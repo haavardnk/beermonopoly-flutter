@@ -74,15 +74,36 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Container(
-                margin: const EdgeInsets.only(top: 12, bottom: 12),
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                    color: Colors.grey[500],
-                    borderRadius: BorderRadius.circular(10)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton.icon(
+                      onPressed: () {
+                        showSettingsPopup(
+                          context,
+                          mystate,
+                        );
+                      },
+                      icon: Icon(Icons.settings),
+                      label: Text('Instillinger')),
+                  TextButton(
+                      onPressed: () {
+                        filters.resetFilters();
+                        _priceRange = filters.priceRange;
+                        _pricePerVolumeRange = filters.pricePerVolumeRange;
+                        _alcoholRange = filters.alcoholRange;
+                        Navigator.pop(context);
+                      },
+                      child: Text('Reset Alle')),
+                ],
               ),
+            ),
+            Divider(
+              height: 1,
+              indent: 16,
+              endIndent: 16,
             ),
             Flexible(
               child: ListView(
@@ -92,31 +113,11 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                         vertical: 16,
                         horizontal: _mediaQueryData.size.width * 0.15,
                       )
-                    : const EdgeInsets.all(16),
+                    : const EdgeInsets.fromLTRB(16, 5, 16, 16),
                 children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Butikklager',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold)),
-                      Semantics(
-                        label: 'Reset alle filter',
-                        button: true,
-                        child: InkWell(
-                          onTap: () {
-                            filters.resetFilters();
-                            _priceRange = filters.priceRange;
-                            _pricePerVolumeRange = filters.pricePerVolumeRange;
-                            _alcoholRange = filters.alcoholRange;
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Reset Alle',
-                              style: TextStyle(color: Colors.pink)),
-                        ),
-                      )
-                    ],
-                  ),
+                  const Text('Butikklager',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   Consumer<Filter>(
                     builder: (context, flt, _) {
                       if (!flt.storesLoading && flt.storeList.isEmpty) {
@@ -566,6 +567,91 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
       backgroundColor: Theme.of(context).backgroundColor,
       selectedColor: Colors.pink,
       checkmarkColor: Colors.white,
+    );
+  }
+
+  Future<void> showSettingsPopup(
+      BuildContext context, StateSetter mystate) async {
+    Widget continueButton = TextButton(
+      onPressed: () {
+        filters.saveFilters();
+        Navigator.pop(context);
+      },
+      child: const Text(
+        'Ok',
+        style: TextStyle(
+          color: Colors.pink,
+        ),
+      ),
+    );
+
+    AlertDialog alert = AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            'Husk filter',
+            style: TextStyle(fontSize: 18),
+          ),
+          Semantics(
+            label: 'Velg alle',
+            button: true,
+            child: InkWell(
+              onTap: () {
+                mystate(() {
+                  if (filters.filterSaveSettings[0]['save'] == true) {
+                    filters.filterSaveSettings.forEach((element) {
+                      element['save'] = false;
+                    });
+                  } else {
+                    filters.filterSaveSettings.forEach((element) {
+                      element['save'] = true;
+                    });
+                  }
+                  filters.saveFilterSettings();
+                });
+              },
+              child: const Text('Velg alle',
+                  style: TextStyle(fontSize: 15, color: Colors.pink)),
+            ),
+          ),
+        ],
+      ),
+      content: Container(
+        height: 400,
+        width: 300,
+        child: ListView.builder(
+          itemCount: filters.filterSaveSettings.length,
+          itemBuilder: (context, index) {
+            return Consumer<Filter>(
+              builder: (context, _, __) => CheckboxListTile(
+                activeColor: Colors.pink,
+                value: filters.filterSaveSettings[index]['save'],
+                title: Text(filters.filterSaveSettings[index]['text']),
+                onChanged: (bool? newValue) {
+                  mystate(() {
+                    filters.filterSaveSettings[index]['save'] = newValue!;
+                    filters.saveFilterSettings();
+                  });
+                },
+              ),
+            );
+          },
+        ),
+      ),
+      actions: [
+        continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

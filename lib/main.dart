@@ -140,7 +140,7 @@ class _MyAppState extends State<MyApp> {
           ),
         ],
         child: Consumer<Auth>(builder: (ctx, auth, _) {
-          Provider.of<Filter>(ctx, listen: false).loadLastStore();
+          Provider.of<Filter>(ctx, listen: false).loadFilters();
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             scrollBehavior: MyCustomScrollBehavior(),

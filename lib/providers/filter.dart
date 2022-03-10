@@ -173,6 +173,20 @@ class Filter with ChangeNotifier {
     'Ikke i ønskeliste',
   ];
 
+  List<Map<String, dynamic>> filterSaveSettings = [
+    {'name': 'store', 'text': 'Butikklager', 'save': false},
+    {'name': 'price', 'text': 'Pris', 'save': false},
+    {'name': 'pricePerVolume', 'text': 'Pris per liter', 'save': false},
+    {'name': 'sortBy', 'text': 'Sortering', 'save': false},
+    {'name': 'style', 'text': 'Stil', 'save': false},
+    {'name': 'country', 'text': 'Land', 'save': false},
+    {'name': 'alcohol', 'text': 'Alkohol', 'save': false},
+    {'name': 'productSelection', 'text': 'Produktutvalg', 'save': false},
+    {'name': 'delivery', 'text': 'Bestilling', 'save': false},
+    {'name': 'checkIn', 'text': 'Untappd Innsjekket', 'save': false},
+    {'name': 'wishlisted', 'text': 'Untappd Ønskeliste', 'save': false},
+  ];
+
   Filter get filters {
     return this;
   }
@@ -228,6 +242,7 @@ class Filter with ChangeNotifier {
       priceLow = priceRange.start.toString();
     }
     notifyListeners();
+    saveFilters();
   }
 
   void setPricePerVolumeRange(RangeValues range) {
@@ -240,6 +255,7 @@ class Filter with ChangeNotifier {
       ppvLow = pricePerVolumeRange.start.toString();
     }
     notifyListeners();
+    saveFilters();
   }
 
   void setAlcoholRange(RangeValues range) {
@@ -252,12 +268,14 @@ class Filter with ChangeNotifier {
       abvLow = alcoholRange.start.toString();
     }
     notifyListeners();
+    saveFilters();
   }
 
   void setSortBy(String index) {
     sortIndex = index;
     sortBy = sortListAuth[index]!;
     notifyListeners();
+    saveFilters();
   }
 
   void setStyle(int index, bool boolean) {
@@ -275,6 +293,7 @@ class Filter with ChangeNotifier {
     );
     style = temporaryStyle;
     notifyListeners();
+    saveFilters();
   }
 
   void setProductSelection(int index, bool boolean) {
@@ -292,11 +311,13 @@ class Filter with ChangeNotifier {
     );
     productSelection = temporaryProductSelection;
     notifyListeners();
+    saveFilters();
   }
 
   void setDeliverySelection(int index, bool boolean) {
     deliverySelectedList[index] = boolean;
     notifyListeners();
+    saveFilters();
   }
 
   void setRelease(int index, bool boolean) {
@@ -319,16 +340,35 @@ class Filter with ChangeNotifier {
   void setCheckin(int index) {
     checkIn = index;
     notifyListeners();
+    saveFilters();
   }
 
   void setWishlisted(int index) {
     wishlisted = index;
     notifyListeners();
+    saveFilters();
   }
 
   void setSearch(String text) {
     search = text;
     notifyListeners();
+  }
+
+  void setCountry() {
+    if (selectedCountries.isEmpty) {
+      country = '';
+    } else {
+      String temporaryCountries = '';
+      selectedCountries.forEach((countryName) {
+        if (temporaryCountries.isNotEmpty) {
+          temporaryCountries += ',';
+        }
+        temporaryCountries += countryName;
+      });
+      country = temporaryCountries;
+    }
+    notifyListeners();
+    saveFilters();
   }
 
   void setStore() {
@@ -346,36 +386,7 @@ class Filter with ChangeNotifier {
       storeId = temporaryStores;
     }
     notifyListeners();
-    saveLastStore();
-  }
-
-  void saveLastStore() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('storeId', storeId);
-    prefs.setStringList('selectedStores', selectedStores);
-  }
-
-  void setCountry() {
-    if (selectedCountries.isEmpty) {
-      country = '';
-    } else {
-      String temporaryCountries = '';
-      selectedCountries.forEach((countryName) {
-        if (temporaryCountries.isNotEmpty) {
-          temporaryCountries += ',';
-        }
-        temporaryCountries += countryName;
-      });
-      country = temporaryCountries;
-    }
-    notifyListeners();
-  }
-
-  Future<void> loadLastStore() async {
-    final prefs = await SharedPreferences.getInstance();
-    storeId = prefs.getString('storeId') ?? '';
-    selectedStores = prefs.getStringList('selectedStores') ?? [];
-    notifyListeners();
+    saveFilters();
   }
 
   void resetFilters() {
@@ -402,11 +413,158 @@ class Filter with ChangeNotifier {
     sortBy = '-rating';
     release = '';
     checkIn = 0;
+    wishlisted = 0;
     notifyListeners();
-    saveLastStore();
+    saveFilters();
   }
 
   void setFilters() {
+    notifyListeners();
+  }
+
+  void saveFilterSettings() async {
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    filterSaveSettings.forEach((filter) {
+      prefs.setBool(filter['name'] + 'Save', filter['save']);
+    });
+  }
+
+  Future<void> loadFilterSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    filterSaveSettings.forEach((filter) {
+      filter['save'] = prefs.getBool(filter['name'] + 'Save') ?? false;
+    });
+  }
+
+  void saveFilters() async {
+    final prefs = await SharedPreferences.getInstance();
+    filterSaveSettings.forEach((filter) {
+      if (filter['name'] == 'store' && filter['save'] == true) {
+        prefs.setString('storeId', storeId);
+        prefs.setStringList('selectedStores', selectedStores);
+      }
+      if (filter['name'] == 'price' && filter['save'] == true) {
+        prefs.setString('priceHigh', priceHigh);
+        prefs.setString('priceLow', priceLow);
+      }
+      if (filter['name'] == 'pricePerVolume' && filter['save'] == true) {
+        prefs.setString('ppvHigh', ppvHigh);
+        prefs.setString('ppvLow', ppvLow);
+      }
+      if (filter['name'] == 'sortBy' && filter['save'] == true) {
+        prefs.setString('sortBy', sortBy);
+        prefs.setString('sortIndex', sortIndex);
+      }
+      if (filter['name'] == 'style' && filter['save'] == true) {
+        prefs.setString('style', style);
+        prefs.setStringList(
+            'styleSelectedList',
+            styleSelectedList
+                .map((e) => e == true ? 'true' : 'false')
+                .toList());
+      }
+      if (filter['name'] == 'country' && filter['save'] == true) {
+        prefs.setString('country', country);
+        prefs.setStringList('selectedCountries', selectedCountries);
+      }
+      if (filter['name'] == 'alcohol' && filter['save'] == true) {
+        prefs.setString('abvHigh', abvHigh);
+        prefs.setString('abvLow', abvLow);
+      }
+      if (filter['name'] == 'productSelection' && filter['save'] == true) {
+        prefs.setString('productSelection', productSelection);
+        prefs.setStringList(
+            'productSelectionSelectedList',
+            productSelectionSelectedList
+                .map((e) => e == true ? 'true' : 'false')
+                .toList());
+      }
+      if (filter['name'] == 'delivery' && filter['save'] == true) {
+        prefs.setStringList(
+            'deliverySelectedList',
+            deliverySelectedList
+                .map((e) => e == true ? 'true' : 'false')
+                .toList());
+      }
+      if (filter['name'] == 'checkIn' && filter['save'] == true) {
+        prefs.setInt('checkIn', checkIn);
+      }
+      if (filter['name'] == 'wishlisted' && filter['save'] == true) {
+        prefs.setInt('wishlisted', wishlisted);
+      }
+    });
+  }
+
+  Future<void> loadFilters() async {
+    await loadFilterSettings();
+    final prefs = await SharedPreferences.getInstance();
+    filterSaveSettings.forEach((filter) {
+      if (filter['name'] == 'store' && filter['save'] == true) {
+        storeId = prefs.getString('storeId') ?? '';
+        selectedStores = prefs.getStringList('selectedStores') ?? [];
+      }
+      if (filter['name'] == 'price' && filter['save'] == true) {
+        priceHigh = prefs.getString('priceHigh') ?? '';
+        priceLow = prefs.getString('priceLow') ?? '';
+        priceRange = RangeValues(
+            priceLow.isNotEmpty ? double.parse(priceLow) : priceRange.start,
+            priceHigh.isNotEmpty ? double.parse(priceHigh) : priceRange.end);
+      }
+      if (filter['name'] == 'pricePerVolume' && filter['save'] == true) {
+        ppvHigh = prefs.getString('ppvHigh') ?? '';
+        ppvLow = prefs.getString('ppvLow') ?? '';
+        pricePerVolumeRange = RangeValues(
+            ppvLow.isNotEmpty
+                ? double.parse(ppvLow)
+                : pricePerVolumeRange.start,
+            ppvHigh.isNotEmpty
+                ? double.parse(ppvHigh)
+                : pricePerVolumeRange.end);
+      }
+      if (filter['name'] == 'sortBy' && filter['save'] == true) {
+        sortBy = prefs.getString('sortBy') ?? '-rating';
+        sortIndex =
+            prefs.getString('sortIndex') ?? 'Global rating - Høy til lav';
+      }
+      if (filter['name'] == 'style' && filter['save'] == true) {
+        style = prefs.getString('style') ?? '';
+        var tempList = prefs.getStringList('styleSelectedList');
+        styleSelectedList = tempList != null
+            ? tempList.map((e) => e == "true").toList()
+            : List<bool>.filled(23, false);
+      }
+      if (filter['name'] == 'country' && filter['save'] == true) {
+        country = prefs.getString('country') ?? '';
+        selectedCountries = prefs.getStringList('selectedCountries') ?? [];
+      }
+      if (filter['name'] == 'alcohol' && filter['save'] == true) {
+        abvHigh = prefs.getString('abvHigh') ?? '';
+        abvLow = prefs.getString('abvLow') ?? '';
+        alcoholRange = RangeValues(
+            abvLow.isNotEmpty ? double.parse(abvLow) : alcoholRange.start,
+            abvHigh.isNotEmpty ? double.parse(abvHigh) : alcoholRange.end);
+      }
+      if (filter['name'] == 'productSelection' && filter['save'] == true) {
+        productSelection = prefs.getString('productSelection') ?? '';
+        var tempList = prefs.getStringList('productSelectionSelectedList');
+        productSelectionSelectedList = tempList != null
+            ? tempList.map((e) => e == "true").toList()
+            : List<bool>.filled(5, false);
+      }
+      if (filter['name'] == 'delivery' && filter['save'] == true) {
+        var tempList = prefs.getStringList('deliverySelectedList');
+        deliverySelectedList = tempList != null
+            ? tempList.map((e) => e == "true").toList()
+            : List<bool>.filled(2, false);
+      }
+      if (filter['name'] == 'delivery' && filter['save'] == true) {
+        checkIn = prefs.getInt('checkIn') ?? 0;
+      }
+      if (filter['name'] == 'wishlisted' && filter['save'] == true) {
+        wishlisted = prefs.getInt('wishlisted') ?? 0;
+      }
+    });
     notifyListeners();
   }
 }
