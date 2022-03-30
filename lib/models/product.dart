@@ -31,7 +31,8 @@ class Product {
         rating: product['rating'],
         checkins: product['checkins'],
         abv: product['abv'],
-        imageUrl: product['label_sm_url'].contains('badge-beer-default.png')
+        imageUrl: product['label_sm_url'] != null &&
+                product['label_sm_url'].contains('badge-beer-default.png')
             ? null
             : product['label_sm_url'],
         userRating: product['user_checked_in'] != null &&
