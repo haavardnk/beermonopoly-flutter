@@ -93,13 +93,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance?.addPostFrameCallback((_) async {
-      await rateMyApp.init();
-      if (mounted && rateMyApp.shouldOpenDialog) {
-        rateMyApp.showRateDialog(context);
-      }
-    });
     requestNotificationPermission();
   }
 
@@ -142,21 +135,52 @@ class _MyAppState extends State<MyApp> {
         child: Consumer<Auth>(builder: (ctx, auth, _) {
           Provider.of<Filter>(ctx, listen: false).loadFilters();
           return MaterialApp(
+            localizationsDelegates: [
+              DefaultMaterialLocalizations.delegate,
+              DefaultWidgetsLocalizations.delegate,
+            ],
             debugShowCheckedModeBanner: false,
             scrollBehavior: MyCustomScrollBehavior(),
             title: 'Ølmonopolet',
             theme: theme,
             darkTheme: darkTheme,
-            home: auth.isAuthOrSkipLogin
-                ? const HomeScreen()
-                : FutureBuilder(
-                    future: auth.tryAutoLogin(),
-                    builder: (ctx, authResultSnapshot) =>
-                        authResultSnapshot.connectionState ==
-                                ConnectionState.waiting
-                            ? const SplashScreen()
-                            : const AuthScreen(),
-                  ),
+            home: RateMyAppBuilder(
+              builder: (context) => auth.isAuthOrSkipLogin
+                  ? const HomeScreen()
+                  : FutureBuilder(
+                      future: auth.tryAutoLogin(),
+                      builder: (ctx, authResultSnapshot) =>
+                          authResultSnapshot.connectionState ==
+                                  ConnectionState.waiting
+                              ? const SplashScreen()
+                              : const AuthScreen(),
+                    ),
+              onInitialized: (context, rateMyApp) {
+                if (rateMyApp.shouldOpenDialog) {
+                  rateMyApp.showStarRateDialog(
+                    context,
+                    title: 'Rate Ølmonopolet!',
+                    message:
+                        'Bruk et øyeblikk på å gi en rating til Ølmonopolet også, det hjelper veldig!',
+                    actionsBuilder: (context, stars) {
+                      return [
+                        TextButton(
+                          child: Text('OK'),
+                          onPressed: () async {
+                            await rateMyApp.callEvent(
+                                RateMyAppEventType.rateButtonPressed);
+                            Navigator.pop<RateMyAppDialogButton>(
+                                context, RateMyAppDialogButton.rate);
+                          },
+                        ),
+                      ];
+                    },
+                    onDismissed: () => rateMyApp
+                        .callEvent(RateMyAppEventType.laterButtonPressed),
+                  );
+                }
+              },
+            ),
             routes: {
               ProductDetailScreen.routeName: (ctx) =>
                   const ProductDetailScreen(),

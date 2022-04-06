@@ -42,7 +42,7 @@ dependencies:
   sqflite: ^2.0.2
   url_launcher: ^6.0.18
   multiselect: ^0.0.4
-  adaptive_theme: ^2.3.0
+  adaptive_theme: ^2.3.1
   rate_my_app: ^1.1.1+1
 
   # The following adds the Cupertino Icons font to your application.
