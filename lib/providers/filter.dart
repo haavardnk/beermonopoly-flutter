@@ -174,7 +174,7 @@ class Filter with ChangeNotifier {
   ];
 
   List<Map<String, dynamic>> filterSaveSettings = [
-    {'name': 'store', 'text': 'Butikklager', 'save': false},
+    {'name': 'store', 'text': 'Butikklager', 'save': true},
     {'name': 'price', 'text': 'Pris', 'save': false},
     {'name': 'pricePerVolume', 'text': 'Pris per liter', 'save': false},
     {'name': 'sortBy', 'text': 'Sortering', 'save': false},
@@ -426,14 +426,14 @@ class Filter with ChangeNotifier {
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     filterSaveSettings.forEach((filter) {
-      prefs.setBool(filter['name'] + 'Save', filter['save']);
+      prefs.setBool(filter['name'] + 'Last', filter['save']);
     });
   }
 
   Future<void> loadFilterSettings() async {
     final prefs = await SharedPreferences.getInstance();
     filterSaveSettings.forEach((filter) {
-      filter['save'] = prefs.getBool(filter['name'] + 'Save') ?? false;
+      filter['save'] = prefs.getBool(filter['name'] + 'Last') ?? filter['save'];
     });
   }
 
