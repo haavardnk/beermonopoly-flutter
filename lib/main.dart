@@ -17,6 +17,7 @@ import './screens/about_screen.dart';
 import './providers/filter.dart';
 import './providers/auth.dart';
 import './providers/cart.dart';
+import './helpers/api_helper.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(
@@ -90,6 +91,13 @@ class _MyAppState extends State<MyApp> {
     print('User granted permission: ${settings.authorizationStatus}');
   }
 
+  Future<void> sendFcmToken(String apiToken) async {
+    var fcmToken = await FirebaseMessaging.instance.getToken();
+    if (fcmToken!.isNotEmpty) {
+      ApiHelper.updateFcmToken(fcmToken, apiToken);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -134,6 +142,9 @@ class _MyAppState extends State<MyApp> {
         ],
         child: Consumer<Auth>(builder: (ctx, auth, _) {
           Provider.of<Filter>(ctx, listen: false).loadFilters();
+          if (auth.isAuth) {
+            sendFcmToken(auth.apiToken);
+          }
           return MaterialApp(
             localizationsDelegates: [
               DefaultMaterialLocalizations.delegate,
