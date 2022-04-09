@@ -947,7 +947,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           onPressed: () {
                             AppLauncher.launchUntappd(product);
                           },
-                          label: const Text('Untappd.com'),
+                          label: const Text('Åpne i Untappd'),
                           icon: const Icon(Icons.open_in_browser),
                         ),
                       ),
@@ -959,7 +959,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               ? launch(product.vmpUrl!)
                               : null;
                         },
-                        label: const Text('Vinmonopolet.no'),
+                        label: const Text('Åpne i Vinmonopolet'),
                         icon: const Icon(Icons.open_in_browser),
                       ),
                     )
