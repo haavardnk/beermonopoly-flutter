@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../helpers/untappd_helper.dart';
+import '../helpers/app_launcher.dart';
 import '../models/product.dart';
 import '../providers/auth.dart';
 
@@ -44,7 +45,7 @@ Future<String?> showPopupMenu(BuildContext context, Auth auth, bool wishlisted,
           child: Row(
             children: <Widget>[
               Icon(Icons.open_in_browser),
-              Text(" Untappd"),
+              Text(" Åpne i Untappd"),
             ],
           ),
         ),
@@ -54,7 +55,7 @@ Future<String?> showPopupMenu(BuildContext context, Auth auth, bool wishlisted,
           child: Row(
             children: <Widget>[
               Icon(Icons.open_in_browser),
-              Text(" Vinmonopolet"),
+              Text(" Åpne i Vinmonopolet"),
             ],
           ),
         )
@@ -76,7 +77,7 @@ Future<String?> showPopupMenu(BuildContext context, Auth auth, bool wishlisted,
     }
   }
   if (value == "untappd") {
-    launch(product.untappdUrl!);
+    AppLauncher.launchUntappd(product);
   }
   if (value == "vinmonopolet") {
     launch(product.vmpUrl!);

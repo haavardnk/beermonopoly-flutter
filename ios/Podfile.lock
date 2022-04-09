@@ -1,4 +1,6 @@
 PODS:
+  - external_app_launcher (0.0.1):
+    - Flutter
   - Firebase/Analytics (8.14.0):
     - Firebase/Core
   - Firebase/Core (8.14.0):
@@ -131,6 +133,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - external_app_launcher (from `.symlinks/plugins/external_app_launcher/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
@@ -159,6 +162,8 @@ SPEC REPOS:
     - PromisesObjC
 
 EXTERNAL SOURCES:
+  external_app_launcher:
+    :path: ".symlinks/plugins/external_app_launcher/ios"
   firebase_analytics:
     :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_core:
@@ -183,6 +188,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
+  external_app_launcher: ad55ac844aa21f2d2197d7cec58ff0d0dc40bbc0
   Firebase: 7e8fe528c161b9271d365217a74c16aaf834578e
   firebase_analytics: af824dd773aab02947636f9f1e9c4b9648c38ce5
   firebase_core: b0b382f1497ab407aceb25e41e3036c8798c1609
