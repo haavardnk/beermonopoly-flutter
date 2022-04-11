@@ -145,8 +145,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 ),
                               )
                             : null,
-                        padding:
-                            const EdgeInsets.only(top: 5, left: 5, right: 5),
                         height: _boxImageSize,
                         width: _boxImageSize,
                         child: snapshot.hasData &&
