@@ -70,31 +70,80 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         iconTheme: Theme.of(context).appBarTheme.iconTheme,
         actions: [
-          PopupMenuButton(
-              // add icon, by default "3 dot" icon
-              // icon: Icon(Icons.book)
-              itemBuilder: (context) {
+          PopupMenuButton(itemBuilder: (context) {
             return [
-              PopupMenuItem<int>(
-                value: 0,
-                child: Text("Legg i Untappd ønskeliste"),
-              ),
+              if (auth.isAuth)
+                PopupMenuItem<int>(
+                  value: 0,
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Row(
+                      children: [
+                        Icon(!wishlisted
+                            ? Icons.playlist_add
+                            : Icons.playlist_remove),
+                        VerticalDivider(width: 5),
+                        Text(!wishlisted
+                            ? 'Legg i Untappd ønskeliste'
+                            : 'Fjern fra Untappd ønskeliste'),
+                      ],
+                    ),
+                  ),
+                ),
               PopupMenuItem<int>(
                 value: 1,
-                child: Text("Settings"),
+                child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Row(
+                    children: [
+                      Icon(Icons.report),
+                      VerticalDivider(width: 5),
+                      Text(
+                        product.rating != null
+                            ? 'Rapporter feil Untappd match'
+                            : 'Foreslå untappd match',
+                        overflow: TextOverflow.fade,
+                      ),
+                    ],
+                  ),
+                ),
               ),
               PopupMenuItem<int>(
                 value: 2,
-                child: Text("Logout"),
+                child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Row(
+                    children: [
+                      Icon(Icons.open_in_browser),
+                      VerticalDivider(width: 5),
+                      Text("Åpne i Untappd"),
+                    ],
+                  ),
+                ),
+              ),
+              PopupMenuItem<int>(
+                value: 3,
+                child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Row(
+                    children: [
+                      Icon(Icons.open_in_browser),
+                      VerticalDivider(width: 5),
+                      Text("Åpne i Vinmonopolet"),
+                    ],
+                  ),
+                ),
               ),
             ];
           }, onSelected: (value) {
             if (value == 0) {
-              print("My account menu is selected.");
+              toggleWishlist(auth, product, cart);
             } else if (value == 1) {
-              print("Settings menu is selected.");
+              wrongUntappdMatch(product);
             } else if (value == 2) {
-              print("Logout menu is selected.");
+              AppLauncher.launchUntappd(product);
+            } else if (value == 3) {
+              product.vmpUrl != null ? launch(product.vmpUrl!) : null;
             }
           }),
         ],
@@ -212,14 +261,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 )
                             ],
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 10),
                           Text(product.style,
                               style: const TextStyle(
                                 fontSize: 14,
                               )),
                           if (product.rating != null &&
                               product.userRating == null)
-                            const SizedBox(height: 12),
+                            const SizedBox(height: 10),
                           if (product.rating != null)
                             product.userRating == null
                                 ? Row(
@@ -252,7 +301,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     child: Column(
                                       children: [
                                         const Divider(
-                                          height: 25,
+                                          height: 20,
                                         ),
                                         Row(
                                           mainAxisAlignment:
@@ -338,7 +387,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   snapshot.data!['sweetness'] != null ||
                                   snapshot.data!['fullness'] != null))
                             const Divider(
-                              height: 25,
+                              height: 20,
                             ),
                           if (snapshot.hasData &&
                               (snapshot.data!['freshness'] != null ||
@@ -428,7 +477,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               ],
                             ),
                           const Divider(
-                            height: 25,
+                            height: 20,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -484,7 +533,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                     ),
                     const Divider(
-                      height: 25,
+                      height: 20,
                     ),
                     Container(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -802,10 +851,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                     ),
                     const Divider(
-                      height: 50,
+                      height: 40,
                     ),
                     Container(
-                      height: 165,
+                      height: _stockList.isNotEmpty ? 165 : 65,
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -855,7 +904,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                     ),
                     const Divider(
-                      height: 50,
+                      height: 40,
                     ),
                     Container(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -891,21 +940,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           style: ButtonStyle(
                               backgroundColor:
                                   MaterialStateProperty.all(Color(0xff01aed6))),
-                          onPressed: () async {
-                            bool success = !wishlisted
-                                ? await UntappdHelper.addToWishlist(
-                                    auth.apiToken, auth.untappdToken, product)
-                                : await UntappdHelper.removeFromWishlist(
-                                    auth.apiToken, auth.untappdToken, product);
-                            setState(() {
-                              if (!wishlisted && success) {
-                                wishlisted = true;
-                                cart.updateCartItemsData();
-                              } else if (wishlisted && success) {
-                                wishlisted = false;
-                                cart.updateCartItemsData();
-                              }
-                            });
+                          onPressed: () {
+                            toggleWishlist(auth, product, cart);
                           },
                           label: Text(!wishlisted
                               ? 'Legg i Untappd ønskeliste'
@@ -919,18 +955,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          showModalBottomSheet<void>(
-                            isScrollControlled: true,
-                            context: context,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(24),
-                                  topRight: Radius.circular(24)),
-                            ),
-                            builder: (BuildContext context) {
-                              return _showPopup(context, product.id);
-                            },
-                          );
+                          wrongUntappdMatch(product);
                         },
                         label: Text(product.rating != null
                             ? 'Rapporter feil Untappd match'
@@ -1127,7 +1152,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     }
 
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.30 +
+      height: MediaQuery.of(context).size.height * 0.27 +
           MediaQuery.of(context).viewInsets.bottom,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1188,6 +1213,37 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> toggleWishlist(Auth auth, Product product, Cart cart) async {
+    bool success = !wishlisted
+        ? await UntappdHelper.addToWishlist(
+            auth.apiToken, auth.untappdToken, product)
+        : await UntappdHelper.removeFromWishlist(
+            auth.apiToken, auth.untappdToken, product);
+    setState(() {
+      if (!wishlisted && success) {
+        wishlisted = true;
+        cart.updateCartItemsData();
+      } else if (wishlisted && success) {
+        wishlisted = false;
+        cart.updateCartItemsData();
+      }
+    });
+  }
+
+  wrongUntappdMatch(Product product) {
+    showModalBottomSheet<void>(
+      isScrollControlled: true,
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+      ),
+      builder: (BuildContext context) {
+        return _showPopup(context, product.id);
+      },
     );
   }
 }
