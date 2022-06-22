@@ -34,10 +34,8 @@ class AboutScreen extends StatelessWidget {
               height: 16,
             ),
             Text(
-              "Ølmonopolet er en app som samler data fra Vinmonopolet og Untappd. "
-              "På grunn av grenser på de respektive API'ene kan vi ikke levere sanntidsdata. "
-              "I praksis betyr dette at vi har en egen server som kontinuerlig henter "
-              "informasjon om øl, ratinger, checkins med mer.",
+              "Ølmonopolet er en app som kontinuerlig samler data fra Vinmonopolet og Untappd "
+              "for å tilby en tjeneste som skal hjelpe deg å finne det beste ølet på lager til en hver tid. ",
             ),
             const SizedBox(
               height: 16,
@@ -58,7 +56,7 @@ class AboutScreen extends StatelessWidget {
             Text(
               "Data fra Vinmonopolet blir oppdatert en gang i døgnet. "
               "Det inkluderer informasjon om øl, utvalg og lagerstatus. "
-              "Når på døgnet denne dataen blir oppdatert varierer og er spredt utover døgnet.",
+              "Når på døgnet denne dataen blir oppdatert varierer og er spredt utover.",
             ),
             const SizedBox(
               height: 16,
@@ -79,19 +77,19 @@ class AboutScreen extends StatelessWidget {
             Text(
               "Data fra Untappd blir oppdatert kontinuerlig gjennom hele døgnet. "
               "Dette gjøres fordi Untappd har en ganske lav API grense. "
-              "Derfor blir øl oppdatert rullerende etter hvilken som ble oppdatert sist, "
+              "Øl blir derfor oppdatert rullerende etter hvilken som ble oppdatert sist, "
               "med ekstra prioritet til nye øl og øl med få innsjekkinger. "
-              "Når du først logger inn med Untappd vil alle dine checkins bli hentet av serveren. "
+              "Når du først logger inn med Untappd vil alle dine innsjekkinger bli hentet. "
               "Dette kan ta noe tid og avhenger av hvor mange innsjekkinger du har. "
               "Etter dette blir alle nye innsjekkinger hentet en gang i døgnet. "
-              "Ønskelisten din vil også bli hentet en gang i døgnet.",
+              "Ønskelisten og vennelisten din vil også bli hentet en gang i døgnet.",
             ),
             const SizedBox(
               height: 10,
             ),
             Text(
                 "Ølmonopolet's algoritme for å matche øl mellom Vinmonopolet og Untappd er bra, men ikke perfekt."
-                " Det vil si at du kan komme over øl hvor metadata er feil. Dette kan du rapportere inn med knappen"
+                " Du kan derfor komme over øl hvor metadata er feil. Dette kan du rapportere med knappen"
                 " 'Rapporter feil Untappd match' innpå detaljsiden til hvert enkelt øl."),
             const SizedBox(
               height: 16,
@@ -110,9 +108,9 @@ class AboutScreen extends StatelessWidget {
               height: 10,
             ),
             Text(
-              "Som du sikkert skjønner er denne applikasjonen 100% avhengig av ekstern data. "
-              "Det vil si at dersom data tilgjengeligheten av en eller annen grunn skulle "
-              "forsvinne fra en av de eksterne datakildene vil denne applikasjonen slutte å fungere.",
+              "Denne applikasjonen er 100% avhengig av ekstern data. "
+              "Dersom data tilgjengeligheten av en eller annen grunn skulle "
+              "forsvinne fra en av de eksterne datakildene vil denne applikasjonen derfor slutte å fungere.",
             ),
           ],
         ),
