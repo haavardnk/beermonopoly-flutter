@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../providers/auth.dart';
 import '../providers/filter.dart';
+import '../helpers/app_launcher.dart';
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer({Key? key}) : super(key: key);
@@ -71,6 +73,22 @@ class _AppDrawerState extends State<AppDrawer> {
                 _themeMode = AdaptiveThemeMode.dark;
                 AdaptiveTheme.of(context).setDark();
               }
+            },
+          ),
+          const Divider(),
+          ListTile(
+            trailing: const Icon(Icons.facebook),
+            title: const Text('Følg på Facebook'),
+            onTap: () {
+              AppLauncher.launchFacebook();
+            },
+          ),
+          const Divider(),
+          ListTile(
+            trailing: const Icon(Icons.email),
+            title: const Text('Gi tilbakemelding'),
+            onTap: () {
+              launch('mailto:post@olmonopolet.app');
             },
           ),
           const Divider(),

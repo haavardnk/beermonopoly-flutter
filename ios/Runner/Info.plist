@@ -27,6 +27,8 @@
 			<string>https</string>
 			<string>http</string>
 			<string>untappd</string>
+			<string>fb</string>
+			<string>mailto</string>
 		</array>
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
@@ -57,6 +59,6 @@
 		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<true/>
 		<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-</dict>
+		<true/>
+	</dict>
 </plist>
