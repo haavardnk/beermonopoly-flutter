@@ -29,6 +29,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   late bool init = false;
 
   int _numRatings = 0;
+  double _friendsRating = 0;
   List<dynamic> _stockList = [];
   List<dynamic> _sortStockList(var stockList, var snapshot, var storeList) {
     stockList = snapshot.data!['all_stock'];
@@ -162,6 +163,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           }
           if (snapshot.hasData) {
             _numRatings = 0;
+            _friendsRating = 0;
             if (snapshot.data!['app_rating'] != null &&
                 snapshot.data!['app_rating']['rating'] != null) {
               _numRatings += 1;
@@ -169,270 +171,161 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             if (snapshot.data!['friends_checked_in'] != null &&
                 snapshot.data!['friends_checked_in'].isNotEmpty) {
               _numRatings += 1;
+              snapshot.data!['friends_checked_in']
+                  .forEach((friend) => {_friendsRating += friend['rating']});
+              _friendsRating =
+                  _friendsRating / snapshot.data!['friends_checked_in'].length;
             }
             if (product.userRating != null) {
               _numRatings += 1;
             }
           }
-          return Column(
+          return Stack(
             children: [
-              Expanded(
-                child: ListView(
-                  padding: _tabletMode &&
-                          _mediaQueryData.orientation == Orientation.landscape
-                      ? EdgeInsets.symmetric(
-                          horizontal: _mediaQueryData.size.width * 0.15)
-                      : null,
-                  children: [
-                    Container(
-                      foregroundDecoration: wishlisted == true
-                          ? const RotatedCornerDecoration(
-                              color: Color(0xff01aed6),
-                              textSpan: TextSpan(text: 'Ønsket'),
-                              geometry: BadgeGeometry(
-                                width: 60,
-                                height: 60,
-                                cornerRadius: 0,
-                                alignment: BadgeAlignment.topRight,
-                              ),
-                            )
+              if (!snapshot.hasData && !_tabletMode)
+                Positioned(
+                    right: 10,
+                    bottom: _mediaQueryData.size.height * 0.10,
+                    child: CircularProgressIndicator()),
+              Column(
+                children: [
+                  Expanded(
+                    child: ListView(
+                      padding: _tabletMode &&
+                              _mediaQueryData.orientation ==
+                                  Orientation.landscape
+                          ? EdgeInsets.symmetric(
+                              horizontal: _mediaQueryData.size.width * 0.15)
                           : null,
-                      child: Container(
-                        foregroundDecoration: product.userRating != null
-                            ? const RotatedCornerDecoration(
-                                color: Color(0xFFFBC02D),
-                                textSpan: TextSpan(text: 'Smakt'),
-                                geometry: BadgeGeometry(
-                                  width: 60,
-                                  height: 60,
-                                  cornerRadius: 0,
-                                  alignment: BadgeAlignment.topLeft,
-                                ),
-                              )
-                            : null,
-                        height: _boxImageSize,
-                        width: _boxImageSize,
-                        child: snapshot.hasData &&
-                                snapshot.data!['label_hd_url'] != null &&
-                                snapshot.data!['label_hd_url'].isNotEmpty
-                            ? FadeInImage(
-                                fit: BoxFit.contain,
-                                image: NetworkImage(
-                                  snapshot.data!['label_hd_url'],
-                                ),
-                                placeholder: product.imageUrl != null
-                                    ? NetworkImage(product.imageUrl!)
-                                    : Image.asset(
-                                        'assets/images/placeholder.png',
-                                        fit: BoxFit.contain,
-                                      ).image,
-                              )
-                            : Hero(
-                                tag: product.id,
-                                child: product.imageUrl != null
-                                    ? Image.network(
-                                        product.imageUrl!,
-                                        fit: BoxFit.contain,
-                                      )
-                                    : Image.asset(
-                                        'assets/images/placeholder.png',
-                                        fit: BoxFit.contain,
-                                      ),
-                              ),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  product.name,
-                                  style: const TextStyle(fontSize: 18),
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-                          Row(
-                            children: [
-                              Text(
-                                'Kr ${product.price.toStringAsFixed(2)}',
-                                style: const TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
-                              ),
-                              if (product.pricePerVolume != null)
-                                Text(
-                                  ' - Kr ${product.pricePerVolume!.toStringAsFixed(2)} pr. liter',
-                                  style: const TextStyle(
-                                    fontSize: 15,
+                      children: [
+                        Container(
+                          foregroundDecoration: wishlisted == true
+                              ? const RotatedCornerDecoration(
+                                  color: Color(0xff01aed6),
+                                  textSpan: TextSpan(text: 'Ønsket'),
+                                  geometry: BadgeGeometry(
+                                    width: 60,
+                                    height: 60,
+                                    cornerRadius: 0,
+                                    alignment: BadgeAlignment.topRight,
                                   ),
                                 )
-                            ],
+                              : null,
+                          child: Container(
+                            foregroundDecoration: product.userRating != null
+                                ? const RotatedCornerDecoration(
+                                    color: Color(0xFFFBC02D),
+                                    textSpan: TextSpan(text: 'Smakt'),
+                                    geometry: BadgeGeometry(
+                                      width: 60,
+                                      height: 60,
+                                      cornerRadius: 0,
+                                      alignment: BadgeAlignment.topLeft,
+                                    ),
+                                  )
+                                : null,
+                            height: _boxImageSize,
+                            width: _boxImageSize,
+                            child: snapshot.hasData &&
+                                    snapshot.data!['label_hd_url'] != null &&
+                                    snapshot.data!['label_hd_url'].isNotEmpty
+                                ? FadeInImage(
+                                    fit: BoxFit.contain,
+                                    image: NetworkImage(
+                                      snapshot.data!['label_hd_url'],
+                                    ),
+                                    placeholder: product.imageUrl != null
+                                        ? NetworkImage(product.imageUrl!)
+                                        : Image.asset(
+                                            'assets/images/placeholder.png',
+                                            fit: BoxFit.contain,
+                                          ).image,
+                                  )
+                                : Hero(
+                                    tag: product.id,
+                                    child: product.imageUrl != null
+                                        ? Image.network(
+                                            product.imageUrl!,
+                                            fit: BoxFit.contain,
+                                          )
+                                        : Image.asset(
+                                            'assets/images/placeholder.png',
+                                            fit: BoxFit.contain,
+                                          ),
+                                  ),
                           ),
-                          const SizedBox(height: 10),
-                          Text(product.style,
-                              style: const TextStyle(
-                                fontSize: 14,
-                              )),
-                          if (product.rating != null)
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                              child: IntrinsicHeight(
-                                child: Column(
-                                  children: [
-                                    const Divider(
-                                      height: 20,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      product.name,
+                                      style: const TextStyle(fontSize: 18),
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    Row(
-                                      mainAxisAlignment: _tabletMode
-                                          ? MainAxisAlignment.spaceEvenly
-                                          : MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          children: [
-                                            Text(
-                                              'Global rating - ${NumberFormat.compact().format(product.checkins)}',
-                                              style:
-                                                  const TextStyle(fontSize: 14),
-                                            ),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  product.rating != null
-                                                      ? '${product.rating!.toStringAsFixed(2)} '
-                                                      : '0 ',
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 14,
-                                                  ),
-                                                ),
-                                                createRatingBar(
-                                                    rating:
-                                                        product.rating != null
-                                                            ? product.rating!
-                                                            : 0,
-                                                    size: 18,
-                                                    color: Colors.yellow[700]!),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                        if ((_numRatings == 1) &&
-                                            snapshot.hasData &&
-                                            snapshot.data!['app_rating'] !=
-                                                null &&
-                                            snapshot.data!['app_rating']
-                                                    ['rating'] !=
-                                                null)
-                                          Column(
-                                            children: [
-                                              Text(
-                                                'Ølmonopolet - ${snapshot.data!['app_rating']['count']}',
-                                                style: const TextStyle(
-                                                    fontSize: 14),
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    '${snapshot.data!['app_rating']['rating'].toStringAsFixed(2)} ',
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                  createRatingBar(
-                                                      rating: snapshot.data![
-                                                              'app_rating']
-                                                          ['rating'],
-                                                      size: 18,
-                                                      color: Color(0xff01aed6)),
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                        if (product.userRating != null)
-                                          Column(
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  const Text(
-                                                    'Din rating',
-                                                    style:
-                                                        TextStyle(fontSize: 14),
-                                                  ),
-                                                  if (snapshot.hasData &&
-                                                      snapshot.data![
-                                                              'user_checked_in'] !=
-                                                          null)
-                                                    Text(
-                                                      ' - ${snapshot.data!['user_checked_in'][0]['count']}',
-                                                      style: TextStyle(
-                                                          fontSize: 14),
-                                                    )
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    product.userRating != null
-                                                        ? '${product.userRating!.toStringAsFixed(2)} '
-                                                        : '0 ',
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                  createRatingBar(
-                                                      rating: product
-                                                                  .userRating !=
-                                                              null
-                                                          ? product.userRating!
-                                                          : 0,
-                                                      size: 18,
-                                                      color:
-                                                          Colors.yellow[700]!),
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                      ],
-                                    ),
-                                    if (_numRatings > 1)
-                                      SizedBox(
-                                        height: 8,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Kr ${product.price.toStringAsFixed(2)}',
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  if (product.pricePerVolume != null)
+                                    Text(
+                                      ' - Kr ${product.pricePerVolume!.toStringAsFixed(2)} pr. liter',
+                                      style: const TextStyle(
+                                        fontSize: 15,
                                       ),
-                                    if (_numRatings > 1)
-                                      Row(
-                                        mainAxisAlignment: _tabletMode
-                                            ? MainAxisAlignment.spaceEvenly
-                                            : MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          if (snapshot.data!['app_rating'] !=
-                                                  null &&
-                                              snapshot.data!['app_rating']
-                                                      ['rating'] !=
-                                                  null)
+                                    )
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              Text(product.style,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                  )),
+                              if (product.rating != null)
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                  child: IntrinsicHeight(
+                                    child: Column(
+                                      children: [
+                                        const Divider(
+                                          height: 20,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: _tabletMode
+                                              ? MainAxisAlignment.spaceEvenly
+                                              : MainAxisAlignment.spaceBetween,
+                                          children: [
                                             Column(
                                               children: [
                                                 Text(
-                                                  'Ølmonopolet - ${snapshot.data!['app_rating']['count']}',
+                                                  'Global rating - ${NumberFormat.compact().format(product.checkins)}',
                                                   style: const TextStyle(
                                                       fontSize: 14),
                                                 ),
                                                 Row(
                                                   children: [
                                                     Text(
-                                                      '${snapshot.data!['app_rating']['rating'].toStringAsFixed(2)} ',
+                                                      product.rating != null
+                                                          ? '${product.rating!.toStringAsFixed(2)} '
+                                                          : '0 ',
                                                       style: const TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
@@ -440,765 +333,933 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                       ),
                                                     ),
                                                     createRatingBar(
-                                                        rating: snapshot.data![
-                                                                'app_rating']
-                                                            ['rating'],
+                                                        rating: product
+                                                                    .rating !=
+                                                                null
+                                                            ? product.rating!
+                                                            : 0,
                                                         size: 18,
-                                                        color:
-                                                            Color(0xff01aed6)),
+                                                        color: Colors
+                                                            .yellow[700]!),
                                                   ],
                                                 )
                                               ],
                                             ),
-                                          if (snapshot
-                                              .data!['friends_checked_in']
-                                              .isNotEmpty)
-                                            Column(
-                                              children: [
-                                                Row(
+                                            if ((_numRatings == 1) &&
+                                                snapshot.hasData &&
+                                                snapshot.data!['app_rating'] !=
+                                                    null &&
+                                                snapshot.data!['app_rating']
+                                                        ['rating'] !=
+                                                    null)
+                                              Column(
+                                                children: [
+                                                  Text(
+                                                    'Ølmonopolet - ${snapshot.data!['app_rating']['count']}',
+                                                    style: const TextStyle(
+                                                        fontSize: 14),
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        '${snapshot.data!['app_rating']['rating'].toStringAsFixed(2)} ',
+                                                        style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14,
+                                                        ),
+                                                      ),
+                                                      createRatingBar(
+                                                          rating: snapshot
+                                                                      .data![
+                                                                  'app_rating']
+                                                              ['rating'],
+                                                          size: 18,
+                                                          color: Color(
+                                                              0xff01aed6)),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            if (product.userRating != null)
+                                              Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      const Text(
+                                                        'Din rating',
+                                                        style: TextStyle(
+                                                            fontSize: 14),
+                                                      ),
+                                                      if (snapshot.hasData &&
+                                                          snapshot.data![
+                                                                  'user_checked_in'] !=
+                                                              null)
+                                                        Text(
+                                                          ' - ${snapshot.data!['user_checked_in'][0]['count']}',
+                                                          style: TextStyle(
+                                                              fontSize: 14),
+                                                        )
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        product.userRating !=
+                                                                null
+                                                            ? '${product.userRating!.toStringAsFixed(2)} '
+                                                            : '0 ',
+                                                        style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14,
+                                                        ),
+                                                      ),
+                                                      createRatingBar(
+                                                          rating: product
+                                                                      .userRating !=
+                                                                  null
+                                                              ? product
+                                                                  .userRating!
+                                                              : 0,
+                                                          size: 18,
+                                                          color: Colors
+                                                              .yellow[700]!),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                          ],
+                                        ),
+                                        if (_numRatings > 1)
+                                          SizedBox(
+                                            height: 8,
+                                          ),
+                                        if (_numRatings > 1)
+                                          Row(
+                                            mainAxisAlignment: _tabletMode
+                                                ? MainAxisAlignment.spaceEvenly
+                                                : MainAxisAlignment
+                                                    .spaceBetween,
+                                            children: [
+                                              if (snapshot.data![
+                                                          'app_rating'] !=
+                                                      null &&
+                                                  snapshot.data!['app_rating']
+                                                          ['rating'] !=
+                                                      null)
+                                                Column(
                                                   children: [
                                                     Text(
-                                                      'Venner - ${snapshot.data!['friends_checked_in'][0]['count']}',
-                                                      style: TextStyle(
+                                                      'Ølmonopolet - ${snapshot.data!['app_rating']['count']}',
+                                                      style: const TextStyle(
                                                           fontSize: 14),
                                                     ),
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          '${snapshot.data!['app_rating']['rating'].toStringAsFixed(2)} ',
+                                                          style:
+                                                              const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 14,
+                                                          ),
+                                                        ),
+                                                        createRatingBar(
+                                                            rating: snapshot
+                                                                        .data![
+                                                                    'app_rating']
+                                                                ['rating'],
+                                                            size: 18,
+                                                            color: Color(
+                                                                0xff01aed6)),
+                                                      ],
+                                                    )
                                                   ],
                                                 ),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      '${snapshot.data!['friends_checked_in'][0]['rating'].toStringAsFixed(2)} ',
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 14,
+                                              if (snapshot
+                                                  .data!['friends_checked_in']
+                                                  .isNotEmpty)
+                                                InkWell(
+                                                  onTap: () {
+                                                    friendsCheckins(
+                                                      snapshot.data![
+                                                          'friends_checked_in'],
+                                                      _mediaQueryData,
+                                                    );
+                                                  },
+                                                  child: Column(
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            'Venner - ${snapshot.data!['friends_checked_in'].length}',
+                                                            style: TextStyle(
+                                                                fontSize: 14),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ),
-                                                    createRatingBar(
-                                                        rating: snapshot.data![
-                                                                'friends_checked_in']
-                                                            [0]['rating'],
-                                                        size: 18,
-                                                        color:
-                                                            Color(0xff01aed6)),
-                                                  ],
-                                                )
-                                              ],
-                                            ),
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            '${_friendsRating.toStringAsFixed(2)} ',
+                                                            style:
+                                                                const TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 14,
+                                                            ),
+                                                          ),
+                                                          createRatingBar(
+                                                              rating:
+                                                                  _friendsRating,
+                                                              size: 18,
+                                                              color: Color(
+                                                                  0xff01aed6)),
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              if (product.rating == null)
+                                const Text(
+                                  'Ingen Untappd Match',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              if (snapshot.hasData &&
+                                  (snapshot.data!['freshness'] != null ||
+                                      snapshot.data!['bitterness'] != null ||
+                                      snapshot.data!['sweetness'] != null ||
+                                      snapshot.data!['fullness'] != null))
+                                const Divider(
+                                  height: 20,
+                                ),
+                              if (snapshot.hasData &&
+                                  (snapshot.data!['freshness'] != null ||
+                                      snapshot.data!['bitterness'] != null ||
+                                      snapshot.data!['sweetness'] != null ||
+                                      snapshot.data!['fullness'] != null))
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    if (snapshot.data!['freshness'] != null)
+                                      CircularPercentIndicator(
+                                        radius: 50.0,
+                                        lineWidth: 5.0,
+                                        animation: true,
+                                        percent: snapshot.data!['freshness']
+                                                .toDouble() /
+                                            12,
+                                        center: Text(
+                                            (snapshot.data!['freshness'] /
+                                                        12 *
+                                                        100)
+                                                    .toStringAsFixed(0) +
+                                                '%'),
+                                        backgroundColor: Colors.grey[300]!,
+                                        progressColor: Colors.pink,
+                                        circularStrokeCap:
+                                            CircularStrokeCap.round,
+                                        footer: const Text(
+                                          "Friskhet",
+                                        ),
+                                      ),
+                                    if (snapshot.data!['fullness'] != null)
+                                      CircularPercentIndicator(
+                                        radius: 50.0,
+                                        lineWidth: 5.0,
+                                        animation: true,
+                                        percent: snapshot.data!['fullness']
+                                                .toDouble() /
+                                            12,
+                                        center: Text(
+                                            (snapshot.data!['fullness'] /
+                                                        12 *
+                                                        100)
+                                                    .toStringAsFixed(0) +
+                                                '%'),
+                                        backgroundColor: Colors.grey[300]!,
+                                        progressColor: Colors.pink,
+                                        circularStrokeCap:
+                                            CircularStrokeCap.round,
+                                        footer: const Text(
+                                          "Fylde",
+                                        ),
+                                      ),
+                                    if (snapshot.data!['bitterness'] != null)
+                                      CircularPercentIndicator(
+                                        radius: 50.0,
+                                        lineWidth: 5.0,
+                                        animation: true,
+                                        percent: snapshot.data!['bitterness']
+                                                .toDouble() /
+                                            12,
+                                        center: Text(
+                                            (snapshot.data!['bitterness'] /
+                                                        12 *
+                                                        100)
+                                                    .toStringAsFixed(0) +
+                                                '%'),
+                                        backgroundColor: Colors.grey[300]!,
+                                        progressColor: Colors.pink,
+                                        circularStrokeCap:
+                                            CircularStrokeCap.round,
+                                        footer: const Text(
+                                          "Bitterhet",
+                                        ),
+                                      ),
+                                    if (snapshot.data!['sweetness'] != null)
+                                      CircularPercentIndicator(
+                                        radius: 50.0,
+                                        lineWidth: 5.0,
+                                        animation: true,
+                                        percent: snapshot.data!['sweetness']
+                                                .toDouble() /
+                                            12,
+                                        center: Text(
+                                            (snapshot.data!['sweetness'] /
+                                                        12 *
+                                                        100)
+                                                    .toStringAsFixed(0) +
+                                                '%'),
+                                        backgroundColor: Colors.grey[300]!,
+                                        progressColor: Colors.pink,
+                                        circularStrokeCap:
+                                            CircularStrokeCap.round,
+                                        footer: const Text(
+                                          "Sødme",
+                                        ),
+                                      )
+                                  ],
+                                ),
+                              const Divider(
+                                height: 20,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  if (product.abv != null)
+                                    Column(
+                                      children: [
+                                        const Text('Styrke'),
+                                        Text('${product.abv} %'),
+                                      ],
+                                    ),
+                                  if (product.volume != null)
+                                    Column(
+                                      children: [
+                                        const Text('Størrelse'),
+                                        Text('${product.volume} l'),
+                                      ],
+                                    ),
+                                  if (snapshot.hasData &&
+                                      snapshot.data!['acid'] != null)
+                                    FadeIn(
+                                      child: Column(
+                                        children: [
+                                          const Text('Syre'),
+                                          Text('${snapshot.data!['acid']} g/l'),
                                         ],
                                       ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          if (product.rating == null)
-                            const Text(
-                              'Ingen Untappd Match',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
-                            ),
-                          if (snapshot.hasData &&
-                              (snapshot.data!['freshness'] != null ||
-                                  snapshot.data!['bitterness'] != null ||
-                                  snapshot.data!['sweetness'] != null ||
-                                  snapshot.data!['fullness'] != null))
-                            const Divider(
-                              height: 20,
-                            ),
-                          if (snapshot.hasData &&
-                              (snapshot.data!['freshness'] != null ||
-                                  snapshot.data!['bitterness'] != null ||
-                                  snapshot.data!['sweetness'] != null ||
-                                  snapshot.data!['fullness'] != null))
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                if (snapshot.data!['freshness'] != null)
-                                  CircularPercentIndicator(
-                                    radius: 50.0,
-                                    lineWidth: 5.0,
-                                    animation: true,
-                                    percent:
-                                        snapshot.data!['freshness'].toDouble() /
-                                            12,
-                                    center: Text(
-                                        (snapshot.data!['freshness'] / 12 * 100)
-                                                .toStringAsFixed(0) +
-                                            '%'),
-                                    backgroundColor: Colors.grey[300]!,
-                                    progressColor: Colors.pink,
-                                    circularStrokeCap: CircularStrokeCap.round,
-                                    footer: const Text(
-                                      "Friskhet",
                                     ),
-                                  ),
-                                if (snapshot.data!['fullness'] != null)
-                                  CircularPercentIndicator(
-                                    radius: 50.0,
-                                    lineWidth: 5.0,
-                                    animation: true,
-                                    percent:
-                                        snapshot.data!['fullness'].toDouble() /
-                                            12,
-                                    center: Text(
-                                        (snapshot.data!['fullness'] / 12 * 100)
-                                                .toStringAsFixed(0) +
-                                            '%'),
-                                    backgroundColor: Colors.grey[300]!,
-                                    progressColor: Colors.pink,
-                                    circularStrokeCap: CircularStrokeCap.round,
-                                    footer: const Text(
-                                      "Fylde",
-                                    ),
-                                  ),
-                                if (snapshot.data!['bitterness'] != null)
-                                  CircularPercentIndicator(
-                                    radius: 50.0,
-                                    lineWidth: 5.0,
-                                    animation: true,
-                                    percent: snapshot.data!['bitterness']
-                                            .toDouble() /
-                                        12,
-                                    center: Text((snapshot.data!['bitterness'] /
-                                                12 *
-                                                100)
-                                            .toStringAsFixed(0) +
-                                        '%'),
-                                    backgroundColor: Colors.grey[300]!,
-                                    progressColor: Colors.pink,
-                                    circularStrokeCap: CircularStrokeCap.round,
-                                    footer: const Text(
-                                      "Bitterhet",
-                                    ),
-                                  ),
-                                if (snapshot.data!['sweetness'] != null)
-                                  CircularPercentIndicator(
-                                    radius: 50.0,
-                                    lineWidth: 5.0,
-                                    animation: true,
-                                    percent:
-                                        snapshot.data!['sweetness'].toDouble() /
-                                            12,
-                                    center: Text(
-                                        (snapshot.data!['sweetness'] / 12 * 100)
-                                                .toStringAsFixed(0) +
-                                            '%'),
-                                    backgroundColor: Colors.grey[300]!,
-                                    progressColor: Colors.pink,
-                                    circularStrokeCap: CircularStrokeCap.round,
-                                    footer: const Text(
-                                      "Sødme",
-                                    ),
-                                  )
-                              ],
-                            ),
-                          const Divider(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              if (product.abv != null)
-                                Column(
-                                  children: [
-                                    const Text('Styrke'),
-                                    Text('${product.abv} %'),
-                                  ],
-                                ),
-                              if (product.volume != null)
-                                Column(
-                                  children: [
-                                    const Text('Størrelse'),
-                                    Text('${product.volume} l'),
-                                  ],
-                                ),
-                              if (snapshot.hasData &&
-                                  snapshot.data!['acid'] != null)
-                                FadeIn(
-                                  child: Column(
-                                    children: [
-                                      const Text('Syre'),
-                                      Text('${snapshot.data!['acid']} g/l'),
-                                    ],
-                                  ),
-                                ),
-                              if (snapshot.hasData &&
-                                  snapshot.data!['sugar'] != null)
-                                FadeIn(
-                                  child: Column(
-                                    children: [
-                                      const Text('Sukker'),
-                                      Text('${snapshot.data!['sugar']} g/l'),
-                                    ],
-                                  ),
-                                ),
-                              if (snapshot.hasData &&
-                                  snapshot.data!['ibu'] != null &&
-                                  snapshot.data!['ibu'] != 0)
-                                FadeIn(
-                                  child: Column(
-                                    children: [
-                                      const Text('IBU'),
-                                      Text(snapshot.data!['ibu'].toString()),
-                                    ],
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Divider(
-                      height: 20,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('Informasjon',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold)),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['year'] != null &&
-                              snapshot.data!['year'] != 0)
-                            FadeIn(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('Årgang'),
-                                  const SizedBox(width: 50),
-                                  Flexible(
-                                    child: Text(
-                                      snapshot.data!['year'].toString(),
-                                      textAlign: TextAlign.end,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['year'] != null &&
-                              snapshot.data!['year'] != 0)
-                            const Divider(
-                              height: 8,
-                            ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['taste'] != null)
-                            FadeIn(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('Smak'),
-                                  const SizedBox(width: 50),
-                                  Flexible(
-                                    child: Text(
-                                      snapshot.data!['taste']
-                                          .toString()
-                                          .replaceAll(".", ""),
-                                      textAlign: TextAlign.end,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['taste'] != null)
-                            const Divider(
-                              height: 8,
-                            ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['aroma'] != null)
-                            FadeIn(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('Lukt'),
-                                  const SizedBox(width: 50),
-                                  Flexible(
-                                    child: Text(
-                                      snapshot.data!['aroma']
-                                          .toString()
-                                          .replaceAll(".", ""),
-                                      textAlign: TextAlign.end,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['aroma'] != null)
-                            const Divider(
-                              height: 8,
-                            ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['color'] != null)
-                            FadeIn(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('Farge'),
-                                  const SizedBox(width: 50),
-                                  Flexible(
-                                    child: Text(
-                                      snapshot.data!['color']
-                                          .toString()
-                                          .replaceAll(".", ""),
-                                      textAlign: TextAlign.end,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['color'] != null)
-                            const Divider(
-                              height: 8,
-                            ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['food_pairing'] != null)
-                            FadeIn(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('Passer til'),
-                                  const SizedBox(width: 50),
-                                  Flexible(
-                                    child: Text(
-                                      snapshot.data!['food_pairing']
-                                          .toString()
-                                          .replaceAll(".", ""),
-                                      textAlign: TextAlign.end,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['food_pairing'] != null)
-                            const Divider(
-                              height: 8,
-                            ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['storable'] != null)
-                            FadeIn(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('Lagring'),
-                                  const SizedBox(width: 50),
-                                  Flexible(
-                                    child: Text(
-                                      snapshot.data!['storable']
-                                          .toString()
-                                          .replaceAll(".", ""),
-                                      textAlign: TextAlign.end,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['storable'] != null)
-                            const Divider(
-                              height: 8,
-                            ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['raw_materials'] != null)
-                            FadeIn(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('Råstoff'),
-                                  const SizedBox(width: 50),
-                                  Flexible(
-                                    child: Text(
-                                      snapshot.data!['raw_materials']
-                                          .toString()
-                                          .replaceAll(".", ""),
-                                      textAlign: TextAlign.end,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['raw_materials'] != null)
-                            const Divider(
-                              height: 8,
-                            ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['method'] != null)
-                            FadeIn(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('Metode'),
-                                  const SizedBox(width: 50),
-                                  Flexible(
-                                    child: Text(
-                                      snapshot.data!['method'].toString(),
-                                      textAlign: TextAlign.end,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['method'] != null)
-                            const Divider(
-                              height: 8,
-                            ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['allergens'] != null)
-                            FadeIn(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('Allergen'),
-                                  const SizedBox(width: 50),
-                                  Flexible(
-                                    child: Text(
-                                      snapshot.data!['allergens'].toString(),
-                                      textAlign: TextAlign.end,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['allergens'] != null)
-                            const Divider(
-                              height: 8,
-                            ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['brewery'] != null)
-                            FadeIn(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('Bryggeri'),
-                                  const SizedBox(width: 50),
-                                  Flexible(
-                                    child: Text(
-                                      snapshot.data!['brewery'],
-                                      textAlign: TextAlign.end,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['brewery'] != null)
-                            const Divider(
-                              height: 8,
-                            ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['country'] != null)
-                            FadeIn(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('Land'),
-                                  const SizedBox(width: 50),
-                                  Flexible(
-                                    child: Text(
-                                      snapshot.data!['country'],
-                                      textAlign: TextAlign.end,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          if ((snapshot.hasData &&
-                              snapshot.data!['country'] != null))
-                            const Divider(
-                              height: 8,
-                            ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text('Varenummer'),
-                              const SizedBox(width: 50),
-                              Flexible(
-                                child: Text(
-                                  product.id.toString(),
-                                  textAlign: TextAlign.end,
-                                ),
-                              )
-                            ],
-                          ),
-                          const Divider(
-                            height: 8,
-                          ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['product_selection'] != null)
-                            FadeIn(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('Utvalg'),
-                                  const SizedBox(width: 50),
-                                  Flexible(
-                                    child: Text(
-                                      snapshot.data!['product_selection'],
-                                      textAlign: TextAlign.end,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                    const Divider(
-                      height: 20,
-                    ),
-                    Container(
-                      height: _stockList.length < 6
-                          ? _stockList.length * 15 + 65
-                          : 165,
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('Butikker med varen på lager',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold)),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          if (_stockList.isNotEmpty)
-                            Expanded(
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: _stockList.length,
-                                itemBuilder: (context, index) {
-                                  return Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                  if (snapshot.hasData &&
+                                      snapshot.data!['sugar'] != null)
+                                    FadeIn(
+                                      child: Column(
                                         children: [
-                                          Text(_stockList[index]['store_name']),
+                                          const Text('Sukker'),
                                           Text(
-                                            'På lager: ${_stockList[index]['quantity']}',
-                                            overflow: TextOverflow.ellipsis,
+                                              '${snapshot.data!['sugar']} g/l'),
+                                        ],
+                                      ),
+                                    ),
+                                  if (snapshot.hasData &&
+                                      snapshot.data!['ibu'] != null &&
+                                      snapshot.data!['ibu'] != 0)
+                                    FadeIn(
+                                      child: Column(
+                                        children: [
+                                          const Text('IBU'),
+                                          Text(
+                                              snapshot.data!['ibu'].toString()),
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Divider(
+                          height: 20,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Informasjon',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold)),
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['year'] != null &&
+                                  snapshot.data!['year'] != 0)
+                                FadeIn(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text('Årgang'),
+                                      const SizedBox(width: 50),
+                                      Flexible(
+                                        child: Text(
+                                          snapshot.data!['year'].toString(),
+                                          textAlign: TextAlign.end,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['year'] != null &&
+                                  snapshot.data!['year'] != 0)
+                                const Divider(
+                                  height: 8,
+                                ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['taste'] != null)
+                                FadeIn(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text('Smak'),
+                                      const SizedBox(width: 50),
+                                      Flexible(
+                                        child: Text(
+                                          snapshot.data!['taste']
+                                              .toString()
+                                              .replaceAll(".", ""),
+                                          textAlign: TextAlign.end,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['taste'] != null)
+                                const Divider(
+                                  height: 8,
+                                ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['aroma'] != null)
+                                FadeIn(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text('Lukt'),
+                                      const SizedBox(width: 50),
+                                      Flexible(
+                                        child: Text(
+                                          snapshot.data!['aroma']
+                                              .toString()
+                                              .replaceAll(".", ""),
+                                          textAlign: TextAlign.end,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['aroma'] != null)
+                                const Divider(
+                                  height: 8,
+                                ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['color'] != null)
+                                FadeIn(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text('Farge'),
+                                      const SizedBox(width: 50),
+                                      Flexible(
+                                        child: Text(
+                                          snapshot.data!['color']
+                                              .toString()
+                                              .replaceAll(".", ""),
+                                          textAlign: TextAlign.end,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['color'] != null)
+                                const Divider(
+                                  height: 8,
+                                ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['food_pairing'] != null)
+                                FadeIn(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text('Passer til'),
+                                      const SizedBox(width: 50),
+                                      Flexible(
+                                        child: Text(
+                                          snapshot.data!['food_pairing']
+                                              .toString()
+                                              .replaceAll(".", ""),
+                                          textAlign: TextAlign.end,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['food_pairing'] != null)
+                                const Divider(
+                                  height: 8,
+                                ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['storable'] != null)
+                                FadeIn(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text('Lagring'),
+                                      const SizedBox(width: 50),
+                                      Flexible(
+                                        child: Text(
+                                          snapshot.data!['storable']
+                                              .toString()
+                                              .replaceAll(".", ""),
+                                          textAlign: TextAlign.end,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['storable'] != null)
+                                const Divider(
+                                  height: 8,
+                                ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['raw_materials'] != null)
+                                FadeIn(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text('Råstoff'),
+                                      const SizedBox(width: 50),
+                                      Flexible(
+                                        child: Text(
+                                          snapshot.data!['raw_materials']
+                                              .toString()
+                                              .replaceAll(".", ""),
+                                          textAlign: TextAlign.end,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['raw_materials'] != null)
+                                const Divider(
+                                  height: 8,
+                                ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['method'] != null)
+                                FadeIn(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text('Metode'),
+                                      const SizedBox(width: 50),
+                                      Flexible(
+                                        child: Text(
+                                          snapshot.data!['method'].toString(),
+                                          textAlign: TextAlign.end,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['method'] != null)
+                                const Divider(
+                                  height: 8,
+                                ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['allergens'] != null)
+                                FadeIn(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text('Allergen'),
+                                      const SizedBox(width: 50),
+                                      Flexible(
+                                        child: Text(
+                                          snapshot.data!['allergens']
+                                              .toString(),
+                                          textAlign: TextAlign.end,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['allergens'] != null)
+                                const Divider(
+                                  height: 8,
+                                ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['brewery'] != null)
+                                FadeIn(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text('Bryggeri'),
+                                      const SizedBox(width: 50),
+                                      Flexible(
+                                        child: Text(
+                                          snapshot.data!['brewery'],
+                                          textAlign: TextAlign.end,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['brewery'] != null)
+                                const Divider(
+                                  height: 8,
+                                ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['country'] != null)
+                                FadeIn(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text('Land'),
+                                      const SizedBox(width: 50),
+                                      Flexible(
+                                        child: Text(
+                                          snapshot.data!['country'],
+                                          textAlign: TextAlign.end,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              if ((snapshot.hasData &&
+                                  snapshot.data!['country'] != null))
+                                const Divider(
+                                  height: 8,
+                                ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text('Varenummer'),
+                                  const SizedBox(width: 50),
+                                  Flexible(
+                                    child: Text(
+                                      product.id.toString(),
+                                      textAlign: TextAlign.end,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const Divider(
+                                height: 8,
+                              ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['product_selection'] != null)
+                                FadeIn(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text('Utvalg'),
+                                      const SizedBox(width: 50),
+                                      Flexible(
+                                        child: Text(
+                                          snapshot.data!['product_selection'],
+                                          textAlign: TextAlign.end,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        const Divider(
+                          height: 20,
+                        ),
+                        Container(
+                          height: _stockList.length < 6
+                              ? _stockList.length * 15 + 65
+                              : 165,
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Butikker med varen på lager',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold)),
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              if (_stockList.isNotEmpty)
+                                Expanded(
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: _stockList.length,
+                                    itemBuilder: (context, index) {
+                                      return Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(_stockList[index]
+                                                  ['store_name']),
+                                              Text(
+                                                'På lager: ${_stockList[index]['quantity']}',
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ],
+                                          ),
+                                          const Divider(
+                                            height: 5,
                                           ),
                                         ],
-                                      ),
-                                      const Divider(
-                                        height: 5,
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ),
-                          if (_stockList.isEmpty)
-                            Expanded(
-                              child: Center(
-                                child: const Text(
-                                  'Ingen butikker har denne på lager',
+                                      );
+                                    },
+                                  ),
                                 ),
-                              ),
-                            )
-                        ],
-                      ),
-                    ),
-                    const Divider(
-                      height: 20,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('Beskrivelse',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold)),
-                          const SizedBox(
-                            height: 16,
+                              if (_stockList.isEmpty)
+                                Expanded(
+                                  child: Center(
+                                    child: const Text(
+                                      'Ingen butikker har denne på lager',
+                                    ),
+                                  ),
+                                )
+                            ],
                           ),
-                          if (snapshot.hasData &&
-                              snapshot.data!['description'] != null)
-                            Text(snapshot.data!['description']),
-                          if (snapshot.hasData &&
-                              snapshot.data!['description'] == '')
-                            Center(
-                              child: const Text(
-                                'Mangler beskrivelse',
-                              ),
-                            ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (auth.isAuth)
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8, 6, 8, 0),
-                        child: ElevatedButton.icon(
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(Color(0xff01aed6))),
-                          onPressed: () {
-                            toggleWishlist(auth, product, cart);
-                          },
-                          label: Text(!wishlisted
-                              ? 'Legg i Untappd ønskeliste'
-                              : 'Fjern fra Untappd ønskeliste'),
-                          icon: Icon(!wishlisted
-                              ? Icons.playlist_add
-                              : Icons.playlist_remove),
                         ),
-                      ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          wrongUntappdMatch(product);
-                        },
-                        label: Text(product.rating != null
-                            ? 'Rapporter feil Untappd match'
-                            : 'Foreslå untappd match'),
-                        icon: const Icon(Icons.report),
-                      ),
-                    ),
-                    if (product.untappdUrl != null)
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            AppLauncher.launchUntappd(product);
-                          },
-                          label: const Text('Åpne i Untappd'),
-                          icon: const Icon(Icons.open_in_browser),
+                        const Divider(
+                          height: 20,
                         ),
-                      ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          product.vmpUrl != null
-                              ? launch(product.vmpUrl!)
-                              : null;
-                        },
-                        label: const Text('Åpne i Vinmonopolet'),
-                        icon: const Icon(Icons.open_in_browser),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                padding: _tabletMode &&
-                        _mediaQueryData.orientation == Orientation.landscape
-                    ? EdgeInsets.fromLTRB(_mediaQueryData.size.width * 0.15, 12,
-                        _mediaQueryData.size.width * 0.15, 25)
-                    : EdgeInsets.fromLTRB(12, 12, 12, 25),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).bottomAppBarColor,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0.0, 1.0), //(x,y)
-                      blurRadius: 2.0,
-                    ),
-                  ],
-                ),
-                child: GestureDetector(
-                  onTap: () {
-                    cart.addItem(product.id, product);
-                    cart.updateCartItemsData();
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text(
-                          'Lagt til i handlelisten!',
-                          textAlign: TextAlign.center,
-                        ),
-                        duration: const Duration(seconds: 2),
-                        action: SnackBarAction(
-                          label: 'ANGRE',
-                          onPressed: () {
-                            cart.removeSingleItem(product.id);
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                  child: Consumer<Cart>(
-                    builder: (_, cart, __) => Stack(
-                      children: [
                         Container(
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.fromLTRB(12, 8, 12, 8),
-                          decoration: BoxDecoration(
-                            color: Colors.pink,
-                            border: Border.all(
-                              width: 1,
-                              color: Colors.pink,
-                            ),
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                          ),
-                          child: const Text(
-                            'Legg til i handleliste',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Beskrivelse',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold)),
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['description'] != null)
+                                Text(snapshot.data!['description']),
+                              if (snapshot.hasData &&
+                                  snapshot.data!['description'] == '')
+                                Center(
+                                  child: const Text(
+                                    'Mangler beskrivelse',
+                                  ),
+                                ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                            ],
                           ),
                         ),
-                        if (cart.items.keys.contains(product.id))
-                          Positioned(
-                            right: 8,
-                            top: 8,
-                            child: Container(
-                              // color: Theme.of(context).accentColor,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                                color: Colors.white,
-                              ),
-                              constraints: const BoxConstraints(
-                                minWidth: 18,
-                                minHeight: 18,
-                              ),
-                              child: Text(
-                                cart.items[product.id]!.quantity.toString(),
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.pink,
-                                ),
-                              ),
+                        if (auth.isAuth)
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 6, 8, 0),
+                            child: ElevatedButton.icon(
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Color(0xff01aed6))),
+                              onPressed: () {
+                                toggleWishlist(auth, product, cart);
+                              },
+                              label: Text(!wishlisted
+                                  ? 'Legg i Untappd ønskeliste'
+                                  : 'Fjern fra Untappd ønskeliste'),
+                              icon: Icon(!wishlisted
+                                  ? Icons.playlist_add
+                                  : Icons.playlist_remove),
                             ),
-                          )
+                          ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              wrongUntappdMatch(product);
+                            },
+                            label: Text(product.rating != null
+                                ? 'Rapporter feil Untappd match'
+                                : 'Foreslå untappd match'),
+                            icon: const Icon(Icons.report),
+                          ),
+                        ),
+                        if (product.untappdUrl != null)
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                AppLauncher.launchUntappd(product);
+                              },
+                              label: const Text('Åpne i Untappd'),
+                              icon: const Icon(Icons.open_in_browser),
+                            ),
+                          ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              product.vmpUrl != null
+                                  ? launch(product.vmpUrl!)
+                                  : null;
+                            },
+                            label: const Text('Åpne i Vinmonopolet'),
+                            icon: const Icon(Icons.open_in_browser),
+                          ),
+                        )
                       ],
                     ),
                   ),
-                ),
+                  Container(
+                    padding: _tabletMode &&
+                            _mediaQueryData.orientation == Orientation.landscape
+                        ? EdgeInsets.fromLTRB(_mediaQueryData.size.width * 0.15,
+                            12, _mediaQueryData.size.width * 0.15, 25)
+                        : EdgeInsets.fromLTRB(12, 12, 12, 25),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).bottomAppBarColor,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey,
+                          offset: Offset(0.0, 1.0), //(x,y)
+                          blurRadius: 2.0,
+                        ),
+                      ],
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        cart.addItem(product.id, product);
+                        cart.updateCartItemsData();
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text(
+                              'Lagt til i handlelisten!',
+                              textAlign: TextAlign.center,
+                            ),
+                            duration: const Duration(seconds: 2),
+                            action: SnackBarAction(
+                              label: 'ANGRE',
+                              onPressed: () {
+                                cart.removeSingleItem(product.id);
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                      child: Consumer<Cart>(
+                        builder: (_, cart, __) => Stack(
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.fromLTRB(12, 8, 12, 8),
+                              decoration: BoxDecoration(
+                                color: Colors.pink,
+                                border: Border.all(
+                                  width: 1,
+                                  color: Colors.pink,
+                                ),
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                              ),
+                              child: const Text(
+                                'Legg til i handleliste',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            if (cart.items.keys.contains(product.id))
+                              Positioned(
+                                right: 8,
+                                top: 8,
+                                child: Container(
+                                  // color: Theme.of(context).accentColor,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    color: Colors.white,
+                                  ),
+                                  constraints: const BoxConstraints(
+                                    minWidth: 18,
+                                    minHeight: 18,
+                                  ),
+                                  child: Text(
+                                    cart.items[product.id]!.quantity.toString(),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.pink,
+                                    ),
+                                  ),
+                                ),
+                              )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           );
@@ -1207,7 +1268,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  Widget _showPopup(BuildContext context, int productId) {
+  Widget _showWrongUntappdMatchPopup(BuildContext context, int productId) {
     final _urlController = TextEditingController();
 
     Future<void> showDialogMessage(String title, String message) async {
@@ -1336,6 +1397,89 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
+  Widget _showFriendsCheckinsPopup(BuildContext context, List<dynamic> checkins,
+      MediaQueryData _mediaQueryData) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.4,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              margin: const EdgeInsets.only(top: 12, bottom: 12),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                  color: Colors.grey[500],
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+            height: _mediaQueryData.size.height * 0.4 - 28,
+            width: _mediaQueryData.size.width,
+            child: ListView.builder(
+                itemCount: checkins.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 16,
+                                foregroundImage:
+                                    NetworkImage(checkins[index]['avatar']),
+                                backgroundImage: AssetImage(
+                                    'assets/images/default_avatar.png'),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                checkins[index]['username'],
+                                style: const TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                '${checkins[index]['rating'].toStringAsFixed(2)} ',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              createRatingBar(
+                                  rating: checkins[index]['rating'],
+                                  size: 18,
+                                  color: Colors.yellow[700]!),
+                              Text(
+                                ' (${checkins[index]['count']})',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                      Divider(
+                        height: 10,
+                      )
+                    ],
+                  );
+                }),
+          )
+        ],
+      ),
+    );
+  }
+
   Future<void> toggleWishlist(Auth auth, Product product, Cart cart) async {
     bool success = !wishlisted
         ? await UntappdHelper.addToWishlist(
@@ -1362,7 +1506,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             topLeft: Radius.circular(24), topRight: Radius.circular(24)),
       ),
       builder: (BuildContext context) {
-        return _showPopup(context, product.id);
+        return _showWrongUntappdMatchPopup(context, product.id);
+      },
+    );
+  }
+
+  friendsCheckins(List<dynamic> checkins, MediaQueryData _mediaQueryData) {
+    showModalBottomSheet<void>(
+      isScrollControlled: true,
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+      ),
+      builder: (BuildContext context) {
+        return _showFriendsCheckinsPopup(context, checkins, _mediaQueryData);
       },
     );
   }

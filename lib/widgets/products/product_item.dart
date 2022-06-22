@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer_image/shimmer_image.dart';
-import 'package:flutter_fadein/flutter_fadein.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
