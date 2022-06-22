@@ -198,7 +198,8 @@ class _ProductItemState extends State<ProductItem> {
                                                           null
                                                       ? widget.product.rating!
                                                       : 0,
-                                                  size: 18),
+                                                  size: 18,
+                                                  color: Colors.yellow[700]!),
                                               Text(
                                                 widget.product.checkins != null
                                                     ? ' ${NumberFormat.compact().format(widget.product.checkins)}'

@@ -26,8 +26,9 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   late bool wishlisted;
-  bool init = false;
+  late bool init = false;
 
+  int _numRatings = 0;
   List<dynamic> _stockList = [];
   List<dynamic> _sortStockList(var stockList, var snapshot, var storeList) {
     stockList = snapshot.data!['all_stock'];
@@ -54,7 +55,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     const fields =
         'label_hd_url,ibu,description,brewery,country,product_selection,all_stock,'
         'year,color,aroma,taste,storable,food_pairing,raw_materials,fullness,'
-        'sweetness,freshness,bitterness,sugar,acid,method,allergens';
+        'sweetness,freshness,bitterness,sugar,acid,method,allergens,'
+        'user_checked_in,friends_checked_in,app_rating';
 
     if (init == false) {
       wishlisted = product.userWishlisted ?? false;
@@ -157,6 +159,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               filters.storeList.isNotEmpty) {
             _stockList =
                 _sortStockList(_stockList, snapshot, filters.storeList);
+          }
+          if (snapshot.hasData) {
+            _numRatings = 0;
+            if (snapshot.data!['app_rating'] != null &&
+                snapshot.data!['app_rating']['rating'] != null) {
+              _numRatings += 1;
+            }
+            if (snapshot.data!['friends_checked_in'] != null &&
+                snapshot.data!['friends_checked_in'].isNotEmpty) {
+              _numRatings += 1;
+            }
+            if (product.userRating != null) {
+              _numRatings += 1;
+            }
           }
           return Column(
             children: [
@@ -266,90 +282,157 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               style: const TextStyle(
                                 fontSize: 14,
                               )),
-                          if (product.rating != null &&
-                              product.userRating == null)
-                            const SizedBox(height: 10),
                           if (product.rating != null)
-                            product.userRating == null
-                                ? Row(
-                                    children: [
-                                      Text(
-                                        product.rating != null
-                                            ? '${product.rating!.toStringAsFixed(2)} '
-                                            : '0 ',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                      createRatingBar(
-                                          rating: product.rating != null
-                                              ? product.rating!
-                                              : 0,
-                                          size: 18),
-                                      Text(
-                                        product.checkins != null
-                                            ? ' ${NumberFormat.compact().format(product.checkins)}'
-                                            : '',
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : IntrinsicHeight(
-                                    child: Column(
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                              child: IntrinsicHeight(
+                                child: Column(
+                                  children: [
+                                    const Divider(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: _tabletMode
+                                          ? MainAxisAlignment.spaceEvenly
+                                          : MainAxisAlignment.spaceBetween,
                                       children: [
-                                        const Divider(
-                                          height: 20,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
+                                        Column(
                                           children: [
+                                            Text(
+                                              'Global rating - ${NumberFormat.compact().format(product.checkins)}',
+                                              style:
+                                                  const TextStyle(fontSize: 14),
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  product.rating != null
+                                                      ? '${product.rating!.toStringAsFixed(2)} '
+                                                      : '0 ',
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                                createRatingBar(
+                                                    rating:
+                                                        product.rating != null
+                                                            ? product.rating!
+                                                            : 0,
+                                                    size: 18,
+                                                    color: Colors.yellow[700]!),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        if ((_numRatings == 1) &&
+                                            snapshot.hasData &&
+                                            snapshot.data!['app_rating'] !=
+                                                null &&
+                                            snapshot.data!['app_rating']
+                                                    ['rating'] !=
+                                                null)
+                                          Column(
+                                            children: [
+                                              Text(
+                                                'Ølmonopolet - ${snapshot.data!['app_rating']['count']}',
+                                                style: const TextStyle(
+                                                    fontSize: 14),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    '${snapshot.data!['app_rating']['rating'].toStringAsFixed(2)} ',
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                  createRatingBar(
+                                                      rating: snapshot.data![
+                                                              'app_rating']
+                                                          ['rating'],
+                                                      size: 18,
+                                                      color: Color(0xff01aed6)),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        if (product.userRating != null)
+                                          Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  const Text(
+                                                    'Din rating',
+                                                    style:
+                                                        TextStyle(fontSize: 14),
+                                                  ),
+                                                  if (snapshot.hasData &&
+                                                      snapshot.data![
+                                                              'user_checked_in'] !=
+                                                          null)
+                                                    Text(
+                                                      ' - ${snapshot.data!['user_checked_in'][0]['count']}',
+                                                      style: TextStyle(
+                                                          fontSize: 14),
+                                                    )
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    product.userRating != null
+                                                        ? '${product.userRating!.toStringAsFixed(2)} '
+                                                        : '0 ',
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                  createRatingBar(
+                                                      rating: product
+                                                                  .userRating !=
+                                                              null
+                                                          ? product.userRating!
+                                                          : 0,
+                                                      size: 18,
+                                                      color:
+                                                          Colors.yellow[700]!),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                      ],
+                                    ),
+                                    if (_numRatings > 1)
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                    if (_numRatings > 1)
+                                      Row(
+                                        mainAxisAlignment: _tabletMode
+                                            ? MainAxisAlignment.spaceEvenly
+                                            : MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          if (snapshot.data!['app_rating'] !=
+                                                  null &&
+                                              snapshot.data!['app_rating']
+                                                      ['rating'] !=
+                                                  null)
                                             Column(
                                               children: [
                                                 Text(
-                                                  'Global rating - ${NumberFormat.compact().format(product.checkins)}',
+                                                  'Ølmonopolet - ${snapshot.data!['app_rating']['count']}',
                                                   style: const TextStyle(
                                                       fontSize: 14),
                                                 ),
                                                 Row(
                                                   children: [
                                                     Text(
-                                                      product.userRating != null
-                                                          ? '${product.rating!.toStringAsFixed(2)} '
-                                                          : '0 ',
-                                                      style: const TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14),
-                                                    ),
-                                                    createRatingBar(
-                                                        rating:
-                                                            product.userRating !=
-                                                                    null
-                                                                ? product
-                                                                    .rating!
-                                                                : 0,
-                                                        size: 18),
-                                                  ],
-                                                )
-                                              ],
-                                            ),
-                                            Column(
-                                              children: [
-                                                const Text(
-                                                  'Din rating',
-                                                  style:
-                                                      TextStyle(fontSize: 14),
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      product.userRating != null
-                                                          ? '${product.userRating!.toStringAsFixed(2)} '
-                                                          : '0 ',
+                                                      '${snapshot.data!['app_rating']['rating'].toStringAsFixed(2)} ',
                                                       style: const TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
@@ -357,22 +440,57 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                       ),
                                                     ),
                                                     createRatingBar(
-                                                        rating:
-                                                            product.userRating !=
-                                                                    null
-                                                                ? product
-                                                                    .userRating!
-                                                                : 0,
-                                                        size: 18),
+                                                        rating: snapshot.data![
+                                                                'app_rating']
+                                                            ['rating'],
+                                                        size: 18,
+                                                        color:
+                                                            Color(0xff01aed6)),
                                                   ],
                                                 )
                                               ],
                                             ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                          if (snapshot
+                                              .data!['friends_checked_in']
+                                              .isNotEmpty)
+                                            Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      'Venner - ${snapshot.data!['friends_checked_in'][0]['count']}',
+                                                      style: TextStyle(
+                                                          fontSize: 14),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      '${snapshot.data!['friends_checked_in'][0]['rating'].toStringAsFixed(2)} ',
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14,
+                                                      ),
+                                                    ),
+                                                    createRatingBar(
+                                                        rating: snapshot.data![
+                                                                'friends_checked_in']
+                                                            [0]['rating'],
+                                                        size: 18,
+                                                        color:
+                                                            Color(0xff01aed6)),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                        ],
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           if (product.rating == null)
                             const Text(
                               'Ingen Untappd Match',
@@ -851,10 +969,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                     ),
                     const Divider(
-                      height: 40,
+                      height: 20,
                     ),
                     Container(
-                      height: _stockList.isNotEmpty ? 165 : 65,
+                      height: _stockList.length < 6
+                          ? _stockList.length * 15 + 65
+                          : 165,
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -904,7 +1024,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                     ),
                     const Divider(
-                      height: 40,
+                      height: 20,
                     ),
                     Container(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
