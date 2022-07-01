@@ -478,9 +478,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                     )
                                                   ],
                                                 ),
-                                              if (snapshot
-                                                  .data!['friends_checked_in']
-                                                  .isNotEmpty)
+                                              if (snapshot.data![
+                                                          'friends_checked_in'] !=
+                                                      null &&
+                                                  snapshot
+                                                      .data![
+                                                          'friends_checked_in']
+                                                      .isNotEmpty)
                                                 InkWell(
                                                   onTap: () {
                                                     friendsCheckins(
