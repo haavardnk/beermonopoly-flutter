@@ -143,6 +143,7 @@ class Filter with ChangeNotifier {
     'Tyskland',
     'USA',
     'Ungarn',
+    'Ukraina',
     'Wales',
     'Østerrike'
   ];
