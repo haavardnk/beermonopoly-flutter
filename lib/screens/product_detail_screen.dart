@@ -1370,8 +1370,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     controller: _urlController,
                     keyboardType: TextInputType.url,
                     validator: (value) {
-                      if (!value!.contains('https://untappd.com/b/')) {
-                        return 'Ugyldig untappd link';
+                      if (value == null || value.isEmpty) {
+                        return 'Vennligst skriv inn riktig Untappd link.';
+                      }
+                      if (!value.contains('https://untappd.com/b/') &&
+                          !value.contains('https://untp.beer/')) {
+                        return 'Ugyldig untappd link.';
                       }
                       return null;
                     },

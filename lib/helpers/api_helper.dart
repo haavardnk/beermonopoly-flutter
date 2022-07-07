@@ -226,6 +226,7 @@ Uri _apiProductUrlBuilder(
       '&product_selection=${filter.productSelection}'
       '&search=${filter.search}'
       '&release=${filter.release}'
+      '&exclude_allergen=${filter.excludeAllergens}'
       '&page=$page'
       '&page_size=$pageSize');
   if (filter.storeId.isNotEmpty) {
