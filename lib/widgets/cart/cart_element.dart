@@ -102,7 +102,10 @@ class _CartElementState extends State<CartElement> {
                 onTap: () {
                   Navigator.of(context).pushNamed(
                     ProductDetailScreen.routeName,
-                    arguments: widget.cartItem.product,
+                    arguments: <String, dynamic>{
+                      'product': widget.cartItem.product,
+                      'herotag': 'cart${widget.cartItem.product.id}'
+                    },
                   );
                 },
                 onTapDown: getPosition,
@@ -182,7 +185,8 @@ class _CartElementState extends State<CartElement> {
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(5)),
                                       child: Hero(
-                                        tag: widget.cartItem.product.id,
+                                        tag:
+                                            'cart${widget.cartItem.product.id}',
                                         child:
                                             widget.cartItem.product.imageUrl !=
                                                     null

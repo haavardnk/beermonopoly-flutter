@@ -80,9 +80,11 @@ class _ProductItemState extends State<ProductItem> {
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
                       Navigator.of(context).pushNamed(
-                        ProductDetailScreen.routeName,
-                        arguments: widget.product,
-                      );
+                          ProductDetailScreen.routeName,
+                          arguments: <String, dynamic>{
+                            'product': widget.product,
+                            'herotag': 'list${widget.product.id}'
+                          });
                     },
                     onTapDown: getPosition,
                     onLongPress: () {
@@ -118,7 +120,7 @@ class _ProductItemState extends State<ProductItem> {
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(5)),
                               child: Hero(
-                                tag: widget.product.id,
+                                tag: 'list${widget.product.id}',
                                 child: widget.product.imageUrl != null
                                     ? ProgressiveImage(
                                         image: widget.product.imageUrl ?? '',

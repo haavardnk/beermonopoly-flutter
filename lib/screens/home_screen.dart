@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!filters.storesLoading && filters.storeList.isEmpty) {
       filters.getStores();
     }
-    if (!filters.releasesLoading && filters.releaseList.length < 2) {
+    if (!filters.releasesLoading && filters.releaseList.isEmpty) {
       filters.getReleases();
     }
     return Scaffold(
