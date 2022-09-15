@@ -346,6 +346,73 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.ideographic,
+                        children: [
+                          const Text(
+                            'Allergener',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          const Text(
+                            '(NB: Ekskluderer valgte)',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                      Semantics(
+                        label: 'Velg alle allergener',
+                        button: true,
+                        child: InkWell(
+                          onTap: () {
+                            mystate(() {
+                              if (!filters.excludeAllergensSelectedList
+                                  .contains(true)) {
+                                filters.excludeAllergensSelectedList =
+                                    List<bool>.filled(
+                                  filters.excludeAllergensList.length,
+                                  true,
+                                );
+                              } else {
+                                filters.excludeAllergensSelectedList =
+                                    List<bool>.filled(
+                                  filters.excludeAllergensList.length,
+                                  false,
+                                );
+                              }
+                            });
+                          },
+                          child: const Text('Velg alle',
+                              style: TextStyle(color: Colors.pink)),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Wrap(
+                    spacing: 8,
+                    children: List.generate(
+                      filters.excludeAllergensList.length,
+                      (index) {
+                        return _filter(
+                          filters.excludeAllergensSelectedList,
+                          filters.excludeAllergensList[index].keys.first,
+                          index,
+                          filters.setExcludeAllergensSelection,
+                          mystate,
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                       const Text(
                         'Produktutvalg',
                         style: TextStyle(

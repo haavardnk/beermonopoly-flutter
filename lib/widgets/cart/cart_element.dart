@@ -279,7 +279,9 @@ class _CartElementState extends State<CartElement> {
                                                                     .product
                                                                     .rating!
                                                                 : 0,
-                                                            size: 18),
+                                                            size: 18,
+                                                            color: Colors
+                                                                .yellow[700]!),
                                                         Text(
                                                           widget
                                                                       .cartItem

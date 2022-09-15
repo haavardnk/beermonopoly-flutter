@@ -47,11 +47,12 @@ class _ProductListViewState extends State<ProductListView> {
             2
         ? 24
         : 14;
-    _pagingController.addPageRequestListener((pageKey) {
-      final filters = Provider.of<Filter>(context, listen: false).filters;
-      final auth = Provider.of<Auth>(context, listen: false);
-      _fetchPage(pageKey, filters, auth);
-    });
+    if (!_pagingController.hasListeners)
+      _pagingController.addPageRequestListener((pageKey) {
+        final filters = Provider.of<Filter>(context, listen: false).filters;
+        final auth = Provider.of<Auth>(context, listen: false);
+        _fetchPage(pageKey, filters, auth);
+      });
 
     return RefreshIndicator(
       onRefresh: () => Future.sync(

@@ -11,6 +11,7 @@ class Filter with ChangeNotifier {
   String country = '';
   String style = '';
   String productSelection = '';
+  String excludeAllergens = '';
   String priceHigh = '';
   String priceLow = '';
   String ppvHigh = '';
@@ -142,6 +143,7 @@ class Filter with ChangeNotifier {
     'Tyskland',
     'USA',
     'Ungarn',
+    'Ukraina',
     'Wales',
     'Østerrike'
   ];
@@ -153,6 +155,14 @@ class Filter with ChangeNotifier {
     {'Partiutvalget': 'partiutvalget'},
     {'Spesialutvalget': 'spesialutvalg'},
     {'Tilleggsutvalget': 'tilleggsutvalget'},
+  ];
+
+  List<bool> excludeAllergensSelectedList = List<bool>.filled(4, false);
+  List<Map<String, String>> excludeAllergensList = [
+    {'Gluten': 'gluten, bygg, spelt, hvete, havre, rug'},
+    {'Laktose': 'laktose, melk'},
+    {'Nøtter': 'nøtter, peanøtt, hasselnøtt, valnøtt, nøtt'},
+    {'Sulfitt': 'sulfitt'},
   ];
 
   List<bool> deliverySelectedList = List<bool>.filled(2, false);
@@ -182,6 +192,7 @@ class Filter with ChangeNotifier {
     {'name': 'country', 'text': 'Land', 'save': false},
     {'name': 'alcohol', 'text': 'Alkohol', 'save': false},
     {'name': 'productSelection', 'text': 'Produktutvalg', 'save': false},
+    {'name': 'excludeAllergens', 'text': 'Allergener', 'save': false},
     {'name': 'delivery', 'text': 'Bestilling', 'save': false},
     {'name': 'checkIn', 'text': 'Untappd Innsjekket', 'save': false},
     {'name': 'wishlisted', 'text': 'Untappd Ønskeliste', 'save': false},
@@ -314,6 +325,24 @@ class Filter with ChangeNotifier {
     saveFilters();
   }
 
+  void setExcludeAllergensSelection(int index, bool boolean) {
+    excludeAllergensSelectedList[index] = boolean;
+    var temporaryProductSelection = '';
+    excludeAllergensSelectedList.asMap().forEach(
+      (index, value) {
+        if (value) {
+          if (temporaryProductSelection.isNotEmpty) {
+            temporaryProductSelection += ',';
+          }
+          temporaryProductSelection += excludeAllergensList[index].values.first;
+        }
+      },
+    );
+    excludeAllergens = temporaryProductSelection;
+    notifyListeners();
+    saveFilters();
+  }
+
   void setDeliverySelection(int index, bool boolean) {
     deliverySelectedList[index] = boolean;
     notifyListeners();
@@ -392,6 +421,7 @@ class Filter with ChangeNotifier {
   void resetFilters() {
     styleSelectedList = List<bool>.filled(23, false);
     productSelectionSelectedList = List<bool>.filled(5, false);
+    excludeAllergensSelectedList = List<bool>.filled(4, false);
     deliverySelectedList = List<bool>.filled(2, false);
     releaseSelectedList = List<bool>.filled(releaseList.length, false);
     priceRange = const RangeValues(0, 500);
@@ -404,6 +434,7 @@ class Filter with ChangeNotifier {
     selectedCountries = [];
     style = '';
     productSelection = '';
+    excludeAllergens = '';
     priceHigh = '';
     priceLow = '';
     ppvHigh = '';
@@ -480,6 +511,14 @@ class Filter with ChangeNotifier {
                 .map((e) => e == true ? 'true' : 'false')
                 .toList());
       }
+      if (filter['name'] == 'excludeAllergens' && filter['save'] == true) {
+        prefs.setString('excludeAllergens', excludeAllergens);
+        prefs.setStringList(
+            'excludeAllergensSelectedList',
+            excludeAllergensSelectedList
+                .map((e) => e == true ? 'true' : 'false')
+                .toList());
+      }
       if (filter['name'] == 'delivery' && filter['save'] == true) {
         prefs.setStringList(
             'deliverySelectedList',
@@ -549,6 +588,13 @@ class Filter with ChangeNotifier {
         productSelection = prefs.getString('productSelection') ?? '';
         var tempList = prefs.getStringList('productSelectionSelectedList');
         productSelectionSelectedList = tempList != null
+            ? tempList.map((e) => e == "true").toList()
+            : List<bool>.filled(5, false);
+      }
+      if (filter['name'] == 'excludeAllergens' && filter['save'] == true) {
+        excludeAllergens = prefs.getString('excludeAllergens') ?? '';
+        var tempList = prefs.getStringList('excludeAllergensSelectedList');
+        excludeAllergensSelectedList = tempList != null
             ? tempList.map((e) => e == "true").toList()
             : List<bool>.filled(5, false);
       }
