@@ -1,22 +1,22 @@
 class Product {
-  Product({
-    required this.id,
-    required this.name,
-    required this.style,
-    required this.price,
-    required this.volume,
-    this.pricePerVolume,
-    this.stock,
-    this.rating,
-    this.checkins,
-    this.abv,
-    this.imageUrl,
-    this.userRating,
-    this.userWishlisted,
-    this.vmpUrl,
-    this.untappdUrl,
-    this.untappdId,
-  });
+  Product(
+      {required this.id,
+      required this.name,
+      required this.style,
+      required this.price,
+      required this.volume,
+      this.pricePerVolume,
+      this.stock,
+      this.rating,
+      this.checkins,
+      this.abv,
+      this.imageUrl,
+      this.userRating,
+      this.userWishlisted,
+      this.vmpUrl,
+      this.untappdUrl,
+      this.untappdId,
+      this.country});
 
   factory Product.fromJson(Map<String, dynamic> product) => Product(
         id: product['vmp_id'],
@@ -45,6 +45,7 @@ class Product {
         vmpUrl: product['vmp_url'],
         untappdUrl: product['untpd_url'],
         untappdId: product['untpd_id'],
+        country: product['country'],
       );
 
   final int id;
@@ -63,4 +64,5 @@ class Product {
   final String? vmpUrl;
   final String? untappdUrl;
   final int? untappdId;
+  final String? country;
 }

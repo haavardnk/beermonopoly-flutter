@@ -61,7 +61,7 @@ class ApiHelper {
     const fields =
         'vmp_id,vmp_name,price,rating,checkins,label_sm_url,main_category,'
         'sub_category,style,stock,abv,user_checked_in,user_wishlisted,'
-        'volume,price_per_volume,vmp_url,untpd_url,untpd_id';
+        'volume,price_per_volume,vmp_url,untpd_url,untpd_id,country';
     final Map<String, String> headers = auth.apiToken.isNotEmpty
         ? {
             'Authorization': 'Token ${auth.apiToken}',
@@ -97,7 +97,7 @@ class ApiHelper {
     const fields =
         'vmp_id,vmp_name,price,rating,checkins,label_sm_url,main_category,'
         'sub_category,style,stock,abv,user_checked_in,user_wishlisted,'
-        'volume,price_per_volume,vmp_url,untpd_url,untpd_id';
+        'volume,price_per_volume,vmp_url,untpd_url,untpd_id,country';
     final Map<String, String> headers = apiToken.isNotEmpty
         ? {
             'Authorization': 'Token $apiToken',

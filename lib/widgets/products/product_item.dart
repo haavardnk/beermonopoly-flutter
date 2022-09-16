@@ -3,10 +3,12 @@ import 'package:shimmer_image/shimmer_image.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
+import 'package:flag/flag.dart';
 
 import '../../models/product.dart';
 import '../../providers/cart.dart';
 import '../../providers/auth.dart';
+import '../../providers/filter.dart';
 import '../../screens/product_detail_screen.dart';
 import '../rating_widget.dart';
 import '../item_popup_menu.dart';
@@ -34,6 +36,7 @@ class _ProductItemState extends State<ProductItem> {
     final MediaQueryData _mediaQueryData = MediaQuery.of(context);
     final _tabletMode = _mediaQueryData.size.shortestSide >= 600 ? true : false;
     final cart = Provider.of<Cart>(context, listen: false);
+    final countries = Provider.of<Filter>(context, listen: false).countryList;
     final double _boxImageSize = _tabletMode
         ? 100 + _mediaQueryData.textScaleFactor * 10
         : _mediaQueryData.size.shortestSide / 4;
@@ -119,21 +122,40 @@ class _ProductItemState extends State<ProductItem> {
                             ClipRRect(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(5)),
-                              child: Hero(
-                                tag: 'list${widget.product.id}',
-                                child: widget.product.imageUrl != null
-                                    ? ProgressiveImage(
-                                        image: widget.product.imageUrl ?? '',
-                                        height: _boxImageSize,
-                                        width: _boxImageSize,
-                                        imageError:
+                              child: Stack(
+                                children: [
+                                  Hero(
+                                    tag: 'list${widget.product.id}',
+                                    child: widget.product.imageUrl != null
+                                        ? ProgressiveImage(
+                                            image:
+                                                widget.product.imageUrl ?? '',
+                                            height: _boxImageSize,
+                                            width: _boxImageSize,
+                                            imageError:
+                                                'assets/images/placeholder.png',
+                                          )
+                                        : Image.asset(
                                             'assets/images/placeholder.png',
-                                      )
-                                    : Image.asset(
-                                        'assets/images/placeholder.png',
-                                        height: _boxImageSize,
-                                        width: _boxImageSize,
+                                            height: _boxImageSize,
+                                            width: _boxImageSize,
+                                          ),
+                                  ),
+                                  if (widget.product.country != null &&
+                                      countries[widget.product.country] !=
+                                          null &&
+                                      countries[widget.product.country]!
+                                          .isNotEmpty)
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.only(
+                                          bottomRight: Radius.circular(5)),
+                                      child: Flag.fromString(
+                                        countries[widget.product.country!]!,
+                                        height: 20,
+                                        width: 20 * 4 / 3,
                                       ),
+                                    )
+                                ],
                               ),
                             ),
                             const SizedBox(

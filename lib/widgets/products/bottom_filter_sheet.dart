@@ -312,7 +312,7 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                         filters.setCountry();
                       });
                     },
-                    options: filters.countryList,
+                    options: filters.countryList.keys.toList(),
                     selectedValues: filters.selectedCountries,
                     whenEmpty: 'Alle land',
                   ),
