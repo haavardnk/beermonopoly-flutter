@@ -4,6 +4,7 @@ import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:shimmer_image/shimmer_image.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:flag/flag.dart';
 
 import '../../providers/cart.dart';
 import '../../providers/auth.dart';
@@ -184,11 +185,13 @@ class _CartElementState extends State<CartElement> {
                                     ClipRRect(
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(5)),
-                                      child: Hero(
-                                        tag:
-                                            'cart${widget.cartItem.product.id}',
-                                        child:
-                                            widget.cartItem.product.imageUrl !=
+                                      child: Stack(
+                                        children: [
+                                          Hero(
+                                            tag:
+                                                'cart${widget.cartItem.product.id}',
+                                            child: widget.cartItem.product
+                                                        .imageUrl !=
                                                     null
                                                 ? ProgressiveImage(
                                                     image: widget.cartItem
@@ -204,6 +207,34 @@ class _CartElementState extends State<CartElement> {
                                                     height: widget.boxImageSize,
                                                     width: widget.boxImageSize,
                                                   ),
+                                          ),
+                                          if (widget.cartItem.product
+                                                      .country !=
+                                                  null &&
+                                              filters.countryList[widget
+                                                      .cartItem
+                                                      .product
+                                                      .country] !=
+                                                  null &&
+                                              filters
+                                                  .countryList[widget.cartItem
+                                                      .product.country]!
+                                                  .isNotEmpty)
+                                            ClipRRect(
+                                              borderRadius:
+                                                  const BorderRadius.only(
+                                                      bottomRight:
+                                                          Radius.circular(5)),
+                                              child: Flag.fromString(
+                                                filters.countryList[widget
+                                                    .cartItem
+                                                    .product
+                                                    .country!]!,
+                                                height: 20,
+                                                width: 20 * 4 / 3,
+                                              ),
+                                            )
+                                        ],
                                       ),
                                     ),
                                     const SizedBox(

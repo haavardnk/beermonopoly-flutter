@@ -57,7 +57,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final _boxImageSize =
         _mediaQueryData.size.shortestSide * (_tabletMode ? 0.4 : 0.75);
     const fields =
-        'label_hd_url,ibu,description,brewery,country,product_selection,all_stock,'
+        'label_hd_url,ibu,description,brewery,product_selection,all_stock,'
         'year,color,aroma,taste,storable,food_pairing,raw_materials,fullness,'
         'sweetness,freshness,bitterness,sugar,acid,method,allergens,'
         'user_checked_in,friends_checked_in,app_rating';
@@ -970,8 +970,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 const Divider(
                                   height: 8,
                                 ),
-                              if (snapshot.hasData &&
-                                  snapshot.data!['country'] != null)
+                              if (product.country != null)
                                 FadeIn(
                                   child: Row(
                                     mainAxisAlignment:
@@ -981,15 +980,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       const SizedBox(width: 50),
                                       Flexible(
                                         child: Text(
-                                          snapshot.data!['country'],
+                                          product.country!,
                                           textAlign: TextAlign.end,
                                         ),
                                       )
                                     ],
                                   ),
                                 ),
-                              if ((snapshot.hasData &&
-                                  snapshot.data!['country'] != null))
+                              if (product.country != null)
                                 const Divider(
                                   height: 8,
                                 ),
