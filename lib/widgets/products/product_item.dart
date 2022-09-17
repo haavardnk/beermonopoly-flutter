@@ -348,14 +348,26 @@ class _ProductItemState extends State<ProductItem> {
                           textAlign: TextAlign.center,
                         ),
                         duration: const Duration(seconds: 2),
-                        action: SnackBarAction(
-                          label: 'ANGRE',
-                          onPressed: () {
-                            cart.removeSingleItem(widget.product.id);
-                          },
-                        ),
                       ),
                     );
+                  },
+                  onLongPress: () {
+                    if (cart.items.keys.contains(widget.product.id)) {
+                      cart.removeSingleItem(widget.product.id);
+                      cart.updateCartItemsData();
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            cart.items.keys.contains(widget.product.id)
+                                ? 'Fjernet en fra handlelisten!'
+                                : 'Fjernet helt fra handlelisten!',
+                            textAlign: TextAlign.center,
+                          ),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    }
                   },
                   child: Container(
                     height: 35,
@@ -374,7 +386,7 @@ class _ProductItemState extends State<ProductItem> {
                         children: [
                           Center(
                             child: const Icon(
-                              Icons.add_shopping_cart,
+                              Icons.shopping_cart_outlined,
                               size: 20,
                             ),
                           ),
