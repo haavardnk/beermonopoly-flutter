@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
 import 'package:provider/provider.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 import '../../providers/cart.dart';
 import '../../providers/filter.dart';
-import '../products/multiselect.dart';
 
 class BottomStoreSheet extends StatefulWidget {
   final Function initCartSettings;
@@ -122,21 +122,76 @@ class _BottomStoreSheetState extends State<BottomStoreSheet> {
                                   filters.getStores();
                                 }
                                 return filters.storeList.isNotEmpty
-                                    ? DropDownMultiSelect(
-                                        onChanged: (List<String> x) {
-                                          mystate(() {
-                                            cart.cartSelectedStores = x;
-                                            cart.setCartStore(
-                                                filters.storeList);
-                                            widget.initCartSettings();
-                                          });
-                                        },
-                                        options: filters.storeList
-                                            .map((e) => e.name)
-                                            .toList(),
-                                        stores: filters.storeList,
-                                        selectedValues: cart.cartSelectedStores,
-                                        whenEmpty: 'Velg butikker',
+                                    ? Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 8, 0, 8),
+                                        child: DropdownSearch<
+                                            String>.multiSelection(
+                                          popupProps:
+                                              PopupPropsMultiSelection.dialog(
+                                            showSelectedItems: true,
+                                            showSearchBox: true,
+                                            searchFieldProps: TextFieldProps(
+                                              decoration: InputDecoration(
+                                                labelText: 'Søk',
+                                                prefixIcon: Icon(Icons.search,
+                                                    color: Colors.grey[500]),
+                                                border: OutlineInputBorder(),
+                                              ),
+                                            ),
+                                            itemBuilder:
+                                                (context, item, isSelected) {
+                                              return Container(
+                                                margin: EdgeInsets.symmetric(
+                                                    horizontal: 8),
+                                                child: ListTile(
+                                                  title: Text(item),
+                                                  subtitle: Text(filters
+                                                          .storeList.isNotEmpty
+                                                      ? '${filters.storeList.firstWhere((element) => element.name == item).distance!.toStringAsFixed(0)}km'
+                                                      : ''),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                          dropdownBuilder:
+                                              (context, selectedItems) {
+                                            return Text(
+                                              cart.cartSelectedStores.isNotEmpty
+                                                  ? cart.cartSelectedStores
+                                                      .reduce((a, b) =>
+                                                          a + ', ' + b)
+                                                  : 'Velg butikker',
+                                              style: TextStyle(fontSize: 16),
+                                            );
+                                          },
+                                          dropdownDecoratorProps:
+                                              DropDownDecoratorProps(
+                                            dropdownSearchDecoration:
+                                                InputDecoration(
+                                              border: OutlineInputBorder(),
+                                              isDense: true,
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                vertical: 23,
+                                                horizontal: 10,
+                                              ),
+                                            ),
+                                          ),
+                                          items: filters.storeList
+                                              .map((e) => e.name)
+                                              .toList(),
+                                          onChanged: (List<String> x) {
+                                            mystate(() {
+                                              cart.cartSelectedStores = x;
+                                              cart.setCartStore(
+                                                  filters.storeList);
+                                              widget.initCartSettings();
+                                            });
+                                          },
+                                          selectedItems:
+                                              cart.cartSelectedStores,
+                                        ),
                                       )
                                     : Center(
                                         child: CircularProgressIndicator(),

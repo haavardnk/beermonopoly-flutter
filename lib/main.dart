@@ -110,8 +110,10 @@ class _MyAppState extends State<MyApp> {
       light: ThemeData(
         brightness: Brightness.light,
         primarySwatch: Colors.pink,
+        primaryColorLight: Colors.pink,
         backgroundColor: Colors.grey[100],
         iconTheme: IconThemeData(color: Colors.grey[800]),
+        textTheme: TextTheme(subtitle2: TextStyle(color: Colors.white)),
         appBarTheme: AppBarTheme(
           color: Colors.white,
           iconTheme: IconThemeData(color: Colors.black),
@@ -120,7 +122,9 @@ class _MyAppState extends State<MyApp> {
       dark: ThemeData(
         brightness: Brightness.dark,
         primarySwatch: Colors.pink,
+        primaryColorLight: Colors.pink,
         accentColor: Colors.pink,
+        toggleableActiveColor: Colors.pink,
         appBarTheme: AppBarTheme(
           iconTheme: IconThemeData(color: Colors.white),
         ),

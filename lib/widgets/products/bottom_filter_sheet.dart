@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 import '../../providers/filter.dart';
 import '../../providers/auth.dart';
-import 'multiselect.dart';
 
 class BottomFilterSheet extends StatefulWidget {
   const BottomFilterSheet({Key? key}) : super(key: key);
@@ -115,27 +115,92 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                       )
                     : const EdgeInsets.fromLTRB(16, 5, 16, 16),
                 children: <Widget>[
-                  const Text('Butikklager',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Butikklager',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold)),
+                      Semantics(
+                        label: 'Reset valgte butikker',
+                        button: true,
+                        child: InkWell(
+                          onTap: () {
+                            mystate(() {
+                              filters.selectedStores = [];
+                              filters.setStore();
+                            });
+                          },
+                          child: const Text('Velg alle',
+                              style: TextStyle(color: Colors.pink)),
+                        ),
+                      )
+                    ],
+                  ),
                   Consumer<Filter>(
                     builder: (context, flt, _) {
                       if (!flt.storesLoading && flt.storeList.isEmpty) {
                         flt.getStores();
                       }
                       return flt.storeList.isNotEmpty
-                          ? DropDownMultiSelect(
-                              onChanged: (List<String> x) {
-                                mystate(() {
-                                  filters.selectedStores = x;
-                                  filters.setStore();
-                                });
-                              },
-                              options:
-                                  filters.storeList.map((e) => e.name).toList(),
-                              stores: filters.storeList,
-                              selectedValues: filters.selectedStores,
-                              whenEmpty: 'Velg butikker',
+                          ? Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                              child: DropdownSearch<String>.multiSelection(
+                                popupProps: PopupPropsMultiSelection.dialog(
+                                  showSelectedItems: true,
+                                  showSearchBox: true,
+                                  searchFieldProps: TextFieldProps(
+                                    decoration: InputDecoration(
+                                      labelText: 'Søk',
+                                      prefixIcon: Icon(Icons.search,
+                                          color: Colors.grey[500]),
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                  itemBuilder: (context, item, isSelected) {
+                                    return Container(
+                                      margin:
+                                          EdgeInsets.symmetric(horizontal: 8),
+                                      child: ListTile(
+                                        title: Text(item),
+                                        subtitle: Text(filters
+                                                .storeList.isNotEmpty
+                                            ? '${filters.storeList.firstWhere((element) => element.name == item).distance!.toStringAsFixed(0)}km'
+                                            : ''),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                dropdownBuilder: (context, selectedItems) {
+                                  return Text(
+                                    filters.selectedStores.isNotEmpty
+                                        ? filters.selectedStores
+                                            .reduce((a, b) => a + ', ' + b)
+                                        : 'Alle butikker',
+                                    style: TextStyle(fontSize: 16),
+                                  );
+                                },
+                                dropdownDecoratorProps: DropDownDecoratorProps(
+                                  dropdownSearchDecoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    isDense: true,
+                                    contentPadding: EdgeInsets.symmetric(
+                                      vertical: 23,
+                                      horizontal: 10,
+                                    ),
+                                  ),
+                                ),
+                                items: filters.storeList
+                                    .map((e) => e.name)
+                                    .toList(),
+                                onChanged: (List<String> x) {
+                                  mystate(() {
+                                    filters.selectedStores = x;
+                                    filters.setStore();
+                                  });
+                                },
+                                selectedItems: filters.selectedStores,
+                              ),
                             )
                           : Center(child: CircularProgressIndicator());
                     },
@@ -207,24 +272,26 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                   const Text('Sortering',
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 8),
-                    child: DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+                    child: DropdownSearch<String>(
+                      popupProps: PopupProps.dialog(),
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 23,
+                            horizontal: 10,
+                          ),
+                        ),
                       ),
-                      hint: Text("Select Year"),
-                      value: filters.sortIndex,
-                      items: _sortList.map((value) {
-                        return DropdownMenuItem<String>(
-                          child: Center(child: Text(value!)),
-                          value: value,
-                        );
-                      }).toList(),
-                      onChanged: (String? value) {
+                      items: _sortList.map((value) => value!).toList(),
+                      selectedItem: filters.sortIndex,
+                      onChanged: (String? x) {
                         mystate(() {
-                          filters.sortIndex = value!;
-                          filters.setSortBy(value);
+                          filters.sortIndex = x!;
+                          filters.setSortBy(x);
                         });
                       },
                     ),
@@ -305,16 +372,49 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                       )
                     ],
                   ),
-                  DropDownMultiSelect(
-                    onChanged: (List<String> x) {
-                      mystate(() {
-                        filters.selectedCountries = x;
-                        filters.setCountry();
-                      });
-                    },
-                    options: filters.countryList.keys.toList(),
-                    selectedValues: filters.selectedCountries,
-                    whenEmpty: 'Alle land',
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                    child: DropdownSearch<String>.multiSelection(
+                      popupProps: PopupPropsMultiSelection.dialog(
+                        showSelectedItems: true,
+                        showSearchBox: true,
+                        searchFieldProps: TextFieldProps(
+                          decoration: InputDecoration(
+                            labelText: 'Søk',
+                            prefixIcon:
+                                Icon(Icons.search, color: Colors.grey[500]),
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                      dropdownBuilder: (context, selectedItems) {
+                        return Text(
+                          filters.selectedCountries.isNotEmpty
+                              ? filters.selectedCountries
+                                  .reduce((a, b) => a + ', ' + b)
+                              : 'Alle land',
+                          style: TextStyle(fontSize: 16),
+                        );
+                      },
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 23,
+                            horizontal: 10,
+                          ),
+                        ),
+                      ),
+                      items: filters.countryList.keys.toList(),
+                      onChanged: (List<String> x) {
+                        mystate(() {
+                          filters.selectedCountries = x;
+                          filters.setCountry();
+                        });
+                      },
+                      selectedItems: filters.selectedCountries,
+                    ),
                   ),
                   const SizedBox(
                     height: 10,
