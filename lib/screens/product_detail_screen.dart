@@ -1111,65 +1111,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     'Mangler beskrivelse',
                                   ),
                                 ),
-                              const SizedBox(
-                                height: 10,
-                              ),
                             ],
                           ),
                         ),
-                        if (auth.isAuth)
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 6, 8, 0),
-                            child: ElevatedButton.icon(
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                      Color(0xff01aed6))),
-                              onPressed: () {
-                                toggleWishlist(auth, product, cart);
-                              },
-                              label: Text(!wishlisted
-                                  ? 'Legg i Untappd ønskeliste'
-                                  : 'Fjern fra Untappd ønskeliste'),
-                              icon: Icon(!wishlisted
-                                  ? Icons.playlist_add
-                                  : Icons.playlist_remove),
-                            ),
-                          ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              wrongUntappdMatch(product);
-                            },
-                            label: Text(product.rating != null
-                                ? 'Rapporter feil Untappd match'
-                                : 'Foreslå untappd match'),
-                            icon: const Icon(Icons.report),
-                          ),
-                        ),
-                        if (product.untappdUrl != null)
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                AppLauncher.launchUntappd(product);
-                              },
-                              label: const Text('Åpne i Untappd'),
-                              icon: const Icon(Icons.open_in_browser),
-                            ),
-                          ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              product.vmpUrl != null
-                                  ? launch(product.vmpUrl!)
-                                  : null;
-                            },
-                            label: const Text('Åpne i Vinmonopolet'),
-                            icon: const Icon(Icons.open_in_browser),
-                          ),
-                        )
                       ],
                     ),
                   ),
