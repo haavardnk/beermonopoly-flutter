@@ -80,7 +80,7 @@ Future<String?> showPopupMenu(BuildContext context, Auth auth, bool wishlisted,
     AppLauncher.launchUntappd(product);
   }
   if (value == "vinmonopolet") {
-    launch(product.vmpUrl!);
+    launchUrl(Uri.parse(product.vmpUrl!));
   }
   return null;
 }

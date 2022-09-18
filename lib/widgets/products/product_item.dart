@@ -126,10 +126,10 @@ class _ProductItemState extends State<ProductItem> {
                                 children: [
                                   Hero(
                                     tag: 'list${widget.product.id}',
-                                    child: widget.product.imageUrl != null
+                                    child: widget.product.imageUrl != null &&
+                                            widget.product.imageUrl!.isNotEmpty
                                         ? ProgressiveImage(
-                                            image:
-                                                widget.product.imageUrl ?? '',
+                                            image: widget.product.imageUrl!,
                                             height: _boxImageSize,
                                             width: _boxImageSize,
                                             imageError:

@@ -143,7 +143,7 @@ class _AppDrawerState extends State<AppDrawer> {
             trailing: const Icon(Icons.email),
             title: const Text('Gi tilbakemelding'),
             onTap: () {
-              launch('mailto:post@olmonopolet.app');
+              launchUrl(Uri.parse('mailto:post@olmonopolet.app'));
             },
           ),
           const Divider(),

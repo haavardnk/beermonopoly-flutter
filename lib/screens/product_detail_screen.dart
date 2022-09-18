@@ -149,7 +149,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             } else if (value == 2) {
               AppLauncher.launchUntappd(product);
             } else if (value == 3) {
-              product.vmpUrl != null ? launch(product.vmpUrl!) : null;
+              product.vmpUrl != null
+                  ? launchUrl(Uri.parse(product.vmpUrl!))
+                  : null;
             }
           }),
         ],
@@ -665,13 +667,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         Text('${product.abv} %'),
                                       ],
                                     ),
-                                  if (product.volume != null)
-                                    Column(
-                                      children: [
-                                        const Text('Størrelse'),
-                                        Text('${product.volume} l'),
-                                      ],
-                                    ),
+                                  Column(
+                                    children: [
+                                      const Text('Størrelse'),
+                                      Text('${product.volume} l'),
+                                    ],
+                                  ),
                                   if (snapshot.hasData &&
                                       snapshot.data!['acid'] != null)
                                     FadeIn(
