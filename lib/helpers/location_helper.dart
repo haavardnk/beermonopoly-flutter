@@ -43,7 +43,8 @@ class LocationHelper {
       for (var store in list) {
         if (store.gpsLat != null && store.gpsLng != null) {
           store.distance = Geolocator.distanceBetween(deviceLocation.latitude,
-              deviceLocation.longitude, store.gpsLat!, store.gpsLng!);
+                  deviceLocation.longitude, store.gpsLat!, store.gpsLng!) /
+              1000.0;
         }
       }
     } catch (error) {
