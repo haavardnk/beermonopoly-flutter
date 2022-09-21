@@ -1145,7 +1145,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               'Lagt til i handlelisten!',
                               textAlign: TextAlign.center,
                             ),
-                            duration: const Duration(seconds: 2),
+                            duration: const Duration(seconds: 1),
                             action: SnackBarAction(
                               label: 'ANGRE',
                               onPressed: () {
@@ -1154,6 +1154,24 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ),
                           ),
                         );
+                      },
+                      onLongPress: () {
+                        if (cart.items.keys.contains(product.id)) {
+                          cart.removeSingleItem(product.id);
+                          cart.updateCartItemsData();
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                cart.items.keys.contains(product.id)
+                                    ? 'Fjernet en fra handlelisten!'
+                                    : 'Fjernet helt fra handlelisten!',
+                                textAlign: TextAlign.center,
+                              ),
+                              duration: const Duration(seconds: 1),
+                            ),
+                          );
+                        }
                       },
                       child: Consumer<Cart>(
                         builder: (_, cart, __) => Stack(
