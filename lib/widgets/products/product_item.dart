@@ -83,11 +83,9 @@ class _ProductItemState extends State<ProductItem> {
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
                       Navigator.of(context).pushNamed(
-                          ProductDetailScreen.routeName,
-                          arguments: <String, dynamic>{
-                            'product': widget.product,
-                            'herotag': 'list${widget.product.id}'
-                          });
+                        ProductDetailScreen.routeName,
+                        arguments: widget.product,
+                      );
                     },
                     onTapDown: getPosition,
                     onLongPress: () {
@@ -125,16 +123,15 @@ class _ProductItemState extends State<ProductItem> {
                               child: Stack(
                                 children: [
                                   Hero(
-                                    tag: 'list${widget.product.id}',
-                                    child: widget.product.imageUrl != null &&
-                                            widget.product.imageUrl!.isNotEmpty
+                                    tag: widget.product.id,
+                                    child: widget.product.imageUrl != null
                                         ? ProgressiveImage(
-                                            image: widget.product.imageUrl!,
+                                            image:
+                                                widget.product.imageUrl ?? '',
                                             height: _boxImageSize,
                                             width: _boxImageSize,
                                             imageError:
-                                                'assets/images/placeholder.png',
-                                          )
+                                                'assets/images/placeholder.png')
                                         : Image.asset(
                                             'assets/images/placeholder.png',
                                             height: _boxImageSize,

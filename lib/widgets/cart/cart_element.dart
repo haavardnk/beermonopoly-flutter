@@ -103,10 +103,7 @@ class _CartElementState extends State<CartElement> {
                 onTap: () {
                   Navigator.of(context).pushNamed(
                     ProductDetailScreen.routeName,
-                    arguments: <String, dynamic>{
-                      'product': widget.cartItem.product,
-                      'herotag': 'cart${widget.cartItem.product.id}'
-                    },
+                    arguments: widget.cartItem.product,
                   );
                 },
                 onTapDown: getPosition,
@@ -188,8 +185,7 @@ class _CartElementState extends State<CartElement> {
                                       child: Stack(
                                         children: [
                                           Hero(
-                                            tag:
-                                                'cart${widget.cartItem.product.id}',
+                                            tag: widget.cartItem.product.id,
                                             child: widget.cartItem.product
                                                         .imageUrl !=
                                                     null

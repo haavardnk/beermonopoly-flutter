@@ -4,17 +4,10 @@ import 'package:provider/provider.dart';
 import '../providers/cart.dart';
 import '../widgets/cart/cart_element.dart';
 
-class CartTab extends StatefulWidget {
+class CartTab extends StatelessWidget {
   const CartTab({Key? key}) : super(key: key);
 
   @override
-  State<CartTab> createState() => _CartTabState();
-}
-
-class _CartTabState extends State<CartTab> with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-
   Widget build(BuildContext context) {
     final MediaQueryData _mediaQueryData = MediaQuery.of(context);
     final cartData = Provider.of<Cart>(context);
@@ -22,7 +15,6 @@ class _CartTabState extends State<CartTab> with AutomaticKeepAliveClientMixin {
     final double _boxImageSize = _tabletMode
         ? 100 + _mediaQueryData.textScaleFactor * 10
         : _mediaQueryData.size.shortestSide / 4;
-    super.build(context);
     return Scaffold(
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
