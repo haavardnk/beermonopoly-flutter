@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shimmer_image/shimmer_image.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:flag/flag.dart';
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 
 import '../../models/product.dart';
 import '../../providers/cart.dart';
@@ -125,13 +125,16 @@ class _ProductItemState extends State<ProductItem> {
                                   Hero(
                                     tag: widget.product.id,
                                     child: widget.product.imageUrl != null
-                                        ? ProgressiveImage(
-                                            image:
-                                                widget.product.imageUrl ?? '',
+                                        ? FancyShimmerImage(
+                                            imageUrl: widget.product.imageUrl!,
                                             height: _boxImageSize,
                                             width: _boxImageSize,
-                                            imageError:
-                                                'assets/images/placeholder.png')
+                                            errorWidget: Image.asset(
+                                              'assets/images/placeholder.png',
+                                              height: _boxImageSize,
+                                              width: _boxImageSize,
+                                            ),
+                                          )
                                         : Image.asset(
                                             'assets/images/placeholder.png',
                                             height: _boxImageSize,

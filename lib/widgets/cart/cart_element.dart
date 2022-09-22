@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
-import 'package:shimmer_image/shimmer_image.dart';
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flag/flag.dart';
@@ -189,14 +189,18 @@ class _CartElementState extends State<CartElement> {
                                             child: widget.cartItem.product
                                                         .imageUrl !=
                                                     null
-                                                ? ProgressiveImage(
-                                                    image: widget.cartItem
-                                                            .product.imageUrl ??
-                                                        '',
+                                                ? FancyShimmerImage(
+                                                    imageUrl: widget.cartItem
+                                                        .product.imageUrl!,
                                                     height: widget.boxImageSize,
                                                     width: widget.boxImageSize,
-                                                    imageError:
-                                                        'assets/images/placeholder.png',
+                                                    errorWidget: Image.asset(
+                                                      'assets/images/placeholder.png',
+                                                      height:
+                                                          widget.boxImageSize,
+                                                      width:
+                                                          widget.boxImageSize,
+                                                    ),
                                                   )
                                                 : Image.asset(
                                                     'assets/images/placeholder.png',
