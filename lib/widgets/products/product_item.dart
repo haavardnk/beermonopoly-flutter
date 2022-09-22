@@ -83,9 +83,11 @@ class _ProductItemState extends State<ProductItem> {
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
                       Navigator.of(context).pushNamed(
-                        ProductDetailScreen.routeName,
-                        arguments: widget.product,
-                      );
+                          ProductDetailScreen.routeName,
+                          arguments: <String, dynamic>{
+                            'product': widget.product,
+                            'herotag': 'list${widget.product.id}'
+                          });
                     },
                     onTapDown: getPosition,
                     onLongPress: () {
@@ -123,8 +125,9 @@ class _ProductItemState extends State<ProductItem> {
                               child: Stack(
                                 children: [
                                   Hero(
-                                    tag: widget.product.id,
-                                    child: widget.product.imageUrl != null
+                                    tag: 'list${widget.product.id}',
+                                    child: widget.product.imageUrl != null &&
+                                            widget.product.imageUrl!.isNotEmpty
                                         ? FancyShimmerImage(
                                             imageUrl: widget.product.imageUrl!,
                                             height: _boxImageSize,

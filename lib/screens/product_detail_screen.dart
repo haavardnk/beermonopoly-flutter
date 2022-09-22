@@ -45,7 +45,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final product = ModalRoute.of(context)!.settings.arguments as Product;
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final product = args['product'] as Product;
+    final herotag = args['herotag'] as String;
     final auth = Provider.of<Auth>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
     final filters = Provider.of<Filter>(context, listen: false);
@@ -244,7 +247,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                           ).image,
                                   )
                                 : Hero(
-                                    tag: product.id,
+                                    tag: herotag,
                                     child: product.imageUrl != null
                                         ? Image.network(
                                             product.imageUrl!,
