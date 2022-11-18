@@ -164,7 +164,13 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                                       child: ListTile(
                                         title: Text(item),
                                         subtitle: Text(filters
-                                                .storeList.isNotEmpty
+                                                    .storeList.isNotEmpty &&
+                                                filters.storeList
+                                                        .firstWhere((element) =>
+                                                            element.name ==
+                                                            item)
+                                                        .distance !=
+                                                    null
                                             ? '${filters.storeList.firstWhere((element) => element.name == item).distance!.toStringAsFixed(0)}km'
                                             : ''),
                                       ),
