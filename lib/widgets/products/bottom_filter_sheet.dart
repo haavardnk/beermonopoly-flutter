@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 import '../../providers/filter.dart';
 import '../../providers/auth.dart';
+import '../../assets/constants.dart';
 
 class BottomFilterSheet extends StatefulWidget {
   const BottomFilterSheet({Key? key}) : super(key: key);
@@ -31,9 +33,9 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
     _pricePerVolumeRange = filters.pricePerVolumeRange;
     _alcoholRange = filters.alcoholRange;
     if (authData.isAuth) {
-      _sortList = filters.sortListAuth.keys.toList();
+      _sortList = sortListAuth.keys.toList();
     } else {
-      _sortList = filters.sortList.keys.toList();
+      _sortList = sortList.keys.toList();
     }
     super.initState();
   }
@@ -319,17 +321,16 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                         child: InkWell(
                           onTap: () {
                             mystate(() {
-                              if (!filters.styleSelectedList.contains(true)) {
-                                filters.styleSelectedList = List<bool>.filled(
-                                  filters.styleList.length,
-                                  true,
-                                );
+                              if (filters.styleChoice == 0) {
+                                filters.selectedStyles.isNotEmpty
+                                    ? filters.selectedStyles = []
+                                    : filters.selectedStyles =
+                                        beermonopolyStyleList.keys.toList();
                               } else {
-                                filters.styleSelectedList = List<bool>.filled(
-                                  filters.styleList.length,
-                                  false,
-                                );
+                                filters.selectedStyles = [];
                               }
+
+                              filters.setStyle();
                             });
                           },
                           child: const Text('Velg alle',
@@ -338,20 +339,112 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                       ),
                     ],
                   ),
-                  Wrap(
-                    spacing: 8,
-                    children: List.generate(
-                      filters.styleList.length,
-                      (index) {
-                        return _filter(
-                          filters.styleSelectedList,
-                          filters.styleList[index].keys.first,
-                          index,
-                          filters.setStyle,
-                          mystate,
-                        );
-                      },
-                    ),
+                  Consumer<Filter>(
+                    builder: (context, _, __) {
+                      List<String> styleList = (filters.styleChoice == 0)
+                          ? beermonopolyStyleList.keys.toList()
+                          : untappdStyleList;
+                      return filters.styleChoice == 0
+                          ? Wrap(
+                              spacing: 8,
+                              children: List.generate(
+                                (filters.styleChoice == 0)
+                                    ? beermonopolyStyleList.keys.toList().length
+                                    : untappdStyleList.length,
+                                (index) {
+                                  return FilterChip(
+                                    label: Text(styleList[index]),
+                                    labelStyle: TextStyle(
+                                        color: filters.selectedStyles
+                                                .contains(styleList[index])
+                                            ? Colors.white
+                                            : null),
+                                    shape: RoundedRectangleBorder(
+                                        side: BorderSide(
+                                            width: 1,
+                                            color: filters.selectedStyles
+                                                        .contains(
+                                                            styleList[index]) ==
+                                                    true
+                                                ? Colors.pink
+                                                : Theme.of(context).focusColor),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    selected: filters.selectedStyles
+                                        .contains(styleList[index]),
+                                    onSelected: (bool selected) {
+                                      mystate(() {
+                                        filters.selectedStyles
+                                                .contains(styleList[index])
+                                            ? filters.selectedStyles
+                                                .remove(styleList[index])
+                                            : filters.selectedStyles
+                                                .add(styleList[index]);
+                                        filters.setStyle();
+                                      });
+                                    },
+                                    elevation: 0,
+                                    pressElevation: 0,
+                                    backgroundColor:
+                                        Theme.of(context).backgroundColor,
+                                    selectedColor: Colors.pink,
+                                    checkmarkColor: Colors.white,
+                                  );
+                                },
+                              ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                              child: DropdownSearch<String>.multiSelection(
+                                popupProps: PopupPropsMultiSelection.dialog(
+                                  showSearchBox: true,
+                                  showSelectedItems: true,
+                                  searchFieldProps: TextFieldProps(
+                                    decoration: InputDecoration(
+                                      labelText: 'Søk',
+                                      prefixIcon: Icon(Icons.search,
+                                          color: Colors.grey[500]),
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                  itemBuilder: (context, item, isSelected) {
+                                    return Container(
+                                      margin:
+                                          EdgeInsets.symmetric(horizontal: 8),
+                                      child: ListTile(
+                                        title: Text(item),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                dropdownBuilder: (context, selectedItems) {
+                                  return Text(
+                                    filters.style.isNotEmpty
+                                        ? filters.selectedStyles.join(', ')
+                                        : 'Alle stiler',
+                                    style: TextStyle(fontSize: 16),
+                                  );
+                                },
+                                dropdownDecoratorProps: DropDownDecoratorProps(
+                                  dropdownSearchDecoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    isDense: true,
+                                    contentPadding: EdgeInsets.symmetric(
+                                      vertical: 23,
+                                      horizontal: 10,
+                                    ),
+                                  ),
+                                ),
+                                items: styleList,
+                                onChanged: (List<String> x) {
+                                  mystate(() {
+                                    filters.selectedStyles = x;
+                                    filters.setStyle();
+                                  });
+                                },
+                                selectedItems: filters.selectedStyles,
+                              ));
+                    },
                   ),
                   const SizedBox(
                     height: 10,
@@ -412,7 +505,7 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                           ),
                         ),
                       ),
-                      items: filters.countryList.keys.toList(),
+                      items: countryList.keys.toList(),
                       onChanged: (List<String> x) {
                         mystate(() {
                           filters.selectedCountries = x;
@@ -480,13 +573,13 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                                   .contains(true)) {
                                 filters.excludeAllergensSelectedList =
                                     List<bool>.filled(
-                                  filters.excludeAllergensList.length,
+                                  excludeAllergensList.length,
                                   true,
                                 );
                               } else {
                                 filters.excludeAllergensSelectedList =
                                     List<bool>.filled(
-                                  filters.excludeAllergensList.length,
+                                  excludeAllergensList.length,
                                   false,
                                 );
                               }
@@ -501,11 +594,11 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                   Wrap(
                     spacing: 8,
                     children: List.generate(
-                      filters.excludeAllergensList.length,
+                      excludeAllergensList.length,
                       (index) {
                         return _filter(
                           filters.excludeAllergensSelectedList,
-                          filters.excludeAllergensList[index].keys.first,
+                          excludeAllergensList[index].keys.first,
                           index,
                           filters.setExcludeAllergensSelection,
                           mystate,
@@ -534,13 +627,13 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                                   .contains(true)) {
                                 filters.productSelectionSelectedList =
                                     List<bool>.filled(
-                                  filters.productSelectionList.length,
+                                  productSelectionList.length,
                                   true,
                                 );
                               } else {
                                 filters.productSelectionSelectedList =
                                     List<bool>.filled(
-                                  filters.productSelectionList.length,
+                                  productSelectionList.length,
                                   false,
                                 );
                               }
@@ -555,11 +648,11 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                   Wrap(
                     spacing: 8,
                     children: List.generate(
-                      filters.productSelectionList.length,
+                      productSelectionList.length,
                       (index) {
                         return _filter(
                           filters.productSelectionSelectedList,
-                          filters.productSelectionList[index].keys.first,
+                          productSelectionList[index].keys.first,
                           index,
                           filters.setProductSelection,
                           mystate,
@@ -591,11 +684,11 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                   Wrap(
                     spacing: 8,
                     children: List.generate(
-                      filters.deliveryList.length,
+                      deliveryList.length,
                       (index) {
                         return _filter(
                           filters.deliverySelectedList,
-                          filters.deliveryList[index],
+                          deliveryList[index],
                           index,
                           filters.setDeliverySelection,
                           mystate,
@@ -646,10 +739,9 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                           fontSize: 16, fontWeight: FontWeight.bold)),
                   Wrap(
                     spacing: 8,
-                    children:
-                        List.generate(filters.checkinList.length, (index) {
+                    children: List.generate(checkinList.length, (index) {
                       return _radio(
-                        filters.checkinList[index],
+                        checkinList[index],
                         index,
                         filters.checkIn,
                         filters.setCheckin,
@@ -668,10 +760,9 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                           fontSize: 16, fontWeight: FontWeight.bold)),
                   Wrap(
                     spacing: 8,
-                    children:
-                        List.generate(filters.wishlistList.length, (index) {
+                    children: List.generate(wishlistList.length, (index) {
                       return _radio(
-                        filters.wishlistList[index],
+                        wishlistList[index],
                         index,
                         filters.wishlisted,
                         filters.setWishlisted,
@@ -762,58 +853,90 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           const Text(
-            'Husk filter',
-            style: TextStyle(fontSize: 18),
+            'Stil utvalg',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
-          Semantics(
-            label: 'Velg alle',
-            button: true,
-            child: InkWell(
-              onTap: () {
-                mystate(() {
-                  if (filters.filterSaveSettings[0]['save'] == true) {
-                    filters.filterSaveSettings.forEach((element) {
-                      element['save'] = false;
+          SizedBox(
+            height: 10,
+          ),
+          ToggleSwitch(
+            minHeight: 35,
+            customWidths: [130.0, 100.0],
+            initialLabelIndex: filters.styleChoice,
+            activeBgColor: [Colors.pink],
+            inactiveBgColor: Theme.of(context).backgroundColor,
+            totalSwitches: styleChoiceList.length,
+            labels: styleChoiceList,
+            onToggle: (index) {
+              filters.setStyleChoice(index!);
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Husk filter',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              Semantics(
+                label: 'Velg alle',
+                button: true,
+                child: InkWell(
+                  onTap: () {
+                    mystate(() {
+                      if (filters.filterSaveSettings[0]['save'] == true) {
+                        filters.filterSaveSettings.forEach((element) {
+                          element['save'] = false;
+                        });
+                      } else {
+                        filters.filterSaveSettings.forEach((element) {
+                          element['save'] = true;
+                        });
+                      }
+                      filters.saveFilterSettings();
                     });
-                  } else {
-                    filters.filterSaveSettings.forEach((element) {
-                      element['save'] = true;
-                    });
-                  }
-                  filters.saveFilterSettings();
-                });
+                  },
+                  child: const Text('Velg alle',
+                      style: TextStyle(fontSize: 15, color: Colors.pink)),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            height: 400,
+            width: 300,
+            child: ListView.builder(
+              itemCount: filters.filterSaveSettings.length,
+              itemBuilder: (context, index) {
+                return Consumer<Filter>(
+                  builder: (context, _, __) => CheckboxListTile(
+                    contentPadding: EdgeInsets.zero,
+                    activeColor: Colors.pink,
+                    value: filters.filterSaveSettings[index]['save'],
+                    title: Text(filters.filterSaveSettings[index]['text']),
+                    onChanged: (bool? newValue) {
+                      mystate(() {
+                        filters.filterSaveSettings[index]['save'] = newValue!;
+                        filters.saveFilterSettings();
+                      });
+                    },
+                  ),
+                );
               },
-              child: const Text('Velg alle',
-                  style: TextStyle(fontSize: 15, color: Colors.pink)),
             ),
           ),
         ],
-      ),
-      content: Container(
-        height: 400,
-        width: 300,
-        child: ListView.builder(
-          itemCount: filters.filterSaveSettings.length,
-          itemBuilder: (context, index) {
-            return Consumer<Filter>(
-              builder: (context, _, __) => CheckboxListTile(
-                activeColor: Colors.pink,
-                value: filters.filterSaveSettings[index]['save'],
-                title: Text(filters.filterSaveSettings[index]['text']),
-                onChanged: (bool? newValue) {
-                  mystate(() {
-                    filters.filterSaveSettings[index]['save'] = newValue!;
-                    filters.saveFilterSettings();
-                  });
-                },
-              ),
-            );
-          },
-        ),
       ),
       actions: [
         continueButton,

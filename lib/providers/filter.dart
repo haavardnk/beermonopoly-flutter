@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/store.dart';
 import '../helpers/api_helper.dart';
 import '../helpers/location_helper.dart';
+import '../assets/constants.dart';
 
 class Filter with ChangeNotifier {
   String search = '';
@@ -22,168 +23,24 @@ class Filter with ChangeNotifier {
   String release = '';
   int checkIn = 0;
   int wishlisted = 0;
-
-  List<String> selectedStores = [];
-  List<Store> storeList = [];
+  int styleChoice = 0;
 
   RangeValues priceRange = const RangeValues(0, 500);
   RangeValues pricePerVolumeRange = const RangeValues(0, 1000);
   RangeValues alcoholRange = const RangeValues(0, 15);
 
   String sortIndex = 'Global rating - Høy til lav';
-  Map<String, String> sortList = {
-    'Alkohol - Høy til lav': '-abv',
-    'Alkohol - Lav til høy': 'abv',
-    'Bryggeri - Stigende': 'brewery',
-    'Bryggeri - Synkende': '-brewery',
-    'Dato lagt til - Nyeste først': '-created_at',
-    'Dato lagt til - Eldste først': 'created_at',
-    'Global rating - Høy til lav': '-rating',
-    'Global rating - Lav til høy': 'rating',
-    'Navn - A til Å': 'vmp_name',
-    'Navn - Å til A': '-vmp_name',
-    'Pris - Høy til lav': '-price',
-    'Pris - Lav til høy': 'price',
-    'Pris per liter - Høy til lav': '-price_per_volume',
-    'Pris per liter - Lav til høy': 'price_per_volume',
-  };
-  Map<String, String> sortListAuth = {
-    'Alkohol - Høy til lav': '-abv',
-    'Alkohol - Lav til høy': 'abv',
-    'Bryggeri - Stigende': 'brewery',
-    'Bryggeri - Synkende': '-brewery',
-    'Dato lagt til - Nyeste først': '-created_at',
-    'Dato lagt til - Eldste først': 'created_at',
-    'Din rating - Høy til lav': '-checkin__rating',
-    'Din rating - Lav til høy': 'checkin__rating',
-    'Global rating - Høy til lav': '-rating',
-    'Global rating - Lav til høy': 'rating',
-    'Navn - A til Å': 'vmp_name',
-    'Navn - Å til A': '-vmp_name',
-    'Pris - Høy til lav': '-price',
-    'Pris - Lav til høy': 'price',
-    'Pris per liter - Høy til lav': '-price_per_volume',
-    'Pris per liter - Lav til høy': 'price_per_volume',
-  };
 
-  List<bool> styleSelectedList = List<bool>.filled(23, false);
-  List<Map<String, String>> styleList = [
-    {
-      'Annet': 'adambier,altbier,brett,burton,tan,chilli,cream ale,festbier,grape ale,'
-          'happoshu,historical,honey beer,kellerbier,koji,kvass,lichtenhainer,'
-          'malt beer,mild,pumpkin,rauchbier,roggenbier,root beer,rye beer,schwarzbier,'
-          'smoked beer,shandy,scotch ale,scottish,steinbier,spiced / herbed,strong ale,table beer,zoigl'
-    },
-    {'Barleywine': 'barleywine'},
-    {'Belgisk': 'belgian'},
-    {'Blonde': 'blonde'},
-    {'Bokk': 'bock'},
-    {'Brown Ale': 'brown'},
-    {'Dark Ale': 'dark ale'},
-    {'Farmhouse Ale': 'farmhouse ale'},
-    {'Glutenfri': 'gluten-free'},
-    {'Hvete': 'wheat beer'},
-    {'IPA': 'ipa'},
-    {'Juleøl': 'winter'},
-    {'Kölsch': 'kölsch'},
-    {'Lager': 'lager'},
-    {'Mjød': 'mead'},
-    {'Old Ale': 'old ale, traditional ale'},
-    {'Pale Ale': 'pale ale'},
-    {'Pilsner': 'pilsner'},
-    {'Porter': 'porter'},
-    {'Red Ale': 'red ale -'},
-    {'Sider': 'cider'},
-    {'Stout': 'stout'},
-    {'Surøl': 'sour,wild ale,lambic,fruit beer'},
-  ];
-
+  List<String> selectedStyles = [];
   List<String> selectedCountries = [];
-  Map<String, String> countryList = {
-    'Argentina': 'AR',
-    'Australia': 'AU',
-    'Belgia': 'BE',
-    'Canada': 'CA',
-    'Danmark': 'DK',
-    'Den europeiske union': 'EU',
-    'England': 'GB',
-    'Estland': 'EE',
-    'Frankrike': 'FR',
-    'Færøyene': 'FO',
-    'Georgia': 'GE',
-    'Hellas': 'GR',
-    'India': 'IN',
-    'Irland': 'IE',
-    'Island': 'IS',
-    'Italia': 'IT',
-    'Japan': 'JP',
-    'Kina': 'CN',
-    'Kroatia': 'HR',
-    'Latvia': 'LV',
-    'Libanon': 'LB',
-    'Litauen': 'LT',
-    'Mexico': 'MX',
-    'Nederland': 'NL',
-    'New Zealand': 'NZ',
-    'Norge': 'NO',
-    'Palestina': 'PS',
-    'Peru': 'PE',
-    'Polen': 'PL',
-    'Portugal': 'PT',
-    'Russland': 'RU',
-    'Serbia': 'RS',
-    'Singapore': 'SG',
-    'Skottland': 'GB',
-    'Spania': 'ES',
-    'Storbritannia': 'GB',
-    'Sveits': 'CH',
-    'Sverige': 'SE',
-    'Sør-Afrika': 'ZA',
-    'Thailand': 'TH',
-    'Tsjekkia': 'CZ',
-    'Tyrkia': 'TR',
-    'Tyskland': 'DE',
-    'USA': 'US',
-    'Ungarn': 'HU',
-    'Ukraina': 'UA',
-    'Wales': 'GB',
-    'Østerrike': 'AT',
-  };
-
-  List<bool> productSelectionSelectedList = List<bool>.filled(5, false);
-  List<Map<String, String>> productSelectionList = [
-    {'Basisutvalget': 'basisutvalget'},
-    {'Bestillingsutvalget': 'bestillingsutvalget'},
-    {'Partiutvalget': 'partiutvalget'},
-    {'Spesialutvalget': 'spesialutvalg'},
-    {'Tilleggsutvalget': 'tilleggsutvalget'},
-  ];
-
-  List<bool> excludeAllergensSelectedList = List<bool>.filled(4, false);
-  List<Map<String, String>> excludeAllergensList = [
-    {'Gluten': 'gluten, bygg, spelt, hvete, havre, rug'},
-    {'Laktose': 'laktose, melk'},
-    {'Nøtter': 'nøtter, peanøtt, hasselnøtt, valnøtt, nøtt'},
-    {'Sulfitt': 'sulfitt'},
-  ];
-
-  List<bool> deliverySelectedList = List<bool>.filled(2, false);
-  List<String> deliveryList = ['Levering til butikk', 'Levering på posten'];
-
-  List<bool> releaseSelectedList = [];
+  List<String> selectedStores = [];
+  List<Store> storeList = [];
   List<String> releaseList = [];
 
-  List<String> checkinList = [
-    'Alle',
-    'Innsjekket',
-    'Ikke innsjekket',
-  ];
-
-  List<String> wishlistList = [
-    'Alle',
-    'I ønskeliste',
-    'Ikke i ønskeliste',
-  ];
+  List<bool> productSelectionSelectedList = List<bool>.filled(5, false);
+  List<bool> excludeAllergensSelectedList = List<bool>.filled(4, false);
+  List<bool> deliverySelectedList = List<bool>.filled(2, false);
+  List<bool> releaseSelectedList = [];
 
   List<Map<String, dynamic>> filterSaveSettings = [
     {'name': 'store', 'text': 'Butikklager', 'save': true},
@@ -191,6 +48,7 @@ class Filter with ChangeNotifier {
     {'name': 'pricePerVolume', 'text': 'Pris per liter', 'save': false},
     {'name': 'sortBy', 'text': 'Sortering', 'save': false},
     {'name': 'style', 'text': 'Stil', 'save': false},
+    {'name': 'styleChoice', 'text': 'Stil utvalg', 'save': true},
     {'name': 'country', 'text': 'Land', 'save': false},
     {'name': 'alcohol', 'text': 'Alkohol', 'save': false},
     {'name': 'productSelection', 'text': 'Produktutvalg', 'save': false},
@@ -291,20 +149,23 @@ class Filter with ChangeNotifier {
     saveFilters();
   }
 
-  void setStyle(int index, bool boolean) {
-    styleSelectedList[index] = boolean;
-    var temporaryStyle = '';
-    styleSelectedList.asMap().forEach(
-      (index, value) {
-        if (value) {
-          if (temporaryStyle.isNotEmpty) {
-            temporaryStyle += ',';
-          }
-          temporaryStyle += styleList[index].values.first;
+  void setStyle() {
+    if (selectedStyles.isEmpty) {
+      style = '';
+    } else {
+      String temporaryStyles = '';
+      selectedStyles.forEach((styleName) {
+        if (temporaryStyles.isNotEmpty) {
+          temporaryStyles += ',';
         }
-      },
-    );
-    style = temporaryStyle;
+        if (styleChoice == 0) {
+          temporaryStyles += beermonopolyStyleList[styleName]!;
+        } else if (styleChoice == 1) {
+          temporaryStyles += styleName;
+        }
+      });
+      style = temporaryStyles;
+    }
     notifyListeners();
     saveFilters();
   }
@@ -380,6 +241,14 @@ class Filter with ChangeNotifier {
     saveFilters();
   }
 
+  void setStyleChoice(int index) {
+    styleChoice = index;
+    selectedStyles = [];
+    setStyle();
+    notifyListeners();
+    saveFilters();
+  }
+
   void setSearch(String text) {
     search = text;
     notifyListeners();
@@ -421,7 +290,7 @@ class Filter with ChangeNotifier {
   }
 
   void resetFilters() {
-    styleSelectedList = List<bool>.filled(23, false);
+    selectedStyles = [];
     productSelectionSelectedList = List<bool>.filled(5, false);
     excludeAllergensSelectedList = List<bool>.filled(4, false);
     deliverySelectedList = List<bool>.filled(2, false);
@@ -491,11 +360,10 @@ class Filter with ChangeNotifier {
       }
       if (filter['name'] == 'style' && filter['save'] == true) {
         prefs.setString('style', style);
-        prefs.setStringList(
-            'styleSelectedList',
-            styleSelectedList
-                .map((e) => e == true ? 'true' : 'false')
-                .toList());
+        prefs.setStringList('selectedStyles', selectedStyles);
+      }
+      if (filter['name'] == 'styleChoice' && filter['save'] == true) {
+        prefs.setInt('styleChoice', styleChoice);
       }
       if (filter['name'] == 'country' && filter['save'] == true) {
         prefs.setString('country', country);
@@ -570,10 +438,10 @@ class Filter with ChangeNotifier {
       }
       if (filter['name'] == 'style' && filter['save'] == true) {
         style = prefs.getString('style') ?? '';
-        var tempList = prefs.getStringList('styleSelectedList');
-        styleSelectedList = tempList != null
-            ? tempList.map((e) => e == "true").toList()
-            : List<bool>.filled(23, false);
+        selectedStyles = prefs.getStringList('selectedStyles') ?? [];
+      }
+      if (filter['name'] == 'styleChoice' && filter['save'] == true) {
+        styleChoice = prefs.getInt('styleChoice') ?? 0;
       }
       if (filter['name'] == 'country' && filter['save'] == true) {
         country = prefs.getString('country') ?? '';

@@ -12,6 +12,7 @@ import '../../providers/filter.dart';
 import '../../screens/product_detail_screen.dart';
 import '../rating_widget.dart';
 import '../item_popup_menu.dart';
+import '../../assets/constants.dart';
 
 class ProductItem extends StatefulWidget {
   const ProductItem({required this.product, Key? key}) : super(key: key);
@@ -36,7 +37,7 @@ class _ProductItemState extends State<ProductItem> {
     final MediaQueryData _mediaQueryData = MediaQuery.of(context);
     final _tabletMode = _mediaQueryData.size.shortestSide >= 600 ? true : false;
     final cart = Provider.of<Cart>(context, listen: false);
-    final countries = Provider.of<Filter>(context, listen: false).countryList;
+    final countries = countryList;
     final double _boxImageSize = _tabletMode
         ? 100 + _mediaQueryData.textScaleFactor * 10
         : _mediaQueryData.size.shortestSide / 4;

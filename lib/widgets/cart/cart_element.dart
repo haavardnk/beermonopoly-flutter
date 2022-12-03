@@ -13,6 +13,7 @@ import '../../screens/product_detail_screen.dart';
 import '../../helpers/api_helper.dart';
 import '../rating_widget.dart';
 import '../item_popup_menu.dart';
+import '../../assets/constants.dart';
 
 class CartElement extends StatefulWidget {
   final int index;
@@ -215,13 +216,10 @@ class _CartElementState extends State<CartElement> {
                                           if (widget.cartItem.product
                                                       .country !=
                                                   null &&
-                                              filters.countryList[widget
-                                                      .cartItem
-                                                      .product
-                                                      .country] !=
+                                              countryList[widget.cartItem
+                                                      .product.country] !=
                                                   null &&
-                                              filters
-                                                  .countryList[widget.cartItem
+                                              countryList[widget.cartItem
                                                       .product.country]!
                                                   .isNotEmpty)
                                             ClipRRect(
@@ -230,10 +228,8 @@ class _CartElementState extends State<CartElement> {
                                                       bottomRight:
                                                           Radius.circular(5)),
                                               child: Flag.fromString(
-                                                filters.countryList[widget
-                                                    .cartItem
-                                                    .product
-                                                    .country!]!,
+                                                countryList[widget.cartItem
+                                                    .product.country!]!,
                                                 height: 20,
                                                 width: 20 * 4 / 3,
                                               ),
