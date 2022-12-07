@@ -34,8 +34,8 @@ class AboutScreen extends StatelessWidget {
               height: 16,
             ),
             Text(
-              "Ølmonopolet er en app som kontinuerlig samler data fra Vinmonopolet og Untappd "
-              "for å tilby en tjeneste som skal hjelpe deg å finne det beste ølet på lager til en hver tid. ",
+              "Ølmonopolet er en app som kontinuerlig innhenter data fra Vinmonopolet og Untappd "
+              "for å gi deg den best mulige tjenesten for å finne det beste ølet som er på lager til enhver tid.",
             ),
             const SizedBox(
               height: 16,
@@ -54,10 +54,9 @@ class AboutScreen extends StatelessWidget {
               height: 10,
             ),
             Text(
-              "Data fra Vinmonopolet blir oppdatert en gang i døgnet. "
-              "Det inkluderer informasjon om øl, utvalg og lagerstatus. "
-              "Når på døgnet denne dataen blir oppdatert varierer og er spredt utover.",
-            ),
+                "Data fra Vinmonopolet blir oppdatert jevnlig, minst en gang per dag. "
+                "Denne informasjonen inkluderer detaljer om ølutvalg og lagerstatus. "
+                "Nøyaktig når dataen oppdateres kan variere fra dag til dag."),
             const SizedBox(
               height: 16,
             ),
@@ -75,22 +74,21 @@ class AboutScreen extends StatelessWidget {
               height: 10,
             ),
             Text(
-              "Data fra Untappd blir oppdatert kontinuerlig gjennom hele døgnet. "
-              "Dette gjøres fordi Untappd har en ganske lav API grense. "
-              "Øl blir derfor oppdatert rullerende etter hvilken som ble oppdatert sist, "
-              "med ekstra prioritet til nye øl og øl med få innsjekkinger. "
-              "Når du først logger inn med Untappd vil alle dine innsjekkinger bli hentet. "
+              "Untappd-data blir kontinuerlig oppdatert gjennom hele døgnet på grunn av deres lave API-grense. "
+              "Øl blir derfor oppdatert i henhold til når de ble oppdatert sist, "
+              "med ekstra prioritet for nye øl og øl med få innsjekkinger. "
+              "Når du logger inn med Untappd for første gang, vil alle dine innsjekkinger bli hentet. "
               "Dette kan ta noe tid og avhenger av hvor mange innsjekkinger du har. "
-              "Etter dette blir alle nye innsjekkinger hentet en gang i døgnet. "
-              "Ønskelisten og vennelisten din vil også bli hentet en gang i døgnet.",
+              "Etter dette vil alle nye innsjekkinger bli hentet inn en gang per dag. "
+              "Din ønskeliste og venneliste vil også bli hentet inn en gang per dag.",
             ),
             const SizedBox(
               height: 10,
             ),
             Text(
-                "Ølmonopolet's algoritme for å matche øl mellom Vinmonopolet og Untappd er bra, men ikke perfekt."
-                " Du kan derfor komme over øl hvor metadata er feil. Dette kan du rapportere med knappen"
-                " 'Rapporter feil Untappd match' innpå detaljsiden til hvert enkelt øl."),
+                "Ølmonopolet's algoritme for å matche øl mellom Vinmonopolet og Untappd er god, men ikke perfekt. "
+                "Derfor kan du støte på øl hvor metadataen er feil. Du kan rapportere dette ved å bruke knappen "
+                "'Rapporter feil Untappd match' på detaljsiden for hvert enkelt øl."),
             const SizedBox(
               height: 16,
             ),
@@ -108,9 +106,9 @@ class AboutScreen extends StatelessWidget {
               height: 10,
             ),
             Text(
-              "Denne applikasjonen er 100% avhengig av ekstern data. "
-              "Dersom data tilgjengeligheten av en eller annen grunn skulle "
-              "forsvinne fra en av de eksterne datakildene vil denne applikasjonen derfor slutte å fungere.",
+              "Denne applikasjonen er fullstendig avhengig av ekstern data. "
+              "Hvis data fra en av de eksterne datakildene skulle bli utilgjengelig av en eller annen grunn, "
+              "vil applikasjonen slutte å fungere.",
             ),
           ],
         ),
