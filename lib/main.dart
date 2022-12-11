@@ -148,6 +148,7 @@ class _MyAppState extends State<MyApp> {
           Provider.of<Filter>(ctx, listen: false).loadFilters();
           if (auth.isAuth) {
             sendFcmToken(auth.apiToken);
+            auth.getCheckedInStyles();
           }
           return MaterialApp(
             localizationsDelegates: [

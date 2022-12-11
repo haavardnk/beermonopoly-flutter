@@ -152,6 +152,9 @@ class Filter with ChangeNotifier {
   void setStyle() {
     if (selectedStyles.isEmpty) {
       style = '';
+    } else if (styleChoice == 1 &&
+        selectedStyles.length == untappdStyleList.length) {
+      style = '';
     } else {
       String temporaryStyles = '';
       selectedStyles.forEach((styleName) {

@@ -27,6 +27,9 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
   // sort
   late List<String?> _sortList;
 
+  // style
+  final _multiKey = GlobalKey<DropdownSearchState<String>>();
+
   @override
   void initState() {
     _priceRange = filters.priceRange;
@@ -294,6 +297,12 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                           ),
                         ),
                       ),
+                      dropdownBuilder: (context, selectedItem) {
+                        return Text(
+                          selectedItem!,
+                          style: TextStyle(fontSize: 16),
+                        );
+                      },
                       items: _sortList.map((value) => value!).toList(),
                       selectedItem: filters.sortIndex,
                       onChanged: (String? x) {
@@ -315,27 +324,51 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
-                      Semantics(
-                        label: 'Velg alle stiler',
-                        button: true,
-                        child: InkWell(
-                          onTap: () {
-                            mystate(() {
-                              if (filters.styleChoice == 0) {
-                                filters.selectedStyles.isNotEmpty
-                                    ? filters.selectedStyles = []
-                                    : filters.selectedStyles =
-                                        beermonopolyStyleList.keys.toList();
-                              } else {
-                                filters.selectedStyles = [];
-                              }
+                      Row(
+                        children: [
+                          Semantics(
+                            label: filters.styleChoice == 0
+                                ? 'Bytt til avansert stilvalg'
+                                : 'Bytt til standard stilvalg',
+                            button: true,
+                            child: InkWell(
+                              onTap: () {
+                                mystate(() {
+                                  filters.setStyleChoice(
+                                      filters.styleChoice == 0 ? 1 : 0);
+                                });
+                              },
+                              child: Text(
+                                  filters.styleChoice == 0
+                                      ? 'Bytt til Untappd stiler'
+                                      : 'Bytt til standard stiler',
+                                  style: TextStyle(color: Colors.pink)),
+                            ),
+                          ),
+                          SizedBox(width: 15),
+                          Semantics(
+                            label: 'Velg alle stiler',
+                            button: true,
+                            child: InkWell(
+                              onTap: () {
+                                mystate(() {
+                                  if (filters.styleChoice == 0) {
+                                    filters.selectedStyles.isNotEmpty
+                                        ? filters.selectedStyles = []
+                                        : filters.selectedStyles =
+                                            beermonopolyStyleList.keys.toList();
+                                  } else {
+                                    filters.selectedStyles = [];
+                                  }
 
-                              filters.setStyle();
-                            });
-                          },
-                          child: const Text('Velg alle',
-                              style: TextStyle(color: Colors.pink)),
-                        ),
+                                  filters.setStyle();
+                                });
+                              },
+                              child: const Text('Velg alle',
+                                  style: TextStyle(color: Colors.pink)),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -344,106 +377,217 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                       List<String> styleList = (filters.styleChoice == 0)
                           ? beermonopolyStyleList.keys.toList()
                           : untappdStyleList;
-                      return filters.styleChoice == 0
-                          ? Wrap(
-                              spacing: 8,
-                              children: List.generate(
-                                (filters.styleChoice == 0)
-                                    ? beermonopolyStyleList.keys.toList().length
-                                    : untappdStyleList.length,
-                                (index) {
-                                  return FilterChip(
-                                    label: Text(styleList[index]),
-                                    labelStyle: TextStyle(
-                                        color: filters.selectedStyles
-                                                .contains(styleList[index])
-                                            ? Colors.white
-                                            : null),
-                                    shape: RoundedRectangleBorder(
-                                        side: BorderSide(
-                                            width: 1,
-                                            color: filters.selectedStyles
-                                                        .contains(
-                                                            styleList[index]) ==
-                                                    true
-                                                ? Colors.pink
-                                                : Theme.of(context).focusColor),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    selected: filters.selectedStyles
-                                        .contains(styleList[index]),
-                                    onSelected: (bool selected) {
-                                      mystate(() {
-                                        filters.selectedStyles
-                                                .contains(styleList[index])
-                                            ? filters.selectedStyles
-                                                .remove(styleList[index])
-                                            : filters.selectedStyles
-                                                .add(styleList[index]);
-                                        filters.setStyle();
-                                      });
-                                    },
-                                    elevation: 0,
-                                    pressElevation: 0,
-                                    backgroundColor:
-                                        Theme.of(context).backgroundColor,
-                                    selectedColor: Colors.pink,
-                                    checkmarkColor: Colors.white,
-                                  );
-                                },
-                              ),
-                            )
-                          : Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                              child: DropdownSearch<String>.multiSelection(
-                                popupProps: PopupPropsMultiSelection.dialog(
-                                  showSearchBox: true,
-                                  showSelectedItems: true,
-                                  searchFieldProps: TextFieldProps(
-                                    decoration: InputDecoration(
-                                      labelText: 'Søk',
-                                      prefixIcon: Icon(Icons.search,
-                                          color: Colors.grey[500]),
-                                      border: OutlineInputBorder(),
-                                    ),
-                                  ),
-                                  itemBuilder: (context, item, isSelected) {
-                                    return Container(
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 8),
-                                      child: ListTile(
-                                        title: Text(item),
-                                      ),
+                      return AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        child: filters.styleChoice == 0
+                            ? Wrap(
+                                key: ValueKey(filters.styleChoice),
+                                spacing: 8,
+                                children: List.generate(
+                                  (filters.styleChoice == 0)
+                                      ? beermonopolyStyleList.keys
+                                          .toList()
+                                          .length
+                                      : untappdStyleList.length,
+                                  (index) {
+                                    return FilterChip(
+                                      label: Text(styleList[index]),
+                                      labelStyle: TextStyle(
+                                          color: filters.selectedStyles
+                                                  .contains(styleList[index])
+                                              ? Colors.white
+                                              : null),
+                                      shape: RoundedRectangleBorder(
+                                          side: BorderSide(
+                                              width: 1,
+                                              color: filters.selectedStyles
+                                                          .contains(styleList[
+                                                              index]) ==
+                                                      true
+                                                  ? Colors.pink
+                                                  : Theme.of(context)
+                                                      .focusColor),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      selected: filters.selectedStyles
+                                          .contains(styleList[index]),
+                                      onSelected: (bool selected) {
+                                        mystate(() {
+                                          filters.selectedStyles
+                                                  .contains(styleList[index])
+                                              ? filters.selectedStyles
+                                                  .remove(styleList[index])
+                                              : filters.selectedStyles
+                                                  .add(styleList[index]);
+                                          filters.setStyle();
+                                        });
+                                      },
+                                      elevation: 0,
+                                      pressElevation: 0,
+                                      backgroundColor:
+                                          Theme.of(context).backgroundColor,
+                                      selectedColor: Colors.pink,
+                                      checkmarkColor: Colors.white,
                                     );
                                   },
                                 ),
-                                dropdownBuilder: (context, selectedItems) {
-                                  return Text(
-                                    filters.style.isNotEmpty
-                                        ? filters.selectedStyles.join(', ')
-                                        : 'Alle stiler',
-                                    style: TextStyle(fontSize: 16),
-                                  );
-                                },
-                                dropdownDecoratorProps: DropDownDecoratorProps(
-                                  dropdownSearchDecoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    isDense: true,
-                                    contentPadding: EdgeInsets.symmetric(
-                                      vertical: 23,
-                                      horizontal: 10,
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                                child: DropdownSearch<String>.multiSelection(
+                                  key: _multiKey,
+                                  popupProps: PopupPropsMultiSelection.dialog(
+                                    showSearchBox: true,
+                                    showSelectedItems: true,
+                                    searchFieldProps: TextFieldProps(
+                                      decoration: InputDecoration(
+                                        labelText: 'Søk',
+                                        prefixIcon: Icon(Icons.search,
+                                            color: Colors.grey[500]),
+                                        border: OutlineInputBorder(),
+                                      ),
+                                    ),
+                                    itemBuilder: (context, item, isSelected) {
+                                      return Container(
+                                        margin:
+                                            EdgeInsets.symmetric(horizontal: 8),
+                                        child: ListTile(
+                                          title: Text(item),
+                                        ),
+                                      );
+                                    },
+                                    containerBuilder: (context, popupWidget) {
+                                      return Column(
+                                        children: [
+                                          Wrap(
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(top: 8),
+                                                child: ElevatedButton(
+                                                  onPressed: () {
+                                                    _multiKey.currentState!
+                                                            .popupIsAllItemSelected
+                                                        ? _multiKey.currentState
+                                                            ?.popupDeselectAllItems()
+                                                        : _multiKey.currentState
+                                                            ?.popupSelectAllItems();
+                                                  },
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    minimumSize: Size(50, 30),
+                                                    textStyle:
+                                                        TextStyle(fontSize: 13),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 10),
+                                                  ),
+                                                  child: const Text('Alle'),
+                                                ),
+                                              ),
+                                              if (authData.isAuth)
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 8,
+                                                      top: 8,
+                                                      right: 8),
+                                                  child: ElevatedButton(
+                                                      onPressed: () {
+                                                        _multiKey.currentState
+                                                            ?.popupDeselectItems(
+                                                                styleList);
+                                                        _multiKey.currentState
+                                                            ?.popupSelectItems(styleList
+                                                                .where((item) =>
+                                                                    authData
+                                                                        .checkedInStyles
+                                                                        .contains(
+                                                                            item))
+                                                                .toList());
+                                                      },
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        minimumSize:
+                                                            Size(50, 30),
+                                                        textStyle: TextStyle(
+                                                            fontSize: 13),
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal: 10),
+                                                      ),
+                                                      child: const Text(
+                                                          'Innsjekket')),
+                                                ),
+                                              if (authData.isAuth)
+                                                Padding(
+                                                  padding:
+                                                      EdgeInsets.only(top: 8),
+                                                  child: ElevatedButton(
+                                                    onPressed: () {
+                                                      _multiKey.currentState
+                                                          ?.popupDeselectItems(
+                                                              styleList);
+                                                      _multiKey.currentState
+                                                          ?.popupSelectItems(styleList
+                                                              .where((item) =>
+                                                                  !authData
+                                                                      .checkedInStyles
+                                                                      .contains(
+                                                                          item))
+                                                              .toList());
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      minimumSize: Size(50, 30),
+                                                      textStyle: TextStyle(
+                                                          fontSize: 13),
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 10),
+                                                    ),
+                                                    child: const Text(
+                                                        'Ikke Innsjekket'),
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
+                                          Expanded(child: popupWidget),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                  dropdownBuilder: (context, selectedItems) {
+                                    return Text(
+                                      filters.style.isNotEmpty
+                                          ? filters.selectedStyles.join(', ')
+                                          : 'Alle stiler',
+                                      style: TextStyle(fontSize: 16),
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                    );
+                                  },
+                                  dropdownDecoratorProps:
+                                      DropDownDecoratorProps(
+                                    dropdownSearchDecoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      isDense: true,
+                                      contentPadding: EdgeInsets.symmetric(
+                                        vertical: 23,
+                                        horizontal: 10,
+                                      ),
                                     ),
                                   ),
+                                  items: styleList,
+                                  onChanged: (List<String> x) {
+                                    mystate(() {
+                                      filters.selectedStyles = x;
+                                      filters.setStyle();
+                                    });
+                                  },
+                                  selectedItems: filters.selectedStyles,
                                 ),
-                                items: styleList,
-                                onChanged: (List<String> x) {
-                                  mystate(() {
-                                    filters.selectedStyles = x;
-                                    filters.setStyle();
-                                  });
-                                },
-                                selectedItems: filters.selectedStyles,
-                              ));
+                              ),
+                      );
                     },
                   ),
                   const SizedBox(

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:beermonopoly/helpers/api_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +13,7 @@ class Auth with ChangeNotifier {
   String _untappdToken = '';
   String userName = '';
   String userAvatarUrl = '';
+  List<String> checkedInStyles = [];
   bool _skipLogin = false;
 
   bool get isAuth {
@@ -114,5 +116,11 @@ class Auth with ChangeNotifier {
     prefs.remove("untappdToken");
     prefs.remove("userName");
     prefs.remove("userAvatarUrl");
+  }
+
+  Future<void> getCheckedInStyles() async {
+    if (_apiToken.isNotEmpty) {
+      checkedInStyles = await ApiHelper.getCheckedInStyles(apiToken);
+    }
   }
 }

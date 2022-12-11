@@ -171,6 +171,28 @@ class ApiHelper {
     }
   }
 
+  static Future<List<String>> getCheckedInStyles(String apiToken) async {
+    final Map<String, String> headers = {
+      'Authorization': 'Token $apiToken',
+    };
+    try {
+      final response = await http.post(
+        Uri.parse('${_baseUrl}auth/checked_in_styles'),
+        headers: headers,
+      );
+      if (response.statusCode == 200) {
+        List<String> styles = [
+          ...json.decode(utf8.decode(response.bodyBytes))['checked_in_styles']
+        ];
+        return styles;
+      } else {
+        throw GenericHttpException();
+      }
+    } on SocketException {
+      throw NoConnectionException();
+    }
+  }
+
   static Future<List<String>> getReleaseList() async {
     const fields = "name";
     try {
