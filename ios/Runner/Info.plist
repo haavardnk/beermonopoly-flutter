@@ -36,6 +36,8 @@
 		<string>Ølmonopolet trenger tilgang til din lokasjon for å beregne avstand til de ulike Vinmonopolene.</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
 		<string>Ølmonopolet trenger tilgang til din lokasjon for å beregne avstand til de ulike Vinmonopolene.</string>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>Ølmonopolet trenger tilgang til din lokasjon for å beregne avstand til de ulike Vinmonopolene.</string>
 		<key>UIBackgroundModes</key>
 		<array>
 			<string>fetch</string>
