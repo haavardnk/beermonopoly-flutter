@@ -629,7 +629,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                           "Bitterhet",
                                         ),
                                       ),
-                                    if (snapshot.data!['sweetness'] != null)
+                                    if (snapshot.data!['sweetness'] != null &&
+                                        snapshot.data!['sweetness'] != 0)
                                       CircularPercentIndicator(
                                         radius: 50.0,
                                         lineWidth: 5.0,
