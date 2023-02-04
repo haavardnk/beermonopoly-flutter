@@ -18,8 +18,7 @@ class ProductListView extends StatefulWidget {
   _ProductListViewState createState() => _ProductListViewState();
 }
 
-class _ProductListViewState extends State<ProductListView>
-    with WidgetsBindingObserver {
+class _ProductListViewState extends State<ProductListView> {
   late int _pageSize;
   final PagingController<int, Product> _pagingController =
       PagingController(firstPageKey: 1, invisibleItemsThreshold: 5);
@@ -37,19 +36,6 @@ class _ProductListViewState extends State<ProductListView>
       }
     } catch (error) {
       _pagingController.error = error;
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.inactive) {
-      _pagingController.refresh();
     }
   }
 
@@ -137,7 +123,6 @@ class _ProductListViewState extends State<ProductListView>
   @override
   void dispose() {
     _pagingController.dispose();
-    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 }

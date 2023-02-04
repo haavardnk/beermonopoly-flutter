@@ -20,14 +20,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late PageController _pageController;
   int _currentIndex = 0;
-
-  // Pages if you click bottom navigation
-  final List<Widget> _contentPages = <Widget>[
-    const ProductOverviewTab(),
-    const CartTab(),
-  ];
 
   Future<void> initCartSettings() async {
     final cart = Provider.of<Cart>(context, listen: false);
@@ -39,25 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
     if (cart.cartStoreId.isNotEmpty && (cart.greyNoStock || cart.hideNoStock)) {
       cart.checkCartStockStatus();
     }
-  }
-
-  @override
-  void initState() {
-    // set initial pages for navigation to home page
-    _pageController = PageController(initialPage: 0);
-    _pageController.addListener(_handleTabSelection);
-    initCartSettings();
-    super.initState();
-  }
-
-  void _handleTabSelection() {
-    setState(() {});
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
   }
 
   @override
@@ -107,20 +81,20 @@ class _HomeScreenState extends State<HomeScreen> {
             : null,
       ),
       drawer: const AppDrawer(),
-      body: PageView(
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        children: _contentPages.map((Widget content) {
-          return content;
-        }).toList(),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: const [
+          ProductOverviewTab(),
+          CartTab(),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
         onTap: (value) {
-          _currentIndex = value;
-          _pageController.jumpToPage(value);
-          FocusScope.of(context).unfocus();
+          setState(() {
+            _currentIndex = value;
+          });
         },
         items: [
           const BottomNavigationBarItem(
