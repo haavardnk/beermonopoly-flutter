@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import '../providers/auth.dart';
 import '../providers/filter.dart';
@@ -96,10 +97,15 @@ class _AppDrawerState extends State<AppDrawer> {
           if (authData.isAuth)
             Column(
               children: [
-                CircleAvatar(
-                  radius: 65,
-                  backgroundImage: NetworkImage(authData.userAvatarUrl),
-                  backgroundColor: Colors.transparent,
+                CachedNetworkImage(
+                  imageUrl: authData.userAvatarUrl,
+                  imageBuilder: (context, imageProvider) => CircleAvatar(
+                    backgroundImage: imageProvider,
+                    backgroundColor: Colors.transparent,
+                    radius: 65,
+                  ),
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
                 const SizedBox(
                   height: 10,
