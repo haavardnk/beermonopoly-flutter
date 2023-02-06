@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
 
 import 'product_overview_tab.dart';
+import 'release_tab.dart';
+import 'store_stock_change_tab.dart';
 import 'cart_tab.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/products/bottom_filter_sheet.dart';
@@ -32,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!filters.releasesLoading && filters.releaseList.isEmpty) {
       filters.getReleases();
     }
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -48,7 +51,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         : filter.selectedStores.length == 1
                             ? filter.selectedStores[0]
                             : 'Valgte butikker: ${filter.selectedStores.length}'
-                    : 'Handleliste',
+                    : _currentIndex == 1
+                        ? 'Slipp'
+                        : _currentIndex == 2
+                            ? 'Velg Butikk'
+                            : 'Handleliste',
                 style: TextStyle(
                     color: Theme.of(context).textTheme.headline6!.color),
               ),
@@ -59,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           if (_currentIndex == 0) const BottomFilterSheet(),
-          if (_currentIndex == 1) const BottomStoreSheet(),
+          if (_currentIndex == 3) const BottomStoreSheet(),
         ],
         bottom: _currentIndex == 0
             ? const PreferredSize(
@@ -73,6 +80,8 @@ class _HomeScreenState extends State<HomeScreen> {
         index: _currentIndex,
         children: const [
           ProductOverviewTab(),
+          ReleaseTab(),
+          StoreStockChangeTab(),
           CartTab(),
         ],
       ),
@@ -88,6 +97,14 @@ class _HomeScreenState extends State<HomeScreen> {
           const BottomNavigationBarItem(
             icon: Icon(Icons.liquor),
             label: 'Produkter',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.new_releases_outlined),
+            label: 'Slipp',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.swap_vert),
+            label: 'Lager inn/ut',
           ),
           BottomNavigationBarItem(
             icon: Consumer<Cart>(
