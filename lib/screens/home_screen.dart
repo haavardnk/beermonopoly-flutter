@@ -22,18 +22,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-  Future<void> initCartSettings() async {
-    final cart = Provider.of<Cart>(context, listen: false);
-    final filters = Provider.of<Filter>(context, listen: false);
-    if (cart.useOverviewStoreSelection == true) {
-      cart.cartStoreId = filters.storeId;
-      cart.cartSelectedStores = filters.selectedStores.toList();
-    }
-    if (cart.cartStoreId.isNotEmpty && (cart.greyNoStock || cart.hideNoStock)) {
-      cart.checkCartStockStatus();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     Provider.of<Cart>(context, listen: false).fetchAndSetCart();
@@ -71,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           if (_currentIndex == 0) const BottomFilterSheet(),
-          if (_currentIndex == 1) BottomStoreSheet(initCartSettings),
+          if (_currentIndex == 1) const BottomStoreSheet(),
         ],
         bottom: _currentIndex == 0
             ? const PreferredSize(

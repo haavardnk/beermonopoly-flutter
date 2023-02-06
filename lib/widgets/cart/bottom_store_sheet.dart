@@ -7,14 +7,25 @@ import '../../providers/cart.dart';
 import '../../providers/filter.dart';
 
 class BottomStoreSheet extends StatefulWidget {
-  final Function initCartSettings;
-  BottomStoreSheet(this.initCartSettings, {Key? key}) : super(key: key);
+  const BottomStoreSheet({Key? key}) : super(key: key);
 
   @override
   _BottomStoreSheetState createState() => _BottomStoreSheetState();
 }
 
 class _BottomStoreSheetState extends State<BottomStoreSheet> {
+  Future<void> initCartSettings() async {
+    final cart = Provider.of<Cart>(context, listen: false);
+    final filters = Provider.of<Filter>(context, listen: false);
+    if (cart.useOverviewStoreSelection == true) {
+      cart.cartStoreId = filters.storeId;
+      cart.cartSelectedStores = filters.selectedStores.toList();
+    }
+    if (cart.cartStoreId.isNotEmpty && (cart.greyNoStock || cart.hideNoStock)) {
+      cart.checkCartStockStatus();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextButton.icon(
@@ -72,7 +83,7 @@ class _BottomStoreSheetState extends State<BottomStoreSheet> {
                         mystate(() {
                           cart.greyNoStock = value;
                           cart.saveCartSettings();
-                          widget.initCartSettings();
+                          initCartSettings();
                         });
                       },
                     ),
@@ -86,7 +97,7 @@ class _BottomStoreSheetState extends State<BottomStoreSheet> {
                         mystate(() {
                           cart.hideNoStock = value;
                           cart.saveCartSettings();
-                          widget.initCartSettings();
+                          initCartSettings();
                         });
                       },
                     ),
@@ -99,7 +110,7 @@ class _BottomStoreSheetState extends State<BottomStoreSheet> {
                         mystate(() {
                           cart.useOverviewStoreSelection = value;
                           cart.saveCartSettings();
-                          widget.initCartSettings();
+                          initCartSettings();
                         });
                       },
                     ),
@@ -186,7 +197,7 @@ class _BottomStoreSheetState extends State<BottomStoreSheet> {
                                               cart.cartSelectedStores = x;
                                               cart.setCartStore(
                                                   filters.storeList);
-                                              widget.initCartSettings();
+                                              initCartSettings();
                                             });
                                           },
                                           selectedItems:
