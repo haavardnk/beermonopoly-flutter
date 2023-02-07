@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/store.dart';
+import '../models/release.dart';
 import '../helpers/api_helper.dart';
 import '../helpers/location_helper.dart';
 import '../assets/constants.dart';
@@ -35,7 +36,7 @@ class Filter with ChangeNotifier {
   List<String> selectedCountries = [];
   List<String> selectedStores = [];
   List<Store> storeList = [];
-  List<String> releaseList = [];
+  List<Release> releaseList = [];
 
   List<bool> productSelectionSelectedList = List<bool>.filled(5, false);
   List<bool> excludeAllergensSelectedList = List<bool>.filled(4, false);
@@ -84,7 +85,7 @@ class Filter with ChangeNotifier {
   }
 
   bool releasesLoading = false;
-  Future<List<String>> getReleases() async {
+  Future<List<Release>> getReleases() async {
     if (releaseList.isNotEmpty && releaseList.length > 1 && !releasesLoading) {
       return releaseList;
     }
@@ -224,7 +225,7 @@ class Filter with ChangeNotifier {
           if (temporaryRelease.isNotEmpty) {
             temporaryRelease += ',';
           }
-          temporaryRelease += releaseList[index];
+          temporaryRelease += releaseList[index].name;
         }
       },
     );

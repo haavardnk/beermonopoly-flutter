@@ -856,7 +856,7 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                                 (index) {
                                   return _filter(
                                     filters.releaseSelectedList,
-                                    filters.releaseList[index],
+                                    filters.releaseList[index].name,
                                     index,
                                     filters.setRelease,
                                     mystate,

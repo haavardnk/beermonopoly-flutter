@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 import '../models/product.dart';
 import '../models/store.dart';
+import '../models/release.dart';
 import '../providers/filter.dart';
 import '../providers/auth.dart';
 
@@ -193,21 +194,21 @@ class ApiHelper {
     }
   }
 
-  static Future<List<String>> getReleaseList() async {
-    const fields = "name";
-    try {
-      final response = await http.get(_apiReleaseUrlBuilder(fields));
-      if (response.statusCode == 200) {
-        List<String> releases = [];
-        final jsonResponse =
-            json.decode(utf8.decode(response.bodyBytes))['results'];
-        jsonResponse.forEach((release) => releases.add(release['name']));
-        return releases;
-      } else {
-        throw GenericHttpException();
-      }
-    } on SocketException {
-      throw NoConnectionException();
+  static Future<List<Release>> getReleaseList() async {
+    const fields = "name,release_date,beer_count,product_selection";
+
+    final response = await http.get(_apiReleaseUrlBuilder(fields));
+    if (response.statusCode == 200) {
+      final jsonResponse =
+          json.decode(utf8.decode(response.bodyBytes))['results'];
+      List<Release> releases = List<Release>.from(
+        jsonResponse.map(
+          (release) => Release.fromJson(release),
+        ),
+      );
+      return releases;
+    } else {
+      throw GenericHttpException();
     }
   }
 
