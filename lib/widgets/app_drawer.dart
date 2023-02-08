@@ -1,9 +1,11 @@
 import 'package:beermonopoly/helpers/api_helper.dart';
+import 'package:beermonopoly/screens/about_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../providers/auth.dart';
 import '../providers/filter.dart';
@@ -38,7 +40,7 @@ class _AppDrawerState extends State<AppDrawer> {
 
     Widget confirmLogoutButton = TextButton(
       onPressed: () {
-        Navigator.of(context).pop();
+        Navigator.of(context, rootNavigator: true).pop();
         Navigator.of(context).pushReplacementNamed('/');
         authData.logout();
         Provider.of<Filter>(context, listen: false).resetFilters();
@@ -53,7 +55,7 @@ class _AppDrawerState extends State<AppDrawer> {
 
     Widget confirmDeleteUserButton = ElevatedButton(
       onPressed: () async {
-        Navigator.of(context).pop();
+        Navigator.of(context, rootNavigator: true).pop();
         try {
           await ApiHelper.deleteUserAccount(authData);
           authData.logout();
@@ -72,7 +74,7 @@ class _AppDrawerState extends State<AppDrawer> {
 
     Widget deleteUserButton = TextButton(
       onPressed: () {
-        Navigator.of(context).pop();
+        Navigator.of(context, rootNavigator: true).pop();
         popupDialog(
           context,
           [confirmDeleteUserButton],
@@ -157,8 +159,12 @@ class _AppDrawerState extends State<AppDrawer> {
             trailing: const Icon(Icons.info),
             title: const Text('Om'),
             onTap: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pushNamed('/about');
+              PersistentNavBarNavigator.pushNewScreenWithRouteSettings(
+                context,
+                settings: RouteSettings(name: AboutScreen.routeName),
+                screen: AboutScreen(),
+                withNavBar: true,
+              );
             },
           ),
           const Divider(),

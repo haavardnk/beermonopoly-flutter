@@ -1123,8 +1123,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     padding: _tabletMode &&
                             _mediaQueryData.orientation == Orientation.landscape
                         ? EdgeInsets.fromLTRB(_mediaQueryData.size.width * 0.15,
-                            12, _mediaQueryData.size.width * 0.15, 25)
-                        : EdgeInsets.fromLTRB(12, 12, 12, 25),
+                            12, _mediaQueryData.size.width * 0.15, 12)
+                        : EdgeInsets.fromLTRB(12, 12, 12, 12),
                     decoration: BoxDecoration(
                       color: Theme.of(context).bottomAppBarColor,
                       boxShadow: [

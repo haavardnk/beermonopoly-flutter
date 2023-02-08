@@ -4,11 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:flag/flag.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../../models/product.dart';
 import '../../providers/cart.dart';
 import '../../providers/auth.dart';
-import '../../providers/filter.dart';
 import '../../screens/product_detail_screen.dart';
 import '../rating_widget.dart';
 import '../item_popup_menu.dart';
@@ -43,7 +43,7 @@ class _ProductItemState extends State<ProductItem> {
         : _mediaQueryData.size.shortestSide / 4;
     late Offset tapPosition;
     RenderBox overlay =
-        Overlay.of(context)!.context.findRenderObject() as RenderBox;
+        Overlay.of(context).context.findRenderObject() as RenderBox;
 
     void getPosition(TapDownDetails detail) {
       tapPosition = detail.globalPosition;
@@ -83,12 +83,19 @@ class _ProductItemState extends State<ProductItem> {
                   child: GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
-                      Navigator.of(context).pushNamed(
-                          ProductDetailScreen.routeName,
-                          arguments: <String, dynamic>{
-                            'product': widget.product,
-                            'herotag': 'list${widget.product.id}'
-                          });
+                      PersistentNavBarNavigator.pushNewScreenWithRouteSettings(
+                        context,
+                        settings: RouteSettings(
+                            name: ProductDetailScreen.routeName,
+                            arguments: <String, dynamic>{
+                              'product': widget.product,
+                              'herotag': 'list${widget.product.id}'
+                            }),
+                        screen: ProductDetailScreen(),
+                        withNavBar: true,
+                        pageTransitionAnimation:
+                            PageTransitionAnimation.cupertino,
+                      );
                     },
                     onTapDown: getPosition,
                     onLongPress: () {

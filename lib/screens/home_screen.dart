@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_fadein/flutter_fadein.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:badges/badges.dart' as badges;
 
 import 'product_overview_tab.dart';
 import 'release_tab.dart';
 import 'store_stock_change_tab.dart';
 import 'cart_tab.dart';
-import '../widgets/app_drawer.dart';
-import '../widgets/products/bottom_filter_sheet.dart';
-import '../widgets/products/search_bar.dart';
-import '../widgets/cart/bottom_store_sheet.dart';
 import '../providers/filter.dart';
 import '../providers/cart.dart';
 
@@ -22,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;
+  PersistentTabController _controller = PersistentTabController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,114 +32,71 @@ class _HomeScreenState extends State<HomeScreen> {
       filters.getReleases();
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-        centerTitle: true,
-        title: Consumer<Filter>(
-          builder: (context, filter, _) => FadeIn(
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: Text(
-                _currentIndex == 0
-                    ? filter.selectedStores.isEmpty
-                        ? 'Alle Butikker'
-                        : filter.selectedStores.length == 1
-                            ? filter.selectedStores[0]
-                            : 'Valgte butikker: ${filter.selectedStores.length}'
-                    : _currentIndex == 1
-                        ? 'Slipp'
-                        : _currentIndex == 2
-                            ? 'Velg Butikk'
-                            : 'Handleliste',
-                style: TextStyle(
-                    color: Theme.of(context).textTheme.headline6!.color),
-              ),
+    List<PersistentBottomNavBarItem> _navBarItems = [
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.liquor),
+        activeColorSecondary: Colors.pink,
+        inactiveColorPrimary: Theme.of(context).iconTheme.color,
+        inactiveColorSecondary: Theme.of(context).iconTheme.color!,
+        title: 'Produkter',
+      ),
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.new_releases_outlined),
+        activeColorSecondary: Colors.pink,
+        inactiveColorPrimary: Theme.of(context).iconTheme.color,
+        inactiveColorSecondary: Theme.of(context).iconTheme.color!,
+        title: 'Lanseringer',
+      ),
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.swap_vert),
+        activeColorSecondary: Colors.pink,
+        inactiveColorPrimary: Theme.of(context).iconTheme.color,
+        inactiveColorSecondary: Theme.of(context).iconTheme.color!,
+        title: 'Lager inn/ut',
+      ),
+      PersistentBottomNavBarItem(
+        icon: Consumer<Cart>(
+          builder: (_, cart, __) => badges.Badge(
+            badgeContent: Text(cart.itemCount.toString()),
+            child: Icon(Icons.receipt_long),
+            badgeStyle: badges.BadgeStyle(
+              badgeColor: Colors.pink,
             ),
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeIn,
+            showBadge: cart.itemCount > 0,
           ),
         ),
-        actions: [
-          if (_currentIndex == 0) const BottomFilterSheet(),
-          if (_currentIndex == 3) const BottomStoreSheet(),
-        ],
-        bottom: _currentIndex == 0
-            ? const PreferredSize(
-                child: SearchBar(),
-                preferredSize: Size.fromHeight(kToolbarHeight),
-              )
-            : null,
+        activeColorSecondary: Colors.pink,
+        inactiveColorPrimary: Theme.of(context).iconTheme.color,
+        inactiveColorSecondary: Theme.of(context).iconTheme.color!,
+        title: 'Handleliste',
+      )
+    ];
+
+    List<Widget> _buildScreens = const [
+      ProductOverviewTab(),
+      ReleaseTab(),
+      StoreStockChangeTab(),
+      CartTab(),
+    ];
+
+    return PersistentTabView(
+      context,
+      controller: _controller,
+      screens: _buildScreens,
+      items: _navBarItems,
+      resizeToAvoidBottomInset: true,
+      confineInSafeArea: true,
+      backgroundColor: Theme.of(context).canvasColor,
+
+      itemAnimationProperties: const ItemAnimationProperties(
+        duration: Duration(milliseconds: 400),
+        curve: Curves.ease,
       ),
-      drawer: const AppDrawer(),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: const [
-          ProductOverviewTab(),
-          ReleaseTab(),
-          StoreStockChangeTab(),
-          CartTab(),
-        ],
+      screenTransitionAnimation: const ScreenTransitionAnimation(
+        animateTabTransition: true,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
-        onTap: (value) {
-          setState(() {
-            _currentIndex = value;
-          });
-        },
-        items: [
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.liquor),
-            label: 'Produkter',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.new_releases_outlined),
-            label: 'Slipp',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.swap_vert),
-            label: 'Lager inn/ut',
-          ),
-          BottomNavigationBarItem(
-            icon: Consumer<Cart>(
-              builder: (_, cart, __) => Stack(
-                alignment: Alignment.center,
-                children: [
-                  const Icon(Icons.receipt_long),
-                  if (cart.itemCount > 0)
-                    Positioned(
-                      right: 0,
-                      top: 0,
-                      child: Container(
-                        // color: Theme.of(context).accentColor,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: Colors.pink,
-                        ),
-                        constraints: const BoxConstraints(
-                          minWidth: 11,
-                          minHeight: 11,
-                        ),
-                        child: Text(
-                          cart.itemCount.toString(),
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 10,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    )
-                ],
-              ),
-            ),
-            label: 'Handleliste',
-          )
-        ],
-      ),
+      navBarStyle:
+          NavBarStyle.style6, // Choose the nav bar style with this property
     );
   }
 }

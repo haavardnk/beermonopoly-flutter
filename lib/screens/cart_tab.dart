@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../providers/cart.dart';
 import '../widgets/cart/cart_element.dart';
+import '../widgets/cart/bottom_store_sheet.dart';
+import '../widgets/app_drawer.dart';
 
 class CartTab extends StatelessWidget {
   const CartTab({Key? key}) : super(key: key);
@@ -17,6 +19,23 @@ class CartTab extends StatelessWidget {
         : _mediaQueryData.size.shortestSide / 4;
 
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        centerTitle: true,
+        title: FittedBox(
+          fit: BoxFit.contain,
+          child: Text(
+            'Handleliste',
+            style:
+                TextStyle(color: Theme.of(context).textTheme.headline6!.color),
+          ),
+        ),
+        actions: [
+          const BottomStoreSheet(),
+        ],
+      ),
+      drawer: const AppDrawer(),
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
         child: Column(

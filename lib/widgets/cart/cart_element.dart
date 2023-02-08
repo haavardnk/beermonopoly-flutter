@@ -5,6 +5,7 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flag/flag.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../../providers/cart.dart';
 import '../../providers/auth.dart';
@@ -102,12 +103,18 @@ class _CartElementState extends State<CartElement> {
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
-                  Navigator.of(context).pushNamed(
-                    ProductDetailScreen.routeName,
-                    arguments: <String, dynamic>{
-                      'product': widget.cartItem.product,
-                      'herotag': 'cart${widget.cartItem.product.id}'
-                    },
+                  PersistentNavBarNavigator.pushNewScreenWithRouteSettings(
+                    context,
+                    settings: RouteSettings(
+                      name: ProductDetailScreen.routeName,
+                      arguments: <String, dynamic>{
+                        'product': widget.cartItem.product,
+                        'herotag': 'cart${widget.cartItem.product.id}'
+                      },
+                    ),
+                    screen: ProductDetailScreen(),
+                    withNavBar: true,
+                    pageTransitionAnimation: PageTransitionAnimation.cupertino,
                   );
                 },
                 onTapDown: getPosition,
