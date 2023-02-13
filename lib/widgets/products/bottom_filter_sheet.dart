@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 
 import '../../providers/filter.dart';
 import '../../providers/auth.dart';
@@ -50,7 +49,7 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton.icon(
+    return IconButton(
       onPressed: () {
         // Open filters
         showModalBottomSheet<void>(
@@ -65,8 +64,7 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
           },
         ).whenComplete(() => filters.setFilters());
       },
-      icon: const Icon(Icons.filter_list),
-      label: const Text('Filter'),
+      icon: Icon(Icons.filter_list),
     );
   }
 
@@ -136,8 +134,12 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                               filters.setStore();
                             });
                           },
-                          child: const Text('Velg alle',
-                              style: TextStyle(color: Colors.pink)),
+                          child: Text(
+                            'Velg alle',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
                         ),
                       )
                     ],
@@ -157,9 +159,12 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                                   searchFieldProps: TextFieldProps(
                                     decoration: InputDecoration(
                                       labelText: 'Søk',
-                                      prefixIcon: Icon(Icons.search,
-                                          color: Colors.grey[500]),
-                                      border: OutlineInputBorder(),
+                                      prefixIcon: Icon(
+                                        Icons.search,
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
                                     ),
                                   ),
                                   itemBuilder: (context, item, isSelected) {
@@ -193,7 +198,9 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                                 },
                                 dropdownDecoratorProps: DropDownDecoratorProps(
                                   dropdownSearchDecoration: InputDecoration(
-                                    border: OutlineInputBorder(),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                     isDense: true,
                                     contentPadding: EdgeInsets.symmetric(
                                       vertical: 23,
@@ -280,16 +287,19 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Text('Sortering',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Sortering',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
                     child: DropdownSearch<String>(
                       popupProps: PopupProps.dialog(),
                       dropdownDecoratorProps: DropDownDecoratorProps(
                         dropdownSearchDecoration: InputDecoration(
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           isDense: true,
                           contentPadding: EdgeInsets.symmetric(
                             vertical: 23,
@@ -339,10 +349,13 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                                 });
                               },
                               child: Text(
-                                  filters.styleChoice == 0
-                                      ? 'Bytt til Untappd stiler'
-                                      : 'Bytt til standard stiler',
-                                  style: TextStyle(color: Colors.pink)),
+                                filters.styleChoice == 0
+                                    ? 'Bytt til Untappd stiler'
+                                    : 'Bytt til standard stiler',
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
                             ),
                           ),
                           SizedBox(width: 15),
@@ -364,8 +377,12 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                                   filters.setStyle();
                                 });
                               },
-                              child: const Text('Velg alle',
-                                  style: TextStyle(color: Colors.pink)),
+                              child: Text(
+                                'Velg alle',
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
                             ),
                           ),
                         ],
@@ -392,21 +409,10 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                                   (index) {
                                     return FilterChip(
                                       label: Text(styleList[index]),
-                                      labelStyle: TextStyle(
-                                          color: filters.selectedStyles
-                                                  .contains(styleList[index])
-                                              ? Colors.white
-                                              : null),
                                       shape: RoundedRectangleBorder(
                                           side: BorderSide(
-                                              width: 1,
-                                              color: filters.selectedStyles
-                                                          .contains(styleList[
-                                                              index]) ==
-                                                      true
-                                                  ? Colors.pink
-                                                  : Theme.of(context)
-                                                      .focusColor),
+                                            width: 1,
+                                          ),
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                       selected: filters.selectedStyles
@@ -424,10 +430,6 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                                       },
                                       elevation: 0,
                                       pressElevation: 0,
-                                      backgroundColor:
-                                          Theme.of(context).backgroundColor,
-                                      selectedColor: Colors.pink,
-                                      checkmarkColor: Colors.white,
                                     );
                                   },
                                 ),
@@ -442,9 +444,13 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                                     searchFieldProps: TextFieldProps(
                                       decoration: InputDecoration(
                                         labelText: 'Søk',
-                                        prefixIcon: Icon(Icons.search,
-                                            color: Colors.grey[500]),
-                                        border: OutlineInputBorder(),
+                                        prefixIcon: Icon(
+                                          Icons.search,
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
                                       ),
                                     ),
                                     itemBuilder: (context, item, isSelected) {
@@ -569,7 +575,9 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                                   dropdownDecoratorProps:
                                       DropDownDecoratorProps(
                                     dropdownSearchDecoration: InputDecoration(
-                                      border: OutlineInputBorder(),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
                                       isDense: true,
                                       contentPadding: EdgeInsets.symmetric(
                                         vertical: 23,
@@ -609,8 +617,12 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                               filters.setCountry();
                             });
                           },
-                          child: const Text('Velg alle',
-                              style: TextStyle(color: Colors.pink)),
+                          child: Text(
+                            'Velg alle',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
                         ),
                       )
                     ],
@@ -624,9 +636,10 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                         searchFieldProps: TextFieldProps(
                           decoration: InputDecoration(
                             labelText: 'Søk',
-                            prefixIcon:
-                                Icon(Icons.search, color: Colors.grey[500]),
-                            border: OutlineInputBorder(),
+                            prefixIcon: Icon(Icons.search),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
                         ),
                       ),
@@ -641,7 +654,9 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                       },
                       dropdownDecoratorProps: DropDownDecoratorProps(
                         dropdownSearchDecoration: InputDecoration(
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           isDense: true,
                           contentPadding: EdgeInsets.symmetric(
                             vertical: 23,
@@ -729,8 +744,12 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                               }
                             });
                           },
-                          child: const Text('Velg alle',
-                              style: TextStyle(color: Colors.pink)),
+                          child: Text(
+                            'Velg alle',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -783,8 +802,12 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                               }
                             });
                           },
-                          child: const Text('Velg alle',
-                              style: TextStyle(color: Colors.pink)),
+                          child: Text(
+                            'Velg alle',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -926,19 +949,14 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
   Widget _radio(
       String value, int index, int selected, Function setSelected, mystate) {
     return ChoiceChip(
-      label: Text(value,
-          style: TextStyle(color: selected == index ? Colors.white : null)),
+      label: Text(value),
       shape: RoundedRectangleBorder(
           side: BorderSide(
-              width: 1,
-              color: selected == index
-                  ? Colors.pink
-                  : Theme.of(context).focusColor),
+            width: 1,
+          ),
           borderRadius: BorderRadius.circular(10)),
       elevation: 0,
       pressElevation: 0,
-      selectedColor: Colors.pink,
-      backgroundColor: Theme.of(context).backgroundColor,
       selected:
           (selected == 0) ? (index == 0 ? true : false) : selected == index,
       onSelected: (bool selected) {
@@ -955,15 +973,8 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
       var selectedData, String value, int index, Function setFilter, mystate) {
     return FilterChip(
       label: Text(value),
-      labelStyle:
-          TextStyle(color: selectedData[index] == true ? Colors.white : null),
       shape: RoundedRectangleBorder(
-          side: BorderSide(
-              width: 1,
-              color: selectedData[index] == true
-                  ? Colors.pink
-                  : Theme.of(context).focusColor),
-          borderRadius: BorderRadius.circular(10)),
+          side: BorderSide(width: 1), borderRadius: BorderRadius.circular(10)),
       selected: selectedData[index],
       onSelected: (bool selected) {
         mystate(() {
@@ -972,24 +983,18 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
       },
       elevation: 0,
       pressElevation: 0,
-      backgroundColor: Theme.of(context).backgroundColor,
-      selectedColor: Colors.pink,
-      checkmarkColor: Colors.white,
     );
   }
 
   Future<void> showSettingsPopup(
       BuildContext context, StateSetter mystate) async {
-    Widget continueButton = TextButton(
+    Widget continueButton = ElevatedButton(
       onPressed: () {
         filters.saveFilters();
-        Navigator.pop(context);
+        Navigator.of(context, rootNavigator: true).pop();
       },
       child: const Text(
         'Ok',
-        style: TextStyle(
-          color: Colors.pink,
-        ),
       ),
     );
 
@@ -1008,20 +1013,29 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
           SizedBox(
             height: 10,
           ),
-          ToggleSwitch(
-            minHeight: 35,
-            customWidths: [130.0, 100.0],
-            initialLabelIndex: filters.styleChoice,
-            activeBgColor: [Colors.pink],
-            inactiveBgColor: Theme.of(context).backgroundColor,
-            totalSwitches: styleChoiceList.length,
-            labels: styleChoiceList,
-            onToggle: (index) {
-              filters.setStyleChoice(index!);
-            },
+          Consumer<Filter>(
+            builder: (context, _, __) => SizedBox(
+              width: double.infinity,
+              child: SegmentedButton<int>(
+                segments: <ButtonSegment<int>>[
+                  ...styleChoiceList.asMap().entries.map(
+                    (style) {
+                      return ButtonSegment<int>(
+                        value: style.key,
+                        label: Text(style.value),
+                      );
+                    },
+                  )
+                ],
+                selected: <int>{filters.styleChoice},
+                onSelectionChanged: (Set<int> newSelection) {
+                  filters.setStyleChoice(newSelection.first);
+                },
+              ),
+            ),
           ),
-          SizedBox(
-            height: 20,
+          Divider(
+            height: 40,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1048,8 +1062,13 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                       filters.saveFilterSettings();
                     });
                   },
-                  child: const Text('Velg alle',
-                      style: TextStyle(fontSize: 15, color: Colors.pink)),
+                  child: Text(
+                    'Velg alle',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -1066,7 +1085,6 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                 return Consumer<Filter>(
                   builder: (context, _, __) => CheckboxListTile(
                     contentPadding: EdgeInsets.zero,
-                    activeColor: Colors.pink,
                     value: filters.filterSaveSettings[index]['save'],
                     title: Text(filters.filterSaveSettings[index]['text']),
                     onChanged: (bool? newValue) {
@@ -1080,6 +1098,7 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
               },
             ),
           ),
+          Divider(),
         ],
       ),
       actions: [

@@ -16,8 +16,7 @@ class ProductOverviewTab extends StatelessWidget {
     var _currentIndex = 0;
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        surfaceTintColor: Colors.transparent,
         centerTitle: true,
         title: Consumer<Filter>(
           builder: (context, filter, _) => FadeIn(

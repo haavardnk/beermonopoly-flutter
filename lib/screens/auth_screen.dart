@@ -36,15 +36,7 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
           SizedBox(
             height: 55,
-            child: ElevatedButton(
-              style: ButtonStyle(
-                overlayColor: MaterialStateProperty.all(Colors.transparent),
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                ),
-              ),
+            child: FilledButton(
               onPressed: () async {
                 try {
                   await _authData.authenticate();
@@ -65,9 +57,6 @@ class _AuthScreenState extends State<AuthScreen> {
                           },
                           child: const Text(
                             'OK',
-                            style: TextStyle(
-                              color: Colors.pink,
-                            ),
                           ),
                         ),
                       ],
@@ -81,11 +70,10 @@ class _AuthScreenState extends State<AuthScreen> {
                   Image.asset(
                     'assets/images/untappd_logo.png',
                     height: 30,
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onPrimary,
                   ),
                   const Text(
                     'Logg inn med Untappd',
-                    style: TextStyle(fontSize: 16, color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
                   Column()

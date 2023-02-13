@@ -28,7 +28,7 @@ class _BottomStoreSheetState extends State<BottomStoreSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton.icon(
+    return IconButton(
       onPressed: () {
         showModalBottomSheet<void>(
           isScrollControlled: true,
@@ -42,8 +42,9 @@ class _BottomStoreSheetState extends State<BottomStoreSheet> {
           },
         );
       },
-      icon: const Icon(Icons.store_outlined),
-      label: const Text('Butikkvalg'),
+      icon: Icon(
+        Icons.settings,
+      ),
     );
   }
 
@@ -78,7 +79,7 @@ class _BottomStoreSheetState extends State<BottomStoreSheet> {
                       title: Text(
                           'Grå ut dersom ingen på lager i valgte butikker'),
                       value: cart.greyNoStock,
-                      activeColor: Colors.pink,
+                      activeColor: Theme.of(context).colorScheme.primary,
                       onChanged: (bool value) {
                         mystate(() {
                           cart.greyNoStock = value;
@@ -92,7 +93,7 @@ class _BottomStoreSheetState extends State<BottomStoreSheet> {
                       title:
                           Text('Skjul dersom ingen på lager i valgte butikker'),
                       value: cart.hideNoStock,
-                      activeColor: Colors.pink,
+                      activeColor: Theme.of(context).colorScheme.primary,
                       onChanged: (bool value) {
                         mystate(() {
                           cart.hideNoStock = value;
@@ -105,7 +106,7 @@ class _BottomStoreSheetState extends State<BottomStoreSheet> {
                       contentPadding: EdgeInsets.only(left: 16, right: 4),
                       title: Text('Bruk butikkvalg fra oversikt'),
                       value: cart.useOverviewStoreSelection,
-                      activeColor: Colors.pink,
+                      activeColor: Theme.of(context).colorScheme.primary,
                       onChanged: (bool value) {
                         mystate(() {
                           cart.useOverviewStoreSelection = value;
@@ -145,9 +146,13 @@ class _BottomStoreSheetState extends State<BottomStoreSheet> {
                                             searchFieldProps: TextFieldProps(
                                               decoration: InputDecoration(
                                                 labelText: 'Søk',
-                                                prefixIcon: Icon(Icons.search,
-                                                    color: Colors.grey[500]),
-                                                border: OutlineInputBorder(),
+                                                prefixIcon: Icon(Icons.search),
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    20,
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                             itemBuilder:
@@ -180,7 +185,12 @@ class _BottomStoreSheetState extends State<BottomStoreSheet> {
                                               DropDownDecoratorProps(
                                             dropdownSearchDecoration:
                                                 InputDecoration(
-                                              border: OutlineInputBorder(),
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                  10,
+                                                ),
+                                              ),
                                               isDense: true,
                                               contentPadding:
                                                   EdgeInsets.symmetric(

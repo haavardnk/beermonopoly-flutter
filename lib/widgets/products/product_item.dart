@@ -386,47 +386,28 @@ class _ProductItemState extends State<ProductItem> {
                     decoration: BoxDecoration(
                       border: Border.all(
                         width: 1,
-                        color: Theme.of(context).iconTheme.color!,
+                        color: Theme.of(context).colorScheme.onBackground,
                       ),
                       borderRadius: const BorderRadius.all(
-                        Radius.circular(5),
+                        Radius.circular(10),
                       ),
                     ),
                     child: Consumer<Cart>(
-                      builder: (_, cart, __) => Stack(
-                        children: [
-                          Center(
-                            child: const Icon(
-                              Icons.shopping_cart_outlined,
-                              size: 20,
-                            ),
+                      builder: (_, cart, __) => Center(
+                        child: Badge(
+                          isLabelVisible:
+                              cart.items.keys.contains(widget.product.id),
+                          label: Text(
+                              cart.items.keys.contains(widget.product.id)
+                                  ? cart.items[widget.product.id]!.quantity
+                                      .toString()
+                                  : ''),
+                          child: Icon(
+                            Icons.shopping_cart_outlined,
+                            size: 20,
+                            color: Theme.of(context).colorScheme.onBackground,
                           ),
-                          if (cart.items.keys.contains(widget.product.id))
-                            Positioned(
-                              right: 7,
-                              top: 4,
-                              child: Container(
-                                // color: Theme.of(context).accentColor,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  color: Colors.pink,
-                                ),
-                                constraints: const BoxConstraints(
-                                  minWidth: 11,
-                                  minHeight: 11,
-                                ),
-                                child: Text(
-                                  cart.items[widget.product.id]!.quantity
-                                      .toString(),
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            )
-                        ],
+                        ),
                       ),
                     ),
                   ),

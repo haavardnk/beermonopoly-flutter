@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-import 'package:badges/badges.dart' as badges;
 
 import 'product_overview_tab.dart';
 import 'release_tab.dart';
@@ -35,39 +34,40 @@ class _HomeScreenState extends State<HomeScreen> {
     List<PersistentBottomNavBarItem> _navBarItems = [
       PersistentBottomNavBarItem(
         icon: Icon(Icons.liquor),
-        activeColorSecondary: Colors.pink,
-        inactiveColorPrimary: Theme.of(context).iconTheme.color,
-        inactiveColorSecondary: Theme.of(context).iconTheme.color!,
+        activeColorSecondary:
+            Theme.of(context).colorScheme.onSecondaryContainer,
+        inactiveColorPrimary: Theme.of(context).colorScheme.onSurfaceVariant,
+        inactiveColorSecondary: Theme.of(context).colorScheme.onSurfaceVariant,
         title: 'Produkter',
       ),
       PersistentBottomNavBarItem(
         icon: Icon(Icons.new_releases_outlined),
-        activeColorSecondary: Colors.pink,
-        inactiveColorPrimary: Theme.of(context).iconTheme.color,
-        inactiveColorSecondary: Theme.of(context).iconTheme.color!,
+        activeColorSecondary:
+            Theme.of(context).colorScheme.onSecondaryContainer,
+        inactiveColorPrimary: Theme.of(context).colorScheme.onSurfaceVariant,
+        inactiveColorSecondary: Theme.of(context).colorScheme.onSurfaceVariant,
         title: 'Lanseringer',
       ),
       PersistentBottomNavBarItem(
         icon: Icon(Icons.swap_vert),
-        activeColorSecondary: Colors.pink,
-        inactiveColorPrimary: Theme.of(context).iconTheme.color,
-        inactiveColorSecondary: Theme.of(context).iconTheme.color!,
+        activeColorSecondary:
+            Theme.of(context).colorScheme.onSecondaryContainer,
+        inactiveColorPrimary: Theme.of(context).colorScheme.onSurfaceVariant,
+        inactiveColorSecondary: Theme.of(context).colorScheme.onSurfaceVariant,
         title: 'Lager inn/ut',
       ),
       PersistentBottomNavBarItem(
         icon: Consumer<Cart>(
-          builder: (_, cart, __) => badges.Badge(
-            badgeContent: Text(cart.itemCount.toString()),
+          builder: (_, cart, __) => Badge(
+            label: Text(cart.itemCount.toString()),
             child: Icon(Icons.receipt_long),
-            badgeStyle: badges.BadgeStyle(
-              badgeColor: Colors.pink,
-            ),
-            showBadge: cart.itemCount > 0,
+            isLabelVisible: cart.itemCount > 0,
           ),
         ),
-        activeColorSecondary: Colors.pink,
-        inactiveColorPrimary: Theme.of(context).iconTheme.color,
-        inactiveColorSecondary: Theme.of(context).iconTheme.color!,
+        activeColorSecondary:
+            Theme.of(context).colorScheme.onSecondaryContainer,
+        inactiveColorPrimary: Theme.of(context).colorScheme.onSurfaceVariant,
+        inactiveColorSecondary: Theme.of(context).colorScheme.onSurfaceVariant,
         title: 'Handleliste',
       )
     ];

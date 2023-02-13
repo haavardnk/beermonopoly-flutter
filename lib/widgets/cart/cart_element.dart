@@ -127,16 +127,18 @@ class _CartElementState extends State<CartElement> {
                     overlay,
                     widget.cartItem.product,
                   ).then(
-                    (value) => setState(() {
-                      if (value == 'wishlistAdded') {
-                        wishlisted = true;
-                        widget.cartData.updateCartItemsData();
-                      }
-                      if (value == 'wishlistRemoved') {
-                        wishlisted = false;
-                        widget.cartData.updateCartItemsData();
-                      }
-                    }),
+                    (value) => setState(
+                      () {
+                        if (value == 'wishlistAdded') {
+                          wishlisted = true;
+                          widget.cartData.updateCartItemsData();
+                        }
+                        if (value == 'wishlistRemoved') {
+                          wishlisted = false;
+                          widget.cartData.updateCartItemsData();
+                        }
+                      },
+                    ),
                   );
                 },
                 child: AnimatedContainer(
@@ -151,15 +153,12 @@ class _CartElementState extends State<CartElement> {
                     children: [
                       Column(
                         children: [
-                          Container(
-                            foregroundDecoration: !widget.cartItem.inStock &&
+                          Opacity(
+                            opacity: !widget.cartItem.inStock &&
                                     widget.cartData.greyNoStock &&
                                     widget.cartData.cartStoreId.isNotEmpty
-                                ? BoxDecoration(
-                                    color: Colors.grey,
-                                    backgroundBlendMode: BlendMode.saturation,
-                                  )
-                                : null,
+                                ? 0.3
+                                : 1,
                             child: Container(
                               foregroundDecoration: wishlisted == true
                                   ? const RotatedCornerDecoration(
@@ -443,9 +442,14 @@ class _CartElementState extends State<CartElement> {
                                                                   5),
                                                             ),
                                                           ),
-                                                          child: const Icon(
-                                                              Icons.add,
-                                                              size: 18),
+                                                          child: Icon(
+                                                            Icons.add,
+                                                            size: 18,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .colorScheme
+                                                                .onBackground,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
@@ -487,9 +491,14 @@ class _CartElementState extends State<CartElement> {
                                                                   5),
                                                             ),
                                                           ),
-                                                          child: const Icon(
-                                                              Icons.remove,
-                                                              size: 18),
+                                                          child: Icon(
+                                                            Icons.remove,
+                                                            size: 18,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .colorScheme
+                                                                .onBackground,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
@@ -533,6 +542,9 @@ class _CartElementState extends State<CartElement> {
                                               child: Icon(
                                                 Icons.store_outlined,
                                                 size: 17,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onBackground,
                                               ),
                                             ),
                                           ),
@@ -546,94 +558,91 @@ class _CartElementState extends State<CartElement> {
                           ),
                           if (_expanded == true)
                             FutureBuilder(
-                                future: ApiHelper.getDetailedProductInfo(
-                                    widget.cartItem.product.id,
-                                    apiToken,
-                                    fields),
-                                builder: (context,
-                                    AsyncSnapshot<Map<String, dynamic>>
-                                        snapshot) {
-                                  if (snapshot.hasData &&
-                                      snapshot.data!['all_stock'] != null &&
-                                      filters.storeList.isNotEmpty) {
-                                    _stockList = _sortStockList(_stockList,
-                                        snapshot, filters.storeList);
-                                  }
-                                  return Expanded(
-                                    child: snapshot.connectionState ==
-                                            ConnectionState.waiting
-                                        ? FadeIn(
-                                            duration:
-                                                Duration(milliseconds: 500),
-                                            child: Center(
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            ),
-                                          )
-                                        : Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                12, 0, 12, 12),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                if (_stockList.isNotEmpty)
-                                                  Expanded(
-                                                    child: ListView.builder(
-                                                      shrinkWrap: true,
-                                                      itemCount:
-                                                          _stockList.length,
-                                                      itemBuilder:
-                                                          (context, index) {
-                                                        return Column(
-                                                          children: [
-                                                            FadeIn(
-                                                              duration: Duration(
-                                                                  milliseconds:
-                                                                      300),
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  Text(
-                                                                    _stockList[
-                                                                            index]
-                                                                        [
-                                                                        'store_name'],
-                                                                  ),
-                                                                  Text(
-                                                                    'På lager: ${_stockList[index]['quantity']}',
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                  ),
-                                                                ],
-                                                              ),
+                              future: ApiHelper.getDetailedProductInfo(
+                                  widget.cartItem.product.id, apiToken, fields),
+                              builder: (context,
+                                  AsyncSnapshot<Map<String, dynamic>>
+                                      snapshot) {
+                                if (snapshot.hasData &&
+                                    snapshot.data!['all_stock'] != null &&
+                                    filters.storeList.isNotEmpty) {
+                                  _stockList = _sortStockList(
+                                      _stockList, snapshot, filters.storeList);
+                                }
+                                return Expanded(
+                                  child: snapshot.connectionState ==
+                                          ConnectionState.waiting
+                                      ? FadeIn(
+                                          duration: Duration(milliseconds: 500),
+                                          child: Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        )
+                                      : Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              12, 0, 12, 12),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              if (_stockList.isNotEmpty)
+                                                Expanded(
+                                                  child: ListView.builder(
+                                                    shrinkWrap: true,
+                                                    itemCount:
+                                                        _stockList.length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return Column(
+                                                        children: [
+                                                          FadeIn(
+                                                            duration: Duration(
+                                                                milliseconds:
+                                                                    300),
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  _stockList[
+                                                                          index]
+                                                                      [
+                                                                      'store_name'],
+                                                                ),
+                                                                Text(
+                                                                  'På lager: ${_stockList[index]['quantity']}',
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ],
                                                             ),
-                                                            Divider(height: 5),
-                                                          ],
-                                                        );
-                                                      },
-                                                    ),
+                                                          ),
+                                                          Divider(height: 5),
+                                                        ],
+                                                      );
+                                                    },
                                                   ),
-                                                if (_stockList.isEmpty)
-                                                  Expanded(
-                                                    child: Center(
-                                                      child: FadeIn(
-                                                        duration: Duration(
-                                                            milliseconds: 300),
-                                                        child: Text(
-                                                          'Ingen butikker har denne på lager',
-                                                        ),
+                                                ),
+                                              if (_stockList.isEmpty)
+                                                Expanded(
+                                                  child: Center(
+                                                    child: FadeIn(
+                                                      duration: Duration(
+                                                          milliseconds: 300),
+                                                      child: Text(
+                                                        'Ingen butikker har denne på lager',
                                                       ),
                                                     ),
-                                                  )
-                                              ],
-                                            ),
+                                                  ),
+                                                )
+                                            ],
                                           ),
-                                  );
-                                }),
+                                        ),
+                                );
+                              },
+                            ),
                         ],
                       ),
                     ],
@@ -647,19 +656,16 @@ class _CartElementState extends State<CartElement> {
 
 Future<void> showPopupDelete(int index, double boxImageSize, CartItem cartItem,
     Cart cartData, BuildContext context) async {
-  Widget cancelButton = TextButton(
+  Widget cancelButton = FilledButton.tonal(
     onPressed: () {
-      Navigator.pop(context);
+      Navigator.of(context, rootNavigator: true).pop();
     },
-    child: const Text(
-      'Nei',
-      style: TextStyle(color: Colors.pink),
-    ),
+    child: const Text('Nei'),
   );
-  Widget continueButton = TextButton(
+  Widget continueButton = FilledButton.tonal(
     onPressed: () {
       cartData.removeItem(cartItem.product.id);
-      Navigator.pop(context);
+      Navigator.of(context, rootNavigator: true).pop();
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -673,17 +679,12 @@ Future<void> showPopupDelete(int index, double boxImageSize, CartItem cartItem,
         ),
       );
     },
-    child: const Text(
-      'Ja',
-      style: TextStyle(
-        color: Colors.pink,
-      ),
-    ),
+    child: const Text('Ja'),
   );
 
   AlertDialog alert = AlertDialog(
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(20),
     ),
     title: const Text(
       'Fjern fra handleliste',

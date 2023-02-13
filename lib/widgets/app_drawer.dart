@@ -45,10 +45,10 @@ class _AppDrawerState extends State<AppDrawer> {
         authData.logout();
         Provider.of<Filter>(context, listen: false).resetFilters();
       },
-      child: const Text(
+      child: Text(
         'Logg ut',
         style: TextStyle(
-          color: Colors.pink,
+          color: Theme.of(context).colorScheme.primary,
         ),
       ),
     );
@@ -82,10 +82,10 @@ class _AppDrawerState extends State<AppDrawer> {
           'Er du sikker på at du vil slette brukeren din på Ølmonopolet og alle data?',
         );
       },
-      child: const Text(
+      child: Text(
         'Slett bruker',
         style: TextStyle(
-          color: Colors.pink,
+          color: Theme.of(context).colorScheme.primary,
         ),
       ),
     );
@@ -203,7 +203,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 child: Image.asset(
                   'assets/images/powered_by_untappd.png',
                   width: 100,
-                  color: Theme.of(context).textTheme.bodyText1!.color,
+                  color: Theme.of(context).colorScheme.onBackground,
                 ),
               ),
             ),

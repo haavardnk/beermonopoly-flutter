@@ -26,8 +26,7 @@ class _ReleaseTabState extends State<ReleaseTab> {
 
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        surfaceTintColor: Colors.transparent,
         centerTitle: true,
         title: FittedBox(
           fit: BoxFit.contain,

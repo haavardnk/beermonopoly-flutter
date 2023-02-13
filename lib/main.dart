@@ -18,6 +18,7 @@ import './providers/filter.dart';
 import './providers/auth.dart';
 import './providers/cart.dart';
 import './helpers/api_helper.dart';
+import './assets/color_schemes.g.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(
@@ -108,26 +109,12 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return AdaptiveTheme(
       light: ThemeData(
-        brightness: Brightness.light,
-        primarySwatch: Colors.pink,
-        primaryColorLight: Colors.pink,
-        backgroundColor: Colors.grey[100],
-        iconTheme: IconThemeData(color: Colors.grey[800]),
-        textTheme: TextTheme(subtitle2: TextStyle(color: Colors.white)),
-        appBarTheme: AppBarTheme(
-          color: Colors.white,
-          iconTheme: IconThemeData(color: Colors.black),
-        ),
+        useMaterial3: true,
+        colorScheme: lightColorScheme,
       ),
       dark: ThemeData(
-        brightness: Brightness.dark,
-        primarySwatch: Colors.pink,
-        primaryColorLight: Colors.pink,
-        accentColor: Colors.pink,
-        toggleableActiveColor: Colors.pink,
-        appBarTheme: AppBarTheme(
-          iconTheme: IconThemeData(color: Colors.white),
-        ),
+        useMaterial3: true,
+        colorScheme: darkColorScheme,
       ),
       initial: AdaptiveThemeMode.system,
       builder: (theme, darkTheme) => MultiProvider(

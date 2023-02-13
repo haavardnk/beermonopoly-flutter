@@ -69,12 +69,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Detaljer',
-          style: TextStyle(color: Theme.of(context).textTheme.headline6!.color),
-        ),
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-        iconTheme: Theme.of(context).appBarTheme.iconTheme,
+        title: Text('Detaljer'),
+        surfaceTintColor: Colors.transparent,
         actions: [
           PopupMenuButton(itemBuilder: (context) {
             return [
@@ -1241,15 +1237,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final _urlController = TextEditingController();
 
     Future<void> showDialogMessage(String title, String message) async {
-      Widget continueButton = TextButton(
+      Widget continueButton = FilledButton.tonal(
         onPressed: () {
-          Navigator.pop(context);
+          Navigator.of(context, rootNavigator: true).pop();
         },
         child: const Text(
           'Ok',
-          style: TextStyle(
-            color: Colors.pink,
-          ),
         ),
       );
 
@@ -1354,7 +1347,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   const SizedBox(
                     height: 5,
                   ),
-                  ElevatedButton.icon(
+                  FilledButton.tonalIcon(
                     onPressed: () {
                       _submit();
                     },

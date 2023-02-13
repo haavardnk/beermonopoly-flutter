@@ -32,37 +32,50 @@ class _SearchBarState extends State<SearchBar> {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
       height: kToolbarHeight,
-      child: TextFormField(
-        controller: _search,
-        textAlignVertical: TextAlignVertical.bottom,
-        maxLines: 1,
-        style: TextStyle(fontSize: 16),
-        onChanged: (textValue) {
-          setState(() {
-            filters.setSearch(textValue);
-          });
-        },
-        decoration: InputDecoration(
-          fillColor: Theme.of(context).backgroundColor,
-          filled: true,
-          hintText: 'Søk',
-          prefixIcon: Icon(Icons.search, color: Colors.grey[500]),
-          suffixIcon: (_search.text == '')
-              ? null
-              : GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _search = TextEditingController(text: '');
-                      filters.setSearch('');
-                    });
-                  },
-                  child: Icon(Icons.close, color: Colors.grey[500])),
-          focusedBorder: UnderlineInputBorder(
-              borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-              borderSide: BorderSide(color: Theme.of(context).backgroundColor)),
-          enabledBorder: UnderlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-            borderSide: BorderSide(color: Theme.of(context).backgroundColor),
+      child: Material(
+        borderRadius: BorderRadius.circular(10),
+        elevation: 3,
+        surfaceTintColor: Theme.of(context).colorScheme.surfaceTint,
+        shadowColor: Colors.transparent,
+        child: TextFormField(
+          controller: _search,
+          textAlignVertical: TextAlignVertical.bottom,
+          maxLines: 1,
+          style: TextStyle(fontSize: 16),
+          onChanged: (textValue) {
+            setState(() {
+              filters.setSearch(textValue);
+            });
+          },
+          decoration: InputDecoration(
+            hintText: 'Søk',
+            prefixIcon: Icon(
+              Icons.search,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+            suffixIcon: (_search.text == '')
+                ? null
+                : GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _search = TextEditingController(text: '');
+                        filters.setSearch('');
+                      });
+                    },
+                    child: Icon(
+                      Icons.close,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
+            focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+              color: Colors.transparent,
+            )),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.transparent,
+              ),
+            ),
           ),
         ),
       ),

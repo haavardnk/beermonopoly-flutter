@@ -11,14 +11,14 @@ PODS:
   - Firebase/Messaging (10.3.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 10.3.0)
-  - firebase_analytics (10.1.0):
+  - firebase_analytics (10.1.3):
     - Firebase/Analytics (= 10.3.0)
     - firebase_core
     - Flutter
-  - firebase_core (2.4.1):
+  - firebase_core (2.6.1):
     - Firebase/CoreOnly (= 10.3.0)
     - Flutter
-  - firebase_messaging (14.2.1):
+  - firebase_messaging (14.2.4):
     - Firebase/Messaging (= 10.3.0)
     - firebase_core
     - Flutter
@@ -194,9 +194,9 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   external_app_launcher: ad55ac844aa21f2d2197d7cec58ff0d0dc40bbc0
   Firebase: f92fc551ead69c94168d36c2b26188263860acd9
-  firebase_analytics: 9f3a4cb560a59976b2c48707abae2d4cb94bcb3a
-  firebase_core: bf59c32d2e53814f558efa20840c1902fa2fe461
-  firebase_messaging: ee597229fc260f8fa491fa8f2d4a32dfbfa406fa
+  firebase_analytics: 649edaf7b1f891d4f04e5e3d52c051d8d73432f8
+  firebase_core: 6242f038aefa4582e028536e71312f7e3a41e6bb
+  firebase_messaging: ee61b8065c395a117864224e3031729e656232af
   FirebaseAnalytics: 036232b6a1e2918e5f67572417be1173576245f3
   FirebaseCore: 988754646ab3bd4bdcb740f1bfe26b9f6c0d5f2a
   FirebaseCoreInternal: e301297f4c15a17489e48ed722d733b1578e0c02
@@ -216,7 +216,7 @@ SPEC CHECKSUMS:
   rate_my_app: 96f658ddb7f0a8d2f46d54452583f084760aef57
   shared_preferences_foundation: 297b3ebca31b34ec92be11acd7fb0ba932c822ca
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
-  url_launcher_ios: ae1517e5e344f5544fb090b079e11f399dfbe4d2
+  url_launcher_ios: fb12c43172927bb5cf75aeebd073f883801f1993
 
 PODFILE CHECKSUM: ef19549a9bc3046e7bb7d2fab4d021637c0c58a3
 

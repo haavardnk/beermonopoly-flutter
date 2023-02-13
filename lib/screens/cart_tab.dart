@@ -20,15 +20,12 @@ class CartTab extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        surfaceTintColor: Colors.transparent,
         centerTitle: true,
         title: FittedBox(
           fit: BoxFit.contain,
           child: Text(
             'Handleliste',
-            style:
-                TextStyle(color: Theme.of(context).textTheme.headline6!.color),
           ),
         ),
         actions: [
@@ -87,9 +84,8 @@ class CartTab extends StatelessWidget {
                     ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 12),
-              padding: const EdgeInsets.all(16),
-              color: Theme.of(context).backgroundColor,
+              padding: const EdgeInsets.all(12),
+              color: Theme.of(context).colorScheme.background,
               child: Column(
                 children: [
                   _createTotalPrice(cartData),
@@ -121,30 +117,12 @@ class CartTab extends StatelessWidget {
             ),
           ],
         ),
-        TextButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.resolveWith<Color>(
-              (Set<MaterialState> states) => Colors.pink,
-            ),
-            overlayColor: MaterialStateProperty.all(Colors.transparent),
-            shape: MaterialStateProperty.all(RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4.0),
-            )),
-          ),
+        FilledButton.tonalIcon(
           onPressed: () {
             cartData.clear();
           },
-          child: const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
-            child: Text(
-              'TØM',
-              style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-              textAlign: TextAlign.center,
-            ),
-          ),
+          label: Text('Tøm'),
+          icon: Icon(Icons.delete_sweep_outlined),
         )
       ],
     );
