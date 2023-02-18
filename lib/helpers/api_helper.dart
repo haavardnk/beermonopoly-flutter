@@ -58,7 +58,8 @@ class ApiHelper {
   }
 
   static Future<List<Product>> getProductList(
-      int page, Filter filter, Auth auth, int pageSize) async {
+      int page, Filter filter, Auth auth, int pageSize,
+      [Release? release = null]) async {
     const fields =
         'vmp_id,vmp_name,price,rating,checkins,label_sm_url,main_category,'
         'sub_category,style,stock,abv,user_checked_in,user_wishlisted,'
@@ -70,7 +71,10 @@ class ApiHelper {
         : {};
     try {
       final response = await http.get(
-        _apiProductUrlBuilder(fields, page, filter, pageSize),
+        release == null
+            ? _apiProductUrlBuilder(fields, page, filter, pageSize)
+            : _apiReleaseProductUrlBuilder(
+                fields, page, filter, release, pageSize),
         headers: headers,
       );
       if (response.statusCode == 200) {
@@ -288,6 +292,25 @@ Uri _apiProductUrlBuilder(
   }
   if (filter.deliverySelectedList[1] == true) {
     string = string + '&post_delivery=True';
+  }
+
+  final url = Uri.parse(string);
+  return url;
+}
+
+Uri _apiReleaseProductUrlBuilder(
+    String fields, int page, Filter filter, Release release, int pageSize) {
+  var string = ('$_baseUrl'
+      'beers/'
+      '?fields=$fields'
+      '&release=${release.name}'
+      '&ordering=${filter.releaseSortBy}'
+      '&page=$page'
+      '&page_size=$pageSize');
+  if (filter.checkIn == 1 || filter.sortBy.contains('checkin__rating')) {
+    string = string + '&user_checkin=True';
+  } else if (filter.checkIn == 2) {
+    string = string + '&user_checkin=False';
   }
 
   final url = Uri.parse(string);

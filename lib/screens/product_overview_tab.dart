@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
 
 import '../widgets/products/product_list_view.dart';
@@ -7,9 +8,13 @@ import '../providers/filter.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/products/bottom_filter_sheet.dart';
 import '../widgets/products/search_bar.dart';
+import '../widgets/products/release_sort.dart';
+import '../models/release.dart';
 
 class ProductOverviewTab extends StatelessWidget {
-  const ProductOverviewTab({Key? key}) : super(key: key);
+  final Release? release;
+
+  const ProductOverviewTab({Key? key, this.release}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,40 +23,51 @@ class ProductOverviewTab extends StatelessWidget {
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         centerTitle: true,
-        title: Consumer<Filter>(
-          builder: (context, filter, _) => FadeIn(
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: Text(
-                _currentIndex == 0
-                    ? filter.selectedStores.isEmpty
-                        ? 'Alle Butikker'
-                        : filter.selectedStores.length == 1
-                            ? filter.selectedStores[0]
-                            : 'Valgte butikker: ${filter.selectedStores.length}'
-                    : _currentIndex == 1
-                        ? 'Nyhetslanseringer'
-                        : _currentIndex == 2
-                            ? 'Velg Butikk'
-                            : 'Handleliste',
-                style: TextStyle(
-                    color: Theme.of(context).textTheme.headline6!.color),
+        title: release != null
+            ? FittedBox(
+                fit: BoxFit.contain,
+                child: Text(
+                  release!.releaseDate != null
+                      ? '${toBeginningOfSentenceCase(DateFormat.yMMMMEEEEd('nb_NO').format(release!.releaseDate!))}'
+                      : release!.name,
+                ),
+              )
+            : Consumer<Filter>(
+                builder: (context, filter, _) => FadeIn(
+                  child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Text(
+                      _currentIndex == 0
+                          ? filter.selectedStores.isEmpty
+                              ? 'Alle Butikker'
+                              : filter.selectedStores.length == 1
+                                  ? filter.selectedStores[0]
+                                  : 'Valgte butikker: ${filter.selectedStores.length}'
+                          : _currentIndex == 1
+                              ? 'Nyhetslanseringer'
+                              : _currentIndex == 2
+                                  ? 'Velg Butikk'
+                                  : 'Handleliste',
+                    ),
+                  ),
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeIn,
+                ),
               ),
-            ),
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeIn,
-          ),
-        ),
         actions: [
-          const BottomFilterSheet(),
+          release == null ? const BottomFilterSheet() : ReleaseSort(release!),
         ],
-        bottom: const PreferredSize(
-          child: SearchBar(),
-          preferredSize: Size.fromHeight(kToolbarHeight),
-        ),
+        bottom: release == null
+            ? const PreferredSize(
+                child: SearchBar(),
+                preferredSize: Size.fromHeight(kToolbarHeight),
+              )
+            : null,
       ),
-      drawer: const AppDrawer(),
-      body: const ProductListView(),
+      drawer: release == null ? const AppDrawer() : null,
+      body: ProductListView(
+        release: release,
+      ),
     );
   }
 }

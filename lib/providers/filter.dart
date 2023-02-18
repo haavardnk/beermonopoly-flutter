@@ -21,6 +21,7 @@ class Filter with ChangeNotifier {
   String abvHigh = '';
   String abvLow = '';
   String sortBy = '-rating';
+  String releaseSortBy = '-rating';
   String release = '';
   int checkIn = 0;
   int wishlisted = 0;
@@ -31,6 +32,7 @@ class Filter with ChangeNotifier {
   RangeValues alcoholRange = const RangeValues(0, 15);
 
   String sortIndex = 'Global rating - Høy til lav';
+  String releaseSortIndex = 'Global rating - Høy til lav';
 
   List<String> selectedStyles = [];
   List<String> selectedCountries = [];
@@ -57,6 +59,7 @@ class Filter with ChangeNotifier {
     {'name': 'delivery', 'text': 'Bestilling', 'save': false},
     {'name': 'checkIn', 'text': 'Untappd Innsjekket', 'save': false},
     {'name': 'wishlisted', 'text': 'Untappd Ønskeliste', 'save': false},
+    {'name': 'releaseSortBy', 'text': 'Lanseringer Sortering', 'save': true},
   ];
 
   Filter get filters {
@@ -86,7 +89,7 @@ class Filter with ChangeNotifier {
 
   bool releasesLoading = false;
   Future<List<Release>> getReleases() async {
-    if (releaseList.isNotEmpty && releaseList.length > 1 && !releasesLoading) {
+    if (releasesLoading) {
       return releaseList;
     }
     try {
@@ -143,9 +146,14 @@ class Filter with ChangeNotifier {
     saveFilters();
   }
 
-  void setSortBy(String index) {
+  void setSortBy(String index, [bool release = false]) {
     sortIndex = index;
-    sortBy = sortListAuth[index]!;
+    if (release) {
+      releaseSortBy = sortListAuth[index]!;
+    } else {
+      sortBy = sortListAuth[index]!;
+    }
+
     notifyListeners();
     saveFilters();
   }
@@ -362,6 +370,10 @@ class Filter with ChangeNotifier {
         prefs.setString('sortBy', sortBy);
         prefs.setString('sortIndex', sortIndex);
       }
+      if (filter['name'] == 'releaseSortBy' && filter['save'] == true) {
+        prefs.setString('releaseSortBy', releaseSortBy);
+        prefs.setString('releaseSortIndex', releaseSortIndex);
+      }
       if (filter['name'] == 'style' && filter['save'] == true) {
         prefs.setString('style', style);
         prefs.setStringList('selectedStyles', selectedStyles);
@@ -439,6 +451,11 @@ class Filter with ChangeNotifier {
         sortBy = prefs.getString('sortBy') ?? '-rating';
         sortIndex =
             prefs.getString('sortIndex') ?? 'Global rating - Høy til lav';
+      }
+      if (filter['name'] == 'releaseSortBy' && filter['save'] == true) {
+        releaseSortBy = prefs.getString('releaseSortBy') ?? '-rating';
+        releaseSortIndex = prefs.getString('releaseSortIndex') ??
+            'Global rating - Høy til lav';
       }
       if (filter['name'] == 'style' && filter['save'] == true) {
         style = prefs.getString('style') ?? '';

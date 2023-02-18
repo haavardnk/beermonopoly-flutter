@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../helpers/api_helper.dart';
 import './product_item.dart';
 import '../../models/product.dart';
+import '../../models/release.dart';
 import '../../providers/filter.dart';
 import '../../providers/auth.dart';
 import './pagination_indicators/first_page_error_indicator.dart';
@@ -12,7 +13,9 @@ import './pagination_indicators/new_page_error_indicator.dart';
 import './pagination_indicators/no_items_found_indicator.dart';
 
 class ProductListView extends StatefulWidget {
-  const ProductListView({Key? key}) : super(key: key);
+  final Release? release;
+
+  const ProductListView({Key? key, this.release}) : super(key: key);
 
   @override
   _ProductListViewState createState() => _ProductListViewState();
@@ -25,8 +28,8 @@ class _ProductListViewState extends State<ProductListView> {
 
   Future<void> _fetchPage(int pageKey, Filter filters, Auth auth) async {
     try {
-      final newItems =
-          await ApiHelper.getProductList(pageKey, filters, auth, _pageSize);
+      final newItems = await ApiHelper.getProductList(
+          pageKey, filters, auth, _pageSize, widget.release);
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
