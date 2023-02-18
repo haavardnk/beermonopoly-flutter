@@ -152,6 +152,57 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           }),
         ],
       ),
+      floatingActionButton: InkWell(
+        onLongPress: () {
+          if (cart.items.keys.contains(product.id)) {
+            cart.removeSingleItem(product.id);
+            cart.updateCartItemsData();
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  cart.items.keys.contains(product.id)
+                      ? 'Fjernet en fra handlelisten!'
+                      : 'Fjernet helt fra handlelisten!',
+                  textAlign: TextAlign.center,
+                ),
+                duration: const Duration(seconds: 1),
+              ),
+            );
+          }
+        },
+        child: FloatingActionButton(
+          child: Consumer<Cart>(
+            builder: (context, _, __) => Badge(
+              isLabelVisible: cart.items.keys.contains(product.id),
+              label: Text(cart.items.keys.contains(product.id)
+                  ? cart.items[product.id]!.quantity.toString()
+                  : ''),
+              child: Icon(Icons.add_shopping_cart),
+            ),
+          ),
+          onPressed: () {
+            cart.addItem(product.id, product);
+            cart.updateCartItemsData();
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text(
+                  'Lagt til i handlelisten!',
+                  textAlign: TextAlign.center,
+                ),
+                duration: const Duration(seconds: 1),
+                action: SnackBarAction(
+                  label: 'ANGRE',
+                  onPressed: () {
+                    cart.removeSingleItem(product.id);
+                  },
+                ),
+              ),
+            );
+          },
+        ),
+      ),
       body: FutureBuilder(
         future:
             ApiHelper.getDetailedProductInfo(product.id, auth.apiToken, fields),
@@ -1113,115 +1164,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                  Container(
-                    padding: _tabletMode &&
-                            _mediaQueryData.orientation == Orientation.landscape
-                        ? EdgeInsets.fromLTRB(_mediaQueryData.size.width * 0.15,
-                            12, _mediaQueryData.size.width * 0.15, 12)
-                        : EdgeInsets.fromLTRB(12, 12, 12, 12),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).bottomAppBarColor,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(0.0, 1.0), //(x,y)
-                          blurRadius: 2.0,
-                        ),
-                      ],
-                    ),
-                    child: GestureDetector(
-                      onTap: () {
-                        cart.addItem(product.id, product);
-                        cart.updateCartItemsData();
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: const Text(
-                              'Lagt til i handlelisten!',
-                              textAlign: TextAlign.center,
-                            ),
-                            duration: const Duration(seconds: 1),
-                            action: SnackBarAction(
-                              label: 'ANGRE',
-                              onPressed: () {
-                                cart.removeSingleItem(product.id);
-                              },
-                            ),
-                          ),
-                        );
-                      },
-                      onLongPress: () {
-                        if (cart.items.keys.contains(product.id)) {
-                          cart.removeSingleItem(product.id);
-                          cart.updateCartItemsData();
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                cart.items.keys.contains(product.id)
-                                    ? 'Fjernet en fra handlelisten!'
-                                    : 'Fjernet helt fra handlelisten!',
-                                textAlign: TextAlign.center,
-                              ),
-                              duration: const Duration(seconds: 1),
-                            ),
-                          );
-                        }
-                      },
-                      child: Consumer<Cart>(
-                        builder: (_, cart, __) => Stack(
-                          children: [
-                            Container(
-                              alignment: Alignment.center,
-                              padding: EdgeInsets.fromLTRB(12, 8, 12, 8),
-                              decoration: BoxDecoration(
-                                color: Colors.pink,
-                                border: Border.all(
-                                  width: 1,
-                                  color: Colors.pink,
-                                ),
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                              ),
-                              child: const Text(
-                                'Legg til i handleliste',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            if (cart.items.keys.contains(product.id))
-                              Positioned(
-                                right: 8,
-                                top: 8,
-                                child: Container(
-                                  // color: Theme.of(context).accentColor,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    color: Colors.white,
-                                  ),
-                                  constraints: const BoxConstraints(
-                                    minWidth: 18,
-                                    minHeight: 18,
-                                  ),
-                                  child: Text(
-                                    cart.items[product.id]!.quantity.toString(),
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.pink,
-                                    ),
-                                  ),
-                                ),
-                              )
-                          ],
-                        ),
-                      ),
                     ),
                   ),
                 ],
