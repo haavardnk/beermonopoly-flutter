@@ -10,6 +10,7 @@ import '../assets/constants.dart';
 class Filter with ChangeNotifier {
   String search = '';
   String storeId = '';
+  String stockChangeStoreId = '';
   String country = '';
   String style = '';
   String productSelection = '';
@@ -39,6 +40,7 @@ class Filter with ChangeNotifier {
   List<String> selectedStores = [];
   List<Store> storeList = [];
   List<Release> releaseList = [];
+  String stockChangeSelectedStore = '';
 
   List<bool> productSelectionSelectedList = List<bool>.filled(5, false);
   List<bool> excludeAllergensSelectedList = List<bool>.filled(4, false);
@@ -59,6 +61,7 @@ class Filter with ChangeNotifier {
     {'name': 'delivery', 'text': 'Bestilling', 'save': false},
     {'name': 'checkIn', 'text': 'Untappd Innsjekket', 'save': false},
     {'name': 'wishlisted', 'text': 'Untappd Ønskeliste', 'save': false},
+    {'name': 'stockChangeStoreId', 'text': 'Lager inn/ut butikk', 'save': true},
     {'name': 'releaseSortBy', 'text': 'Lanseringer Sortering', 'save': true},
   ];
 
@@ -283,19 +286,29 @@ class Filter with ChangeNotifier {
     saveFilters();
   }
 
-  void setStore() {
-    if (selectedStores.isEmpty) {
-      storeId = '';
+  void setStore({bool stock = false}) {
+    if (stock) {
+      if (stockChangeSelectedStore.isEmpty) {
+        stockChangeStoreId = '';
+      } else {
+        stockChangeStoreId = storeList
+            .firstWhere((element) => element.name == stockChangeSelectedStore)
+            .id;
+      }
     } else {
-      String temporaryStores = '';
-      selectedStores.forEach((storeName) {
-        if (temporaryStores.isNotEmpty) {
-          temporaryStores += ',';
-        }
-        temporaryStores +=
-            storeList.firstWhere((element) => element.name == storeName).id;
-      });
-      storeId = temporaryStores;
+      if (selectedStores.isEmpty) {
+        storeId = '';
+      } else {
+        String temporaryStores = '';
+        selectedStores.forEach((storeName) {
+          if (temporaryStores.isNotEmpty) {
+            temporaryStores += ',';
+          }
+          temporaryStores +=
+              storeList.firstWhere((element) => element.name == storeName).id;
+        });
+        storeId = temporaryStores;
+      }
     }
     notifyListeners();
     saveFilters();
@@ -357,6 +370,10 @@ class Filter with ChangeNotifier {
       if (filter['name'] == 'store' && filter['save'] == true) {
         prefs.setString('storeId', storeId);
         prefs.setStringList('selectedStores', selectedStores);
+      }
+      if (filter['name'] == 'stockChangeStoreId' && filter['save'] == true) {
+        prefs.setString('stockChangeStoreId', stockChangeStoreId);
+        prefs.setString('stockChangeSelectedStore', stockChangeSelectedStore);
       }
       if (filter['name'] == 'price' && filter['save'] == true) {
         prefs.setString('priceHigh', priceHigh);
@@ -428,6 +445,11 @@ class Filter with ChangeNotifier {
       if (filter['name'] == 'store' && filter['save'] == true) {
         storeId = prefs.getString('storeId') ?? '';
         selectedStores = prefs.getStringList('selectedStores') ?? [];
+      }
+      if (filter['name'] == 'stockChangeStoreId' && filter['save'] == true) {
+        stockChangeStoreId = prefs.getString('stockChangeStoreId') ?? '';
+        stockChangeSelectedStore =
+            prefs.getString('stockChangeSelectedStore') ?? '';
       }
       if (filter['name'] == 'price' && filter['save'] == true) {
         priceHigh = prefs.getString('priceHigh') ?? '';

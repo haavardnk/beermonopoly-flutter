@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import '../models/product.dart';
 import '../models/store.dart';
 import '../models/release.dart';
+import '../models/stock_change.dart';
 import '../providers/filter.dart';
 import '../providers/auth.dart';
 
@@ -49,6 +50,42 @@ class ApiHelper {
         final List<dynamic> jsonResponse =
             json.decode(utf8.decode(response.bodyBytes))['results'];
         return jsonResponse;
+      } else {
+        throw GenericHttpException();
+      }
+    } on SocketException {
+      throw NoConnectionException();
+    }
+  }
+
+  static Future<List<StockChange>> getStockChangeList(
+      int page, Auth auth, int pageSize, String store) async {
+    const fields =
+        'vmp_id,vmp_name,price,rating,checkins,label_sm_url,main_category,'
+        'sub_category,style,stock,abv,user_checked_in,user_wishlisted,'
+        'volume,price_per_volume,vmp_url,untpd_url,untpd_id,country';
+    final Map<String, String> headers = auth.apiToken.isNotEmpty
+        ? {
+            'Authorization': 'Token ${auth.apiToken}',
+          }
+        : {};
+    try {
+      final response = await http.get(
+        _apiStockChangeUrlBuilder(page, pageSize, store),
+        headers: headers,
+      );
+      if (response.statusCode == 200) {
+        final jsonResponse =
+            json.decode(utf8.decode(response.bodyBytes))['results'];
+        List<StockChange> stockChange = List<StockChange>.from(
+          jsonResponse.map(
+            (stockChange) => StockChange.fromJson(stockChange),
+          ),
+        );
+        return stockChange;
+      } else if (response.statusCode == 401) {
+        auth.logout();
+        return [];
       } else {
         throw GenericHttpException();
       }
@@ -312,6 +349,17 @@ Uri _apiReleaseProductUrlBuilder(
   } else if (filter.checkIn == 2) {
     string = string + '&user_checkin=False';
   }
+
+  final url = Uri.parse(string);
+  return url;
+}
+
+Uri _apiStockChangeUrlBuilder(int page, int pageSize, String store) {
+  var string = ('$_baseUrl'
+      'stockchange/'
+      '?store=$store'
+      '&page=$page'
+      '&page_size=$pageSize');
 
   final url = Uri.parse(string);
   return url;
