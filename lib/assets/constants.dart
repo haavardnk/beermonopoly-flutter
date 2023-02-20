@@ -267,6 +267,7 @@ const Map<String, String> countryList = {
   'Argentina': 'AR',
   'Australia': 'AU',
   'Belgia': 'BE',
+  'Brasil': 'BR',
   'Canada': 'CA',
   'Danmark': 'DK',
   'Den europeiske union': 'EU',
