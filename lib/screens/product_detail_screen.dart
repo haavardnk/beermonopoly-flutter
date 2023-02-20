@@ -308,7 +308,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                          padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -327,7 +327,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 12),
                               Row(
                                 children: [
                                   Text(
@@ -345,11 +344,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     )
                                 ],
                               ),
-                              const SizedBox(height: 10),
-                              Text(product.style,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                  )),
+                              Text(
+                                product.style,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const Divider(
+                                height: 15,
+                              ),
                               if (product.rating != null)
                                 Padding(
                                   padding:
@@ -357,9 +360,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   child: IntrinsicHeight(
                                     child: Column(
                                       children: [
-                                        const Divider(
-                                          height: 20,
-                                        ),
                                         Row(
                                           mainAxisAlignment: _tabletMode
                                               ? MainAxisAlignment.spaceEvenly
@@ -485,7 +485,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         ),
                                         if (_numRatings > 1)
                                           SizedBox(
-                                            height: 8,
+                                            height: 5,
                                           ),
                                         if (_numRatings > 1)
                                           Row(
@@ -624,8 +624,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                         100)
                                                     .toStringAsFixed(0) +
                                                 '%'),
-                                        backgroundColor: Colors.grey[300]!,
-                                        progressColor: Colors.pink,
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .surfaceVariant,
+                                        progressColor: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
                                         circularStrokeCap:
                                             CircularStrokeCap.round,
                                         footer: const Text(
@@ -646,8 +650,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                         100)
                                                     .toStringAsFixed(0) +
                                                 '%'),
-                                        backgroundColor: Colors.grey[300]!,
-                                        progressColor: Colors.pink,
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .surfaceVariant,
+                                        progressColor: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
                                         circularStrokeCap:
                                             CircularStrokeCap.round,
                                         footer: const Text(
@@ -668,8 +676,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                         100)
                                                     .toStringAsFixed(0) +
                                                 '%'),
-                                        backgroundColor: Colors.grey[300]!,
-                                        progressColor: Colors.pink,
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .surfaceVariant,
+                                        progressColor: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
                                         circularStrokeCap:
                                             CircularStrokeCap.round,
                                         footer: const Text(
@@ -691,8 +703,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                         100)
                                                     .toStringAsFixed(0) +
                                                 '%'),
-                                        backgroundColor: Colors.grey[300]!,
-                                        progressColor: Colors.pink,
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .surfaceVariant,
+                                        progressColor: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
                                         circularStrokeCap:
                                             CircularStrokeCap.round,
                                         footer: const Text(
@@ -702,7 +718,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   ],
                                 ),
                               const Divider(
-                                height: 20,
+                                height: 15,
                               ),
                               Row(
                                 mainAxisAlignment:
@@ -760,19 +776,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ),
                         ),
                         const Divider(
-                          height: 20,
+                          height: 15,
                         ),
                         Container(
                           padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('Informasjon',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold)),
+                              const Text(
+                                'Informasjon',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
                               const SizedBox(
-                                height: 16,
+                                height: 10,
                               ),
                               if (snapshot.hasData &&
                                   snapshot.data!['year'] != null &&
@@ -1079,7 +1096,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ),
                         ),
                         const Divider(
-                          height: 20,
+                          height: 15,
                         ),
                         Container(
                           height: _stockList.length < 6
@@ -1094,7 +1111,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold)),
                               const SizedBox(
-                                height: 16,
+                                height: 10,
                               ),
                               if (_stockList.isNotEmpty)
                                 Expanded(
@@ -1148,7 +1165,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold)),
                               const SizedBox(
-                                height: 16,
+                                height: 10,
                               ),
                               if (snapshot.hasData &&
                                   snapshot.data!['description'] != null)

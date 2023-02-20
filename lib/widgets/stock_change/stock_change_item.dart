@@ -45,7 +45,7 @@ class _StockChangeItemState extends State<StockChangeItem> {
     final countries = countryList;
     final double _boxImageSize = _tabletMode
         ? 60 + _mediaQueryData.textScaleFactor * 10
-        : _mediaQueryData.size.shortestSide / 6;
+        : _mediaQueryData.size.shortestSide / 5.9;
     late Offset tapPosition;
     RenderBox overlay =
         Overlay.of(context).context.findRenderObject() as RenderBox;
@@ -70,7 +70,9 @@ class _StockChangeItemState extends State<StockChangeItem> {
                 widget.lastDate!.day ==
                     widget.stockChange.stock_unstock_at!.day) &&
             widget.lastDate != null)
-          Divider(),
+          Divider(
+            height: 0,
+          ),
         Container(
           foregroundDecoration: wishlisted == true
               ? const RotatedCornerDecoration(
@@ -95,247 +97,239 @@ class _StockChangeItemState extends State<StockChangeItem> {
                     ),
                   )
                 : null,
-            child: Column(
-              children: [
-                Semantics(
-                  label: widget.stockChange.product.name,
-                  button: true,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: () {
-                      PersistentNavBarNavigator.pushNewScreenWithRouteSettings(
-                        context,
-                        settings: RouteSettings(
-                            name: ProductDetailScreen.routeName,
-                            arguments: <String, dynamic>{
-                              'product': widget.stockChange.product,
-                              'herotag': 'list${widget.stockChange.product.id}'
-                            }),
-                        screen: ProductDetailScreen(),
-                        withNavBar: true,
-                        pageTransitionAnimation:
-                            PageTransitionAnimation.cupertino,
-                      );
-                    },
-                    onTapDown: getPosition,
-                    onLongPress: () {
-                      showPopupMenu(
-                        context,
-                        auth,
-                        wishlisted,
-                        tapPosition,
-                        overlay,
-                        widget.stockChange.product,
-                      ).then(
-                        (value) => setState(() {
-                          if (value == 'wishlistAdded') {
-                            wishlisted = true;
-                            cart.updateCartItemsData();
-                          }
-                          if (value == 'wishlistRemoved') {
-                            wishlisted = false;
-                            cart.updateCartItemsData();
-                          }
+            child: Semantics(
+              label: widget.stockChange.product.name,
+              button: true,
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  PersistentNavBarNavigator.pushNewScreenWithRouteSettings(
+                    context,
+                    settings: RouteSettings(
+                        name: ProductDetailScreen.routeName,
+                        arguments: <String, dynamic>{
+                          'product': widget.stockChange.product,
+                          'herotag': 'list${widget.stockChange.product.id}'
                         }),
-                      );
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.fromLTRB(12, 2, 12, 2),
-                      child: Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            ClipRRect(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(5)),
-                              child: Stack(
-                                children: [
-                                  Hero(
-                                    tag: 'list${widget.stockChange.product.id}',
-                                    child:
-                                        widget.stockChange.product.imageUrl !=
-                                                    null &&
-                                                widget.stockChange.product
-                                                    .imageUrl!.isNotEmpty
-                                            ? FancyShimmerImage(
-                                                imageUrl: widget.stockChange
-                                                    .product.imageUrl!,
-                                                height: _boxImageSize,
-                                                width: _boxImageSize,
-                                                errorWidget: Image.asset(
-                                                  'assets/images/placeholder.png',
-                                                  height: _boxImageSize,
-                                                  width: _boxImageSize,
-                                                ),
-                                              )
-                                            : Image.asset(
-                                                'assets/images/placeholder.png',
-                                                height: _boxImageSize,
-                                                width: _boxImageSize,
-                                              ),
-                                  ),
-                                  if (widget.stockChange.product.country !=
-                                          null &&
-                                      countries[widget
-                                              .stockChange.product.country] !=
-                                          null &&
-                                      countries[widget
-                                              .stockChange.product.country]!
-                                          .isNotEmpty)
-                                    ClipRRect(
-                                      borderRadius: const BorderRadius.only(
-                                          bottomRight: Radius.circular(5)),
-                                      child: Flag.fromString(
-                                        countries[widget
-                                            .stockChange.product.country!]!,
-                                        height: 20,
-                                        width: 20 * 4 / 3,
-                                      ),
-                                    )
-                                ],
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    widget.stockChange.product.name,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Container(
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Kr ${widget.stockChange.product.price.toStringAsFixed(2)}',
-                                          style: const TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          ' - Kr ${widget.stockChange.product.pricePerVolume!.toStringAsFixed(2)} pr. liter',
-                                          style: const TextStyle(
-                                            fontSize: 11,
+                    screen: ProductDetailScreen(),
+                    withNavBar: true,
+                    pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                  );
+                },
+                onTapDown: getPosition,
+                onLongPress: () {
+                  showPopupMenu(
+                    context,
+                    auth,
+                    wishlisted,
+                    tapPosition,
+                    overlay,
+                    widget.stockChange.product,
+                  ).then(
+                    (value) => setState(() {
+                      if (value == 'wishlistAdded') {
+                        wishlisted = true;
+                        cart.updateCartItemsData();
+                      }
+                      if (value == 'wishlistRemoved') {
+                        wishlisted = false;
+                        cart.updateCartItemsData();
+                      }
+                    }),
+                  );
+                },
+                child: Container(
+                  margin: const EdgeInsets.fromLTRB(12, 4, 12, 6),
+                  child: Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: ClipRRect(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5)),
+                            child: Stack(
+                              children: [
+                                Hero(
+                                  tag: 'list${widget.stockChange.product.id}',
+                                  child: widget.stockChange.product.imageUrl !=
+                                              null &&
+                                          widget.stockChange.product.imageUrl!
+                                              .isNotEmpty
+                                      ? FancyShimmerImage(
+                                          imageUrl: widget
+                                              .stockChange.product.imageUrl!,
+                                          height: _boxImageSize,
+                                          width: _boxImageSize,
+                                          errorWidget: Image.asset(
+                                            'assets/images/placeholder.png',
+                                            height: _boxImageSize,
+                                            width: _boxImageSize,
                                           ),
                                         )
-                                      ],
+                                      : Image.asset(
+                                          'assets/images/placeholder.png',
+                                          height: _boxImageSize,
+                                          width: _boxImageSize,
+                                        ),
+                                ),
+                                if (widget.stockChange.product.country !=
+                                        null &&
+                                    countries[widget
+                                            .stockChange.product.country] !=
+                                        null &&
+                                    countries[
+                                            widget.stockChange.product.country]!
+                                        .isNotEmpty)
+                                  ClipRRect(
+                                    borderRadius: const BorderRadius.only(
+                                        bottomRight: Radius.circular(5)),
+                                    child: Flag.fromString(
+                                      countries[
+                                          widget.stockChange.product.country!]!,
+                                      height: 20,
+                                      width: 20 * 4 / 3,
                                     ),
-                                  ),
-                                  Container(
-                                    child: Text(
-                                      widget.stockChange.product.style,
+                                  )
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.stockChange.product.name,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Container(
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      'Kr ${widget.stockChange.product.price.toStringAsFixed(2)}',
                                       style: const TextStyle(
-                                        fontSize: 12,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    child: widget.stockChange.product
-                                                .userRating ==
-                                            null
-                                        ? Row(
-                                            children: [
-                                              Text(
-                                                widget.stockChange.product
-                                                            .rating !=
-                                                        null
-                                                    ? '${widget.stockChange.product.rating!.toStringAsFixed(2)} '
-                                                    : '0 ',
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                              createRatingBar(
-                                                  rating: widget.stockChange
-                                                              .product.rating !=
-                                                          null
-                                                      ? widget.stockChange
-                                                          .product.rating!
-                                                      : 0,
-                                                  size: 18,
-                                                  color: Colors.yellow[700]!),
-                                              Text(
-                                                widget.stockChange.product
-                                                            .checkins !=
-                                                        null
-                                                    ? ' ${NumberFormat.compact().format(widget.stockChange.product.checkins)}'
-                                                    : '',
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        : Row(
-                                            children: [
-                                              Text(
-                                                widget.stockChange.product
-                                                            .rating !=
-                                                        null
-                                                    ? 'Global: ${widget.stockChange.product.rating!.toStringAsFixed(2)}'
-                                                    : '0 ',
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                              Icon(
-                                                Icons.star,
-                                                color: Colors.yellow[700],
-                                                size: 18,
-                                              ),
-                                              const SizedBox(width: 8),
-                                              Text(
-                                                widget.stockChange.product
-                                                            .userRating !=
-                                                        null
-                                                    ? 'Din: ${widget.stockChange.product.userRating!.toStringAsFixed(2)} '
-                                                    : '0 ',
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                              Icon(
-                                                Icons.star,
-                                                color: Colors.yellow[700],
-                                                size: 18,
-                                              ),
-                                            ],
-                                          ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 20),
-                              child: widget.stockChange.quantity > 0
-                                  ? Text(
-                                      '+' +
-                                          widget.stockChange.quantity
-                                              .toString(),
-                                      style: TextStyle(
-                                          fontSize: 22, color: Colors.green),
+                                    Text(
+                                      ' - Kr ${widget.stockChange.product.pricePerVolume!.toStringAsFixed(2)} pr. liter',
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                      ),
                                     )
-                                  : Icon(
-                                      Icons.close,
-                                      size: 34,
-                                      color: Colors.red,
-                                    ),
-                            )
-                          ],
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                child: Text(
+                                  widget.stockChange.product.style,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                child: widget.stockChange.product.userRating ==
+                                        null
+                                    ? Row(
+                                        children: [
+                                          Text(
+                                            widget.stockChange.product.rating !=
+                                                    null
+                                                ? '${widget.stockChange.product.rating!.toStringAsFixed(2)} '
+                                                : '0 ',
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                          createRatingBar(
+                                              rating: widget.stockChange.product
+                                                          .rating !=
+                                                      null
+                                                  ? widget.stockChange.product
+                                                      .rating!
+                                                  : 0,
+                                              size: 18,
+                                              color: Colors.yellow[700]!),
+                                          Text(
+                                            widget.stockChange.product
+                                                        .checkins !=
+                                                    null
+                                                ? ' ${NumberFormat.compact().format(widget.stockChange.product.checkins)}'
+                                                : '',
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : Row(
+                                        children: [
+                                          Text(
+                                            widget.stockChange.product.rating !=
+                                                    null
+                                                ? 'Global: ${widget.stockChange.product.rating!.toStringAsFixed(2)}'
+                                                : '0 ',
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                          Icon(
+                                            Icons.star,
+                                            color: Colors.yellow[700],
+                                            size: 18,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            widget.stockChange.product
+                                                        .userRating !=
+                                                    null
+                                                ? 'Din: ${widget.stockChange.product.userRating!.toStringAsFixed(2)} '
+                                                : '0 ',
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                          Icon(
+                                            Icons.star,
+                                            color: Colors.yellow[700],
+                                            size: 18,
+                                          ),
+                                        ],
+                                      ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: widget.stockChange.quantity > 0
+                              ? Text(
+                                  '+${widget.stockChange.quantity}',
+                                  style: TextStyle(
+                                      fontSize: 22, color: Colors.green),
+                                )
+                              : Icon(
+                                  Icons.close,
+                                  size: 34,
+                                  color: Colors.red,
+                                ),
+                        )
+                      ],
                     ),
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         ),

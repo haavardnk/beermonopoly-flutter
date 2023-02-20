@@ -49,8 +49,27 @@ class _ReleaseTabState extends State<ReleaseTab> {
                 children: [
                   ListTile(
                     isThreeLine: true,
-                    leading: Icon(Icons.new_releases),
-                    trailing: Icon(Icons.arrow_forward),
+                    leading: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          filters.releaseList[index].releaseDate != null &&
+                                  DateTime.now()
+                                          .difference(filters
+                                              .releaseList[index].releaseDate!)
+                                          .inDays <=
+                                      14
+                              ? Icons.new_releases
+                              : Icons.new_releases_outlined,
+                        ),
+                      ],
+                    ),
+                    trailing: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.arrow_forward),
+                      ],
+                    ),
                     iconColor: Theme.of(context).colorScheme.onBackground,
                     textColor: Theme.of(context).colorScheme.onBackground,
                     onTap: () => PersistentNavBarNavigator.pushNewScreen(
@@ -95,11 +114,7 @@ class _ReleaseTabState extends State<ReleaseTab> {
                       ],
                     ),
                   ),
-                  if (index + 1 != filters.releaseList.length)
-                    Divider(
-                      height: 0,
-                      color: Colors.grey[400],
-                    )
+                  if (index + 1 != filters.releaseList.length) Divider()
                 ],
               );
             },

@@ -866,7 +866,7 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Text('Ølslipp',
+                  const Text('Nyhetslansering',
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   Consumer<Filter>(

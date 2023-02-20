@@ -85,7 +85,6 @@ class _ProductListViewState extends State<ProductListView> {
                   ),
                   separatorBuilder: (context, index) => Divider(
                     height: 0,
-                    color: Colors.grey[400],
                   ),
                 )
               : PagedGridView<int, Product>(

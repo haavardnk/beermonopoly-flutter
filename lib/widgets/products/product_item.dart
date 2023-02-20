@@ -75,259 +75,247 @@ class _ProductItemState extends State<ProductItem> {
             : null,
         child: Stack(
           children: [
-            Column(
-              children: [
-                Semantics(
-                  label: widget.product.name,
-                  button: true,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: () {
-                      PersistentNavBarNavigator.pushNewScreenWithRouteSettings(
-                        context,
-                        settings: RouteSettings(
-                            name: ProductDetailScreen.routeName,
-                            arguments: <String, dynamic>{
-                              'product': widget.product,
-                              'herotag': 'list${widget.product.id}'
-                            }),
-                        screen: ProductDetailScreen(),
-                        withNavBar: true,
-                        pageTransitionAnimation:
-                            PageTransitionAnimation.cupertino,
-                      );
-                    },
-                    onTapDown: getPosition,
-                    onLongPress: () {
-                      showPopupMenu(
-                        context,
-                        auth,
-                        wishlisted,
-                        tapPosition,
-                        overlay,
-                        widget.product,
-                      ).then(
-                        (value) => setState(() {
-                          if (value == 'wishlistAdded') {
-                            wishlisted = true;
-                            cart.updateCartItemsData();
-                          }
-                          if (value == 'wishlistRemoved') {
-                            wishlisted = false;
-                            cart.updateCartItemsData();
-                          }
+            Semantics(
+              label: widget.product.name,
+              button: true,
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  PersistentNavBarNavigator.pushNewScreenWithRouteSettings(
+                    context,
+                    settings: RouteSettings(
+                        name: ProductDetailScreen.routeName,
+                        arguments: <String, dynamic>{
+                          'product': widget.product,
+                          'herotag': 'list${widget.product.id}'
                         }),
-                      );
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.fromLTRB(12, 6, 12, 6),
-                      child: Container(
-                        margin: const EdgeInsets.fromLTRB(0, 8, 8, 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            ClipRRect(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(5)),
-                              child: Stack(
-                                children: [
-                                  Hero(
-                                    tag: 'list${widget.product.id}',
-                                    child: widget.product.imageUrl != null &&
-                                            widget.product.imageUrl!.isNotEmpty
-                                        ? FancyShimmerImage(
-                                            imageUrl: widget.product.imageUrl!,
-                                            height: _boxImageSize,
-                                            width: _boxImageSize,
-                                            errorWidget: Image.asset(
-                                              'assets/images/placeholder.png',
-                                              height: _boxImageSize,
-                                              width: _boxImageSize,
-                                            ),
-                                          )
-                                        : Image.asset(
-                                            'assets/images/placeholder.png',
-                                            height: _boxImageSize,
-                                            width: _boxImageSize,
-                                          ),
-                                  ),
-                                  if (widget.product.country != null &&
-                                      countries[widget.product.country] !=
-                                          null &&
-                                      countries[widget.product.country]!
-                                          .isNotEmpty)
-                                    ClipRRect(
-                                      borderRadius: const BorderRadius.only(
-                                          bottomRight: Radius.circular(5)),
-                                      child: Flag.fromString(
-                                        countries[widget.product.country!]!,
-                                        height: 20,
-                                        width: 20 * 4 / 3,
+                    screen: ProductDetailScreen(),
+                    withNavBar: true,
+                    pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                  );
+                },
+                onTapDown: getPosition,
+                onLongPress: () {
+                  showPopupMenu(
+                    context,
+                    auth,
+                    wishlisted,
+                    tapPosition,
+                    overlay,
+                    widget.product,
+                  ).then(
+                    (value) => setState(() {
+                      if (value == 'wishlistAdded') {
+                        wishlisted = true;
+                        cart.updateCartItemsData();
+                      }
+                      if (value == 'wishlistRemoved') {
+                        wishlisted = false;
+                        cart.updateCartItemsData();
+                      }
+                    }),
+                  );
+                },
+                child: Container(
+                  margin: const EdgeInsets.fromLTRB(12, 6, 20, 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5)),
+                          child: Stack(
+                            children: [
+                              Hero(
+                                tag: 'list${widget.product.id}',
+                                child: widget.product.imageUrl != null &&
+                                        widget.product.imageUrl!.isNotEmpty
+                                    ? FancyShimmerImage(
+                                        imageUrl: widget.product.imageUrl!,
+                                        height: _boxImageSize,
+                                        width: _boxImageSize,
+                                        errorWidget: Image.asset(
+                                          'assets/images/placeholder.png',
+                                          height: _boxImageSize,
+                                          width: _boxImageSize,
+                                        ),
+                                      )
+                                    : Image.asset(
+                                        'assets/images/placeholder.png',
+                                        height: _boxImageSize,
+                                        width: _boxImageSize,
                                       ),
-                                    )
+                              ),
+                              if (widget.product.country != null &&
+                                  countries[widget.product.country] != null &&
+                                  countries[widget.product.country]!.isNotEmpty)
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                      bottomRight: Radius.circular(5)),
+                                  child: Flag.fromString(
+                                    countries[widget.product.country!]!,
+                                    height: 20,
+                                    width: 20 * 4 / 3,
+                                  ),
+                                )
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.product.name,
+                              style: const TextStyle(
+                                fontSize: 14,
+                              ),
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Container(
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Kr ${widget.product.price.toStringAsFixed(2)}',
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    ' - Kr ${widget.product.pricePerVolume!.toStringAsFixed(2)} pr. liter',
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                    ),
+                                  )
                                 ],
                               ),
                             ),
-                            const SizedBox(
-                              width: 10,
+                            Container(
+                              child: Text(
+                                widget.product.style,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
                             ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    widget.product.name,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                    ),
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(top: 5),
-                                    child: Row(
+                            Container(
+                              child: widget.product.userRating == null
+                                  ? Row(
                                       children: [
                                         Text(
-                                          'Kr ${widget.product.price.toStringAsFixed(2)}',
+                                          widget.product.rating != null
+                                              ? '${widget.product.rating!.toStringAsFixed(2)} '
+                                              : '0 ',
                                           style: const TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
                                           ),
                                         ),
+                                        createRatingBar(
+                                            rating:
+                                                widget.product.rating != null
+                                                    ? widget.product.rating!
+                                                    : 0,
+                                            size: 18,
+                                            color: Colors.yellow[700]!),
                                         Text(
-                                          ' - Kr ${widget.product.pricePerVolume!.toStringAsFixed(2)} pr. liter',
+                                          widget.product.checkins != null
+                                              ? ' ${NumberFormat.compact().format(widget.product.checkins)}'
+                                              : '',
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Row(
+                                      children: [
+                                        Text(
+                                          widget.product.rating != null
+                                              ? 'Global: ${widget.product.rating!.toStringAsFixed(2)}'
+                                              : '0 ',
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                        Icon(
+                                          Icons.star,
+                                          color: Colors.yellow[700],
+                                          size: 18,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          widget.product.userRating != null
+                                              ? 'Din: ${widget.product.userRating!.toStringAsFixed(2)} '
+                                              : '0 ',
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                        Icon(
+                                          Icons.star,
+                                          color: Colors.yellow[700],
+                                          size: 18,
+                                        ),
+                                      ],
+                                    ),
+                            ),
+                            Container(
+                              height: 11,
+                              margin: const EdgeInsets.only(top: 2),
+                              child: Row(
+                                children: [
+                                  if (widget.product.stock != null &&
+                                      widget.product.stock != 0)
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'På lager: ${widget.product.stock}',
                                           style: const TextStyle(
                                             fontSize: 11,
+                                            height: 0.9,
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(top: 5),
-                                    child: Text(
-                                      widget.product.style,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(top: 5),
-                                    child: widget.product.userRating == null
-                                        ? Row(
-                                            children: [
-                                              Text(
-                                                widget.product.rating != null
-                                                    ? '${widget.product.rating!.toStringAsFixed(2)} '
-                                                    : '0 ',
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                              createRatingBar(
-                                                  rating: widget
-                                                              .product.rating !=
-                                                          null
-                                                      ? widget.product.rating!
-                                                      : 0,
-                                                  size: 18,
-                                                  color: Colors.yellow[700]!),
-                                              Text(
-                                                widget.product.checkins != null
-                                                    ? ' ${NumberFormat.compact().format(widget.product.checkins)}'
-                                                    : '',
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        : Row(
-                                            children: [
-                                              Text(
-                                                widget.product.rating != null
-                                                    ? 'Global: ${widget.product.rating!.toStringAsFixed(2)}'
-                                                    : '0 ',
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                              Icon(
-                                                Icons.star,
-                                                color: Colors.yellow[700],
-                                                size: 18,
-                                              ),
-                                              const SizedBox(width: 8),
-                                              Text(
-                                                widget.product.userRating !=
-                                                        null
-                                                    ? 'Din: ${widget.product.userRating!.toStringAsFixed(2)} '
-                                                    : '0 ',
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                              Icon(
-                                                Icons.star,
-                                                color: Colors.yellow[700],
-                                                size: 18,
-                                              ),
-                                            ],
-                                          ),
-                                  ),
-                                  Container(
-                                    height: 11,
-                                    margin: const EdgeInsets.only(top: 5),
-                                    child: Row(
-                                      children: [
-                                        if (widget.product.stock != null &&
-                                            widget.product.stock != 0)
-                                          Row(
-                                            children: [
-                                              Text(
-                                                'På lager: ${widget.product.stock}',
-                                                style: const TextStyle(
-                                                  fontSize: 11,
-                                                  height: 0.9,
-                                                ),
-                                              ),
-                                              VerticalDivider(
-                                                width: 15,
-                                                thickness: 1,
-                                                color: Colors.grey[300],
-                                              ),
-                                            ],
-                                          ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              widget.product.abv != null
-                                                  ? '${widget.product.abv!.toStringAsFixed(1)}%'
-                                                  : '',
-                                              style: const TextStyle(
-                                                fontSize: 11,
-                                                height: 0.9,
-                                              ),
-                                            ),
-                                            if (widget.product.abv != null)
-                                              VerticalDivider(
-                                                width: 15,
-                                                thickness: 1,
-                                                color: Colors.grey[300],
-                                              ),
-                                            Text(
-                                              '${widget.product.volume}l',
-                                              style: const TextStyle(
-                                                fontSize: 11,
-                                                height: 0.9,
-                                              ),
-                                            ),
-                                          ],
+                                        ),
+                                        VerticalDivider(
+                                          width: 15,
+                                          thickness: 1,
+                                          color: Colors.grey[300],
                                         ),
                                       ],
                                     ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        widget.product.abv != null
+                                            ? '${widget.product.abv!.toStringAsFixed(1)}%'
+                                            : '',
+                                        style: const TextStyle(
+                                          fontSize: 11,
+                                          height: 0.9,
+                                        ),
+                                      ),
+                                      if (widget.product.abv != null)
+                                        VerticalDivider(
+                                          width: 15,
+                                          thickness: 1,
+                                          color: Colors.grey[300],
+                                        ),
+                                      Text(
+                                        '${widget.product.volume}l',
+                                        style: const TextStyle(
+                                          fontSize: 11,
+                                          height: 0.9,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -335,14 +323,14 @@ class _ProductItemState extends State<ProductItem> {
                           ],
                         ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
             Positioned(
-              bottom: _tabletMode ? null : 14,
-              top: !_tabletMode ? null : _boxImageSize + 14 - 35,
+              bottom: _tabletMode ? null : 10,
+              top: !_tabletMode ? null : _boxImageSize + 11 - 35,
               right: 12,
               child: Semantics(
                 button: true,

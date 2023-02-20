@@ -29,7 +29,11 @@ class _ReleaseSortState extends State<ReleaseSort> {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     content: Container(
-                      width: double.maxFinite,
+                      constraints: const BoxConstraints(
+                        minWidth: 500,
+                        maxWidth: 500,
+                        maxHeight: 600,
+                      ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[

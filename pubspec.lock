@@ -672,6 +672,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.3"
+  retry:
+    dependency: "direct main"
+    description:
+      name: retry
+      sha256: "45dfeebaf095b606fdb9dbfb4c114cc204449bc274783b452658365e03afdbab"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.0"
   rotated_corner_decoration:
     dependency: "direct main"
     description:
