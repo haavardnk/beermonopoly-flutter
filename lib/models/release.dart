@@ -9,7 +9,7 @@ class Release {
   factory Release.fromJson(Map<String, dynamic> release) => Release(
         name: release['name'],
         releaseDate: release['release_date'] != null
-            ? DateTime.parse(release['release_date'])
+            ? DateTime.parse(release['release_date'].split("+")[0])
             : null,
         beerCount: release['beer_count'] ?? null,
         productSelection: release['product_selection'] ?? null,

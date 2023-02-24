@@ -16,17 +16,17 @@ class StockChange {
         quantity: stockChange['quantity'],
         stock_updated: DateTime.parse(stockChange['stock_updated']),
         stocked_at: stockChange['stocked_at'] != null
-            ? DateTime.parse(stockChange['stocked_at'])
+            ? DateTime.parse(stockChange['stocked_at'].split("+")[0])
             : null,
         unstocked_at: stockChange['unstocked_at'] != null
-            ? DateTime.parse(stockChange['unstocked_at'])
+            ? DateTime.parse(stockChange['unstocked_at'].split("+")[0])
             : null,
         product: Product.fromJson(stockChange['beer']),
         stock_unstock_at:
             stockChange['quantity'] > 0 && stockChange['stocked_at'] != null
-                ? DateTime.parse(stockChange['stocked_at'])
+                ? DateTime.parse(stockChange['stocked_at'].split("+")[0])
                 : stockChange['unstocked_at'] != null
-                    ? DateTime.parse(stockChange['unstocked_at'])
+                    ? DateTime.parse(stockChange['unstocked_at'].split("+")[0])
                     : null,
       );
 
