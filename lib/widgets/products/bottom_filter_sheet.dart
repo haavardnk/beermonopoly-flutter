@@ -51,7 +51,6 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {
-        // Open filters
         showModalBottomSheet<void>(
           isScrollControlled: true,
           context: context,
@@ -64,7 +63,10 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
           },
         ).whenComplete(() => filters.setFilters());
       },
-      icon: Icon(Icons.filter_list),
+      icon: Icon(
+        Icons.filter_list,
+        semanticLabel: "Filter",
+      ),
     );
   }
 

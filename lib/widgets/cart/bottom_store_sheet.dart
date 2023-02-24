@@ -44,6 +44,7 @@ class _BottomStoreSheetState extends State<BottomStoreSheet> {
       },
       icon: Icon(
         Icons.settings,
+        semanticLabel: "Instillinger",
       ),
     );
   }

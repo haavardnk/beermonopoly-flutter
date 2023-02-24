@@ -37,7 +37,10 @@ class _StoreStockChangeTabState extends State<StoreStockChangeTab> {
             onPressed: () {
               _openDropDownProgKey.currentState?.openDropDownSearch();
             },
-            icon: Icon(Icons.store),
+            icon: Icon(
+              Icons.store,
+              semanticLabel: "Velg butikk",
+            ),
           ),
         ],
       ),

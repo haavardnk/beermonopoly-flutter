@@ -78,7 +78,10 @@ class _ReleaseSortState extends State<ReleaseSort> {
                 },
               );
             },
-            icon: const Icon(Icons.sort)),
+            icon: const Icon(
+              Icons.sort,
+              semanticLabel: "Sortering",
+            )),
       ],
     );
   }
