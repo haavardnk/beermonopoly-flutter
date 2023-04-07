@@ -161,29 +161,22 @@ class _CartElementState extends State<CartElement> {
                                 : 1,
                             child: Container(
                               foregroundDecoration: wishlisted == true
-                                  ? const RotatedCornerDecoration(
+                                  ? const RotatedCornerDecoration.withColor(
                                       color: Color(0xff01aed6),
-                                      geometry: BadgeGeometry(
-                                        width: 25,
-                                        height: 25,
-                                        cornerRadius: 0,
-                                        alignment: BadgeAlignment.topRight,
-                                      ),
+                                      badgeSize: Size(25, 25),
+                                      badgePosition: BadgePosition.topEnd,
                                     )
                                   : null,
                               child: Container(
-                                foregroundDecoration:
-                                    widget.cartItem.product.userRating != null
-                                        ? const RotatedCornerDecoration(
-                                            color: Color(0xFFFBC02D),
-                                            geometry: BadgeGeometry(
-                                              width: 25,
-                                              height: 25,
-                                              cornerRadius: 0,
-                                              alignment: BadgeAlignment.topLeft,
-                                            ),
-                                          )
-                                        : null,
+                                foregroundDecoration: widget
+                                            .cartItem.product.userRating !=
+                                        null
+                                    ? const RotatedCornerDecoration.withColor(
+                                        color: Color(0xFFFBC02D),
+                                        badgeSize: Size(25, 25),
+                                        badgePosition: BadgePosition.topStart,
+                                      )
+                                    : null,
                                 padding: const EdgeInsets.all(12),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,

@@ -252,28 +252,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       children: [
                         Container(
                           foregroundDecoration: wishlisted == true
-                              ? const RotatedCornerDecoration(
+                              ? const RotatedCornerDecoration.withColor(
                                   color: Color(0xff01aed6),
                                   textSpan: TextSpan(text: 'Ønsket'),
-                                  geometry: BadgeGeometry(
-                                    width: 60,
-                                    height: 60,
-                                    cornerRadius: 0,
-                                    alignment: BadgeAlignment.topRight,
-                                  ),
+                                  badgeSize: Size(60, 60),
+                                  badgePosition: BadgePosition.topEnd,
                                 )
                               : null,
                           child: Container(
                             foregroundDecoration: product.userRating != null
-                                ? const RotatedCornerDecoration(
+                                ? const RotatedCornerDecoration.withColor(
                                     color: Color(0xFFFBC02D),
                                     textSpan: TextSpan(text: 'Smakt'),
-                                    geometry: BadgeGeometry(
-                                      width: 60,
-                                      height: 60,
-                                      cornerRadius: 0,
-                                      alignment: BadgeAlignment.topLeft,
-                                    ),
+                                    badgeSize: Size(60, 60),
+                                    badgePosition: BadgePosition.topStart,
                                   )
                                 : null,
                             height: _boxImageSize,

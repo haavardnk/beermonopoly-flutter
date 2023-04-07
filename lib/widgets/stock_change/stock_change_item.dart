@@ -75,26 +75,16 @@ class _StockChangeItemState extends State<StockChangeItem> {
           ),
         Container(
           foregroundDecoration: wishlisted == true
-              ? const RotatedCornerDecoration(
+              ? const RotatedCornerDecoration.withColor(
                   color: Color(0xff01aed6),
-                  geometry: BadgeGeometry(
-                    width: 25,
-                    height: 25,
-                    cornerRadius: 0,
-                    alignment: BadgeAlignment.topRight,
-                  ),
+                  badgeSize: Size(25, 25),
                 )
               : null,
           child: Container(
             foregroundDecoration: widget.stockChange.product.userRating != null
-                ? const RotatedCornerDecoration(
+                ? const RotatedCornerDecoration.withColor(
                     color: Color(0xFFFBC02D),
-                    geometry: BadgeGeometry(
-                      width: 25,
-                      height: 25,
-                      cornerRadius: 0,
-                      alignment: BadgeAlignment.topLeft,
-                    ),
+                    badgeSize: Size(25, 25),
                   )
                 : null,
             child: Semantics(

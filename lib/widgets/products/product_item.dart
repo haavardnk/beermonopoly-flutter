@@ -51,26 +51,18 @@ class _ProductItemState extends State<ProductItem> {
 
     return Container(
       foregroundDecoration: wishlisted == true
-          ? const RotatedCornerDecoration(
+          ? const RotatedCornerDecoration.withColor(
               color: Color(0xff01aed6),
-              geometry: BadgeGeometry(
-                width: 25,
-                height: 25,
-                cornerRadius: 0,
-                alignment: BadgeAlignment.topRight,
-              ),
+              badgeSize: Size(25, 25),
+              badgePosition: BadgePosition.topEnd,
             )
           : null,
       child: Container(
         foregroundDecoration: widget.product.userRating != null
-            ? const RotatedCornerDecoration(
+            ? const RotatedCornerDecoration.withColor(
                 color: Color(0xFFFBC02D),
-                geometry: BadgeGeometry(
-                  width: 25,
-                  height: 25,
-                  cornerRadius: 0,
-                  alignment: BadgeAlignment.topLeft,
-                ),
+                badgeSize: Size(25, 25),
+                badgePosition: BadgePosition.topStart,
               )
             : null,
         child: Stack(
