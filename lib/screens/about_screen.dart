@@ -10,7 +10,7 @@ class AboutScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Om Ølmonopolet',
-          style: TextStyle(color: Theme.of(context).textTheme.headline6!.color),
+          style: TextStyle(color: Theme.of(context).textTheme.titleLarge!.color),
         ),
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         iconTheme:

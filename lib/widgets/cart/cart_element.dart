@@ -62,7 +62,7 @@ class _CartElementState extends State<CartElement> {
     int quantity = widget.cartItem.quantity;
     late Offset tapPosition;
     RenderBox overlay =
-        Overlay.of(context)!.context.findRenderObject() as RenderBox;
+        Overlay.of(context).context.findRenderObject() as RenderBox;
 
     void getPosition(TapDownDetails detail) {
       tapPosition = detail.globalPosition;
