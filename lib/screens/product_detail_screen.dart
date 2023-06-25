@@ -357,37 +357,42 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                               ? MainAxisAlignment.spaceEvenly
                                               : MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Column(
-                                              children: [
-                                                Text(
-                                                  'Global rating - ${NumberFormat.compact().format(product.checkins)}',
-                                                  style: const TextStyle(
-                                                      fontSize: 14),
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      product.rating != null
-                                                          ? '${product.rating!.toStringAsFixed(2)} '
-                                                          : '0 ',
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 14,
+                                            InkWell(
+                                              onTap: () =>
+                                                  AppLauncher.launchUntappd(
+                                                      product),
+                                              child: Column(
+                                                children: [
+                                                  Text(
+                                                    'Global rating - ${NumberFormat.compact().format(product.checkins)}',
+                                                    style: const TextStyle(
+                                                        fontSize: 14),
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        product.rating != null
+                                                            ? '${product.rating!.toStringAsFixed(2)} '
+                                                            : '0 ',
+                                                        style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14,
+                                                        ),
                                                       ),
-                                                    ),
-                                                    createRatingBar(
-                                                        rating: product
-                                                                    .rating !=
-                                                                null
-                                                            ? product.rating!
-                                                            : 0,
-                                                        size: 18,
-                                                        color: Colors
-                                                            .yellow[700]!),
-                                                  ],
-                                                )
-                                              ],
+                                                      createRatingBar(
+                                                          rating: product
+                                                                      .rating !=
+                                                                  null
+                                                              ? product.rating!
+                                                              : 0,
+                                                          size: 18,
+                                                          color: Colors
+                                                              .yellow[700]!),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                             if ((_numRatings == 1) &&
                                                 snapshot.hasData &&
