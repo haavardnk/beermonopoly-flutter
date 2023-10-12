@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:flag/flag.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 import '../../models/stock_change.dart';
 import '../../providers/cart.dart';
@@ -93,7 +93,7 @@ class _StockChangeItemState extends State<StockChangeItem> {
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
-                  PersistentNavBarNavigator.pushNewScreenWithRouteSettings(
+                  pushScreen(
                     context,
                     settings: RouteSettings(
                         name: ProductDetailScreen.routeName,
@@ -102,7 +102,6 @@ class _StockChangeItemState extends State<StockChangeItem> {
                           'herotag': 'list${widget.stockChange.product.id}'
                         }),
                     screen: ProductDetailScreen(),
-                    withNavBar: true,
                     pageTransitionAnimation: PageTransitionAnimation.cupertino,
                   );
                 },

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 import 'product_overview_tab.dart';
 import 'release_tab.dart';
@@ -31,72 +31,76 @@ class _HomeScreenState extends State<HomeScreen> {
       filters.getReleases();
     }
 
-    List<PersistentBottomNavBarItem> _navBarItems = [
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.liquor),
-        activeColorSecondary:
-            Theme.of(context).colorScheme.onSecondaryContainer,
-        inactiveColorPrimary: Theme.of(context).colorScheme.onSurfaceVariant,
-        inactiveColorSecondary: Theme.of(context).colorScheme.onSurfaceVariant,
-        title: 'Produkter',
-      ),
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.new_releases_outlined),
-        activeColorSecondary:
-            Theme.of(context).colorScheme.onSecondaryContainer,
-        inactiveColorPrimary: Theme.of(context).colorScheme.onSurfaceVariant,
-        inactiveColorSecondary: Theme.of(context).colorScheme.onSurfaceVariant,
-        title: 'Lanseringer',
-      ),
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.swap_vert),
-        activeColorSecondary:
-            Theme.of(context).colorScheme.onSecondaryContainer,
-        inactiveColorPrimary: Theme.of(context).colorScheme.onSurfaceVariant,
-        inactiveColorSecondary: Theme.of(context).colorScheme.onSurfaceVariant,
-        title: 'Lager inn/ut',
-      ),
-      PersistentBottomNavBarItem(
-        icon: Consumer<Cart>(
-          builder: (_, cart, __) => Badge(
-            label: Text(cart.itemCount.toString()),
-            child: Icon(Icons.receipt_long),
-            isLabelVisible: cart.itemCount > 0,
-          ),
+    List<PersistentTabConfig> _tabs = [
+      PersistentTabConfig(
+        screen: ProductOverviewTab(),
+        item: ItemConfig(
+          icon: Icon(Icons.liquor),
+          activeColorPrimary:
+              Theme.of(context).colorScheme.onSecondaryContainer,
+          inactiveColorPrimary: Theme.of(context).colorScheme.onSurfaceVariant,
+          inactiveColorSecondary:
+              Theme.of(context).colorScheme.onSurfaceVariant,
+          title: 'Produkter',
         ),
-        activeColorSecondary:
-            Theme.of(context).colorScheme.onSecondaryContainer,
-        inactiveColorPrimary: Theme.of(context).colorScheme.onSurfaceVariant,
-        inactiveColorSecondary: Theme.of(context).colorScheme.onSurfaceVariant,
-        title: 'Handleliste',
-      )
-    ];
-
-    List<Widget> _buildScreens = const [
-      ProductOverviewTab(),
-      ReleaseTab(),
-      StoreStockChangeTab(),
-      CartTab(),
+      ),
+      PersistentTabConfig(
+        screen: ReleaseTab(),
+        item: ItemConfig(
+          icon: Icon(Icons.new_releases_outlined),
+          activeColorPrimary:
+              Theme.of(context).colorScheme.onSecondaryContainer,
+          inactiveColorPrimary: Theme.of(context).colorScheme.onSurfaceVariant,
+          inactiveColorSecondary:
+              Theme.of(context).colorScheme.onSurfaceVariant,
+          title: 'Lanseringer',
+        ),
+      ),
+      PersistentTabConfig(
+        screen: StoreStockChangeTab(),
+        item: ItemConfig(
+          icon: Icon(Icons.swap_vert),
+          activeColorPrimary:
+              Theme.of(context).colorScheme.onSecondaryContainer,
+          inactiveColorPrimary: Theme.of(context).colorScheme.onSurfaceVariant,
+          inactiveColorSecondary:
+              Theme.of(context).colorScheme.onSurfaceVariant,
+          title: 'Lager inn/ut',
+        ),
+      ),
+      PersistentTabConfig(
+        screen: CartTab(),
+        item: ItemConfig(
+          icon: Consumer<Cart>(
+            builder: (_, cart, __) => Badge(
+              label: Text(cart.itemCount.toString()),
+              child: Icon(Icons.receipt_long),
+              isLabelVisible: cart.itemCount > 0,
+            ),
+          ),
+          activeColorPrimary:
+              Theme.of(context).colorScheme.onSecondaryContainer,
+          inactiveColorPrimary: Theme.of(context).colorScheme.onSurfaceVariant,
+          inactiveColorSecondary:
+              Theme.of(context).colorScheme.onSurfaceVariant,
+          title: 'Handleliste',
+        ),
+      ),
     ];
 
     return PersistentTabView(
-      context,
       controller: _controller,
-      screens: _buildScreens,
-      items: _navBarItems,
+      tabs: _tabs,
       resizeToAvoidBottomInset: true,
-      confineInSafeArea: true,
+      avoidBottomPadding: true,
+      navBarOverlap: NavBarOverlap.none(),
       backgroundColor: Theme.of(context).canvasColor,
-
-      itemAnimationProperties: const ItemAnimationProperties(
-        duration: Duration(milliseconds: 400),
-        curve: Curves.ease,
+      navBarBuilder: (navBarConfig) => Style6BottomNavBar(
+        navBarConfig: navBarConfig,
+        navBarDecoration: NavBarDecoration(
+          color: Theme.of(context).canvasColor,
+        ),
       ),
-      screenTransitionAnimation: const ScreenTransitionAnimation(
-        animateTabTransition: true,
-      ),
-      navBarStyle:
-          NavBarStyle.style6, // Choose the nav bar style with this property
     );
   }
 }

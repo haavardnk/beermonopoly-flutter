@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 import '../providers/filter.dart';
 import '../widgets/app_drawer.dart';
@@ -72,7 +72,7 @@ class _ReleaseTabState extends State<ReleaseTab> {
                     ),
                     iconColor: Theme.of(context).colorScheme.onBackground,
                     textColor: Theme.of(context).colorScheme.onBackground,
-                    onTap: () => PersistentNavBarNavigator.pushNewScreen(
+                    onTap: () => pushScreen(
                       context,
                       screen: ProductOverviewTab(
                         release: filters.releaseList[index],

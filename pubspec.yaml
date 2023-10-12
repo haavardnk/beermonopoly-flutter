@@ -43,12 +43,12 @@ dependencies:
   url_launcher: ^6.0.18
   adaptive_theme: ^3.1.1
   rate_my_app: ^2.0.0
-  percent_indicator: ^3.4.0
+  percent_indicator: ^4.2.3
   external_app_launcher: ^3.1.0
   flag: ^7.0.0
   dropdown_search: ^5.0.2
   cached_network_image: ^3.2.3
-  persistent_bottom_nav_bar: ^5.0.2
+  persistent_bottom_nav_bar_v2: ^5.0.0-beta.6
   retry: ^3.1.0
 
   # The following adds the Cupertino Icons font to your application.
@@ -56,7 +56,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core: ^2.3.0
   firebase_messaging: ^14.1.1
-  flutter_local_notifications: ^15.1.1
+  flutter_local_notifications: ^16.1.0
   firebase_analytics: ^10.0.6
 
 dev_dependencies:

@@ -609,7 +609,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   children: [
                                     if (snapshot.data!['freshness'] != null)
                                       CircularPercentIndicator(
-                                        radius: 50.0,
+                                        radius: 25.0,
                                         lineWidth: 5.0,
                                         animation: true,
                                         percent: snapshot.data!['freshness']
@@ -635,7 +635,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       ),
                                     if (snapshot.data!['fullness'] != null)
                                       CircularPercentIndicator(
-                                        radius: 50.0,
+                                        radius: 25.0,
                                         lineWidth: 5.0,
                                         animation: true,
                                         percent: snapshot.data!['fullness']
@@ -661,7 +661,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       ),
                                     if (snapshot.data!['bitterness'] != null)
                                       CircularPercentIndicator(
-                                        radius: 50.0,
+                                        radius: 25.0,
                                         lineWidth: 5.0,
                                         animation: true,
                                         percent: snapshot.data!['bitterness']

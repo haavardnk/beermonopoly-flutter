@@ -5,7 +5,7 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flag/flag.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 import '../../providers/cart.dart';
 import '../../providers/auth.dart';
@@ -103,7 +103,7 @@ class _CartElementState extends State<CartElement> {
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
-                  PersistentNavBarNavigator.pushNewScreenWithRouteSettings(
+                  pushScreen(
                     context,
                     settings: RouteSettings(
                       name: ProductDetailScreen.routeName,
@@ -113,7 +113,6 @@ class _CartElementState extends State<CartElement> {
                       },
                     ),
                     screen: ProductDetailScreen(),
-                    withNavBar: true,
                     pageTransitionAnimation: PageTransitionAnimation.cupertino,
                   );
                 },
@@ -424,7 +423,7 @@ class _CartElementState extends State<CartElement> {
                                                         child: Container(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .fromLTRB(
+                                                                  .fromLTRB(
                                                                   10, 0, 10, 2),
                                                           decoration:
                                                               BoxDecoration(
@@ -473,7 +472,7 @@ class _CartElementState extends State<CartElement> {
                                                         child: Container(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .fromLTRB(
+                                                                  .fromLTRB(
                                                                   10, 2, 10, 0),
                                                           decoration:
                                                               BoxDecoration(
