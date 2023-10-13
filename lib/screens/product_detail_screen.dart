@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:flag/flag.dart';
 
 import '../providers/auth.dart';
 import '../providers/cart.dart';
@@ -14,6 +15,7 @@ import '../helpers/untappd_helper.dart';
 import '../helpers/app_launcher.dart';
 import '../models/product.dart';
 import '../widgets/rating_widget.dart';
+import '../../assets/constants.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   const ProductDetailScreen({Key? key}) : super(key: key);
@@ -52,6 +54,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final auth = Provider.of<Auth>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
     final filters = Provider.of<Filter>(context, listen: false);
+    final countries = countryList;
     final _mediaQueryData = MediaQuery.of(context);
     final _tabletMode = _mediaQueryData.size.width >= 600 ? true : false;
     final _boxImageSize =
@@ -1042,9 +1045,33 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       const Text('Land'),
                                       const SizedBox(width: 50),
                                       Flexible(
-                                        child: Text(
-                                          product.country!,
-                                          textAlign: TextAlign.end,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              product.country!,
+                                              textAlign: TextAlign.end,
+                                            ),
+                                            if (product.country != null &&
+                                                countries[product.country] !=
+                                                    null &&
+                                                countries[product.country]!
+                                                    .isNotEmpty)
+                                              Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 3,
+                                                  ),
+                                                  Flag.fromString(
+                                                    countries[
+                                                        product.country!]!,
+                                                    height: 12,
+                                                    width: 12 * 4 / 3,
+                                                  ),
+                                                ],
+                                              ),
+                                          ],
                                         ),
                                       )
                                     ],
