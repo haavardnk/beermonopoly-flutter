@@ -91,7 +91,7 @@ class _AppDrawerState extends State<AppDrawer> {
     );
 
     return Drawer(
-      elevation: 20,
+      elevation: 0,
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
