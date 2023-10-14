@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'product_overview_tab.dart';
 import 'release_tab.dart';
@@ -20,8 +21,28 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   PersistentTabController _controller = PersistentTabController();
 
+  Future<void> setupInteractedMessage(
+      PersistentTabController _controller) async {
+    void _handleMessage(RemoteMessage message) {
+      print(message.data);
+      if (message.data['route'] == '/releases') {
+        _controller.jumpToTab(1);
+      }
+    }
+
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    if (initialMessage != null) {
+      _handleMessage(initialMessage);
+    }
+
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+  }
+
   @override
   Widget build(BuildContext context) {
+    setupInteractedMessage(_controller);
     Provider.of<Cart>(context, listen: false).fetchAndSetCart();
     final filters = Provider.of<Filter>(context, listen: false);
     if (!filters.storesLoading && filters.storeList.isEmpty) {
