@@ -46,6 +46,7 @@ class _StockChangeItemState extends State<StockChangeItem> {
     final double _boxImageSize = _tabletMode
         ? 60 + _mediaQueryData.textScaleFactor * 10
         : _mediaQueryData.size.shortestSide / 5.9;
+    final heroTag = 'stock${widget.stockChange.product.id}';
     late Offset tapPosition;
     RenderBox overlay =
         Overlay.of(context).context.findRenderObject() as RenderBox;
@@ -99,10 +100,11 @@ class _StockChangeItemState extends State<StockChangeItem> {
                         name: ProductDetailScreen.routeName,
                         arguments: <String, dynamic>{
                           'product': widget.stockChange.product,
-                          'herotag': 'list${widget.stockChange.product.id}'
+                          'herotag': heroTag,
                         }),
                     screen: ProductDetailScreen(),
                     pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                    withNavBar: true,
                   );
                 },
                 onTapDown: getPosition,
@@ -138,11 +140,11 @@ class _StockChangeItemState extends State<StockChangeItem> {
                           padding: const EdgeInsets.only(top: 5),
                           child: ClipRRect(
                             borderRadius:
-                                const BorderRadius.all(Radius.circular(5)),
+                                const BorderRadius.all(Radius.circular(6)),
                             child: Stack(
                               children: [
                                 Hero(
-                                  tag: 'list${widget.stockChange.product.id}',
+                                  tag: heroTag,
                                   child: widget.stockChange.product.imageUrl !=
                                               null &&
                                           widget.stockChange.product.imageUrl!
@@ -174,7 +176,7 @@ class _StockChangeItemState extends State<StockChangeItem> {
                                         .isNotEmpty)
                                   ClipRRect(
                                     borderRadius: const BorderRadius.only(
-                                        bottomRight: Radius.circular(5)),
+                                        bottomRight: Radius.circular(6)),
                                     child: Flag.fromString(
                                       countries[
                                           widget.stockChange.product.country!]!,

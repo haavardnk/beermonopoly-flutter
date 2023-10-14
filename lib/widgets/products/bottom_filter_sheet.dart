@@ -73,7 +73,7 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
   Widget _showPopup() {
     final _mediaQueryData = MediaQuery.of(context);
     return SizedBox(
-      height: _mediaQueryData.size.height * 0.7,
+      height: _mediaQueryData.size.height * 0.60,
       child:
           StatefulBuilder(builder: (BuildContext context, StateSetter mystate) {
         return Column(
@@ -81,34 +81,46 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Stack(
                 children: [
-                  TextButton.icon(
-                      onPressed: () {
-                        showSettingsPopup(
-                          context,
-                          mystate,
-                        );
-                      },
-                      icon: Icon(Icons.settings),
-                      label: Text('Instillinger')),
-                  TextButton(
-                      onPressed: () {
-                        filters.resetFilters();
-                        _priceRange = filters.priceRange;
-                        _pricePerVolumeRange = filters.pricePerVolumeRange;
-                        _alcoholRange = filters.alcoholRange;
-                        Navigator.pop(context);
-                      },
-                      child: Text('Reset Alle')),
+                  Center(
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 12, bottom: 12),
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton.icon(
+                          onPressed: () {
+                            showSettingsPopup(
+                              context,
+                              mystate,
+                            );
+                          },
+                          icon: Icon(Icons.settings),
+                          label: Text('Instillinger')),
+                      TextButton(
+                          onPressed: () {
+                            filters.resetFilters();
+                            _priceRange = filters.priceRange;
+                            _pricePerVolumeRange = filters.pricePerVolumeRange;
+                            _alcoholRange = filters.alcoholRange;
+                            Navigator.pop(context);
+                          },
+                          child: Text('Reset Alle')),
+                    ],
+                  ),
                 ],
               ),
             ),
             Divider(
               height: 1,
-              indent: 16,
-              endIndent: 16,
             ),
             Flexible(
               child: ListView(
@@ -165,7 +177,7 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                                         Icons.search,
                                       ),
                                       border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(20),
+                                        borderRadius: BorderRadius.circular(24),
                                       ),
                                     ),
                                   ),
@@ -201,7 +213,7 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                                 dropdownDecoratorProps: DropDownDecoratorProps(
                                   dropdownSearchDecoration: InputDecoration(
                                     border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
+                                      borderRadius: BorderRadius.circular(24),
                                     ),
                                     isDense: true,
                                     contentPadding: EdgeInsets.symmetric(
@@ -300,7 +312,7 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                       dropdownDecoratorProps: DropDownDecoratorProps(
                         dropdownSearchDecoration: InputDecoration(
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(24),
                           ),
                           isDense: true,
                           contentPadding: EdgeInsets.symmetric(
@@ -416,7 +428,7 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                                             width: 1,
                                           ),
                                           borderRadius:
-                                              BorderRadius.circular(10)),
+                                              BorderRadius.circular(24)),
                                       selected: filters.selectedStyles
                                           .contains(styleList[index]),
                                       onSelected: (bool selected) {
@@ -451,7 +463,7 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                                         ),
                                         border: OutlineInputBorder(
                                           borderRadius:
-                                              BorderRadius.circular(10),
+                                              BorderRadius.circular(24),
                                         ),
                                       ),
                                     ),
@@ -578,7 +590,7 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                                       DropDownDecoratorProps(
                                     dropdownSearchDecoration: InputDecoration(
                                       border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(24),
                                       ),
                                       isDense: true,
                                       contentPadding: EdgeInsets.symmetric(
@@ -640,7 +652,7 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                             labelText: 'Søk',
                             prefixIcon: Icon(Icons.search),
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(24),
                             ),
                           ),
                         ),
@@ -657,7 +669,7 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                       dropdownDecoratorProps: DropDownDecoratorProps(
                         dropdownSearchDecoration: InputDecoration(
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(24),
                           ),
                           isDense: true,
                           contentPadding: EdgeInsets.symmetric(
@@ -877,7 +889,7 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                           ? Wrap(
                               spacing: 8,
                               children: List.generate(
-                                filters.releaseList.length,
+                                3,
                                 (index) {
                                   return _filter(
                                     filters.releaseSelectedList,
@@ -956,7 +968,7 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
           side: BorderSide(
             width: 1,
           ),
-          borderRadius: BorderRadius.circular(10)),
+          borderRadius: BorderRadius.circular(24)),
       elevation: 0,
       pressElevation: 0,
       selected:
@@ -976,7 +988,7 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
     return FilterChip(
       label: Text(value),
       shape: RoundedRectangleBorder(
-          side: BorderSide(width: 1), borderRadius: BorderRadius.circular(10)),
+          side: BorderSide(width: 1), borderRadius: BorderRadius.circular(24)),
       selected: selectedData[index],
       onSelected: (bool selected) {
         mystate(() {
@@ -996,13 +1008,13 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
         Navigator.of(context, rootNavigator: true).pop();
       },
       child: const Text(
-        'Ok',
+        'OK',
       ),
     );
 
     AlertDialog alert = AlertDialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(24),
       ),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1036,7 +1048,7 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
               ),
             ),
           ),
-          Divider(
+          SizedBox(
             height: 40,
           ),
           Row(
@@ -1100,7 +1112,6 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
               },
             ),
           ),
-          Divider(),
         ],
       ),
       actions: [

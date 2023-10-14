@@ -33,7 +33,7 @@ class _SearchBarState extends State<SearchBar> {
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
       height: kToolbarHeight,
       child: Material(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(24),
         elevation: 3,
         surfaceTintColor: Theme.of(context).colorScheme.surfaceTint,
         shadowColor: Colors.transparent,

@@ -72,6 +72,7 @@ class _ProductListViewState extends State<ProductListView> {
                     transitionDuration: const Duration(milliseconds: 300),
                     itemBuilder: (context, item, index) => ProductItem(
                       product: item,
+                      release: widget.release,
                     ),
                     firstPageErrorIndicatorBuilder: (_) =>
                         FirstPageErrorIndicator(
@@ -106,6 +107,7 @@ class _ProductListViewState extends State<ProductListView> {
                     transitionDuration: const Duration(milliseconds: 300),
                     itemBuilder: (context, item, index) => ProductItem(
                       product: item,
+                      release: widget.release,
                     ),
                     firstPageErrorIndicatorBuilder: (_) =>
                         FirstPageErrorIndicator(

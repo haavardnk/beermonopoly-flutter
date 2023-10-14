@@ -10,11 +10,11 @@ import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import '../../providers/cart.dart';
 import '../../providers/auth.dart';
 import '../../providers/filter.dart';
-import '../../screens/product_detail_screen.dart';
 import '../../helpers/api_helper.dart';
 import '../rating_widget.dart';
 import '../item_popup_menu.dart';
 import '../../assets/constants.dart';
+import '../../screens/product_detail_screen.dart';
 
 class CartElement extends StatefulWidget {
   final int index;
@@ -59,6 +59,7 @@ class _CartElementState extends State<CartElement> {
     final auth = Provider.of<Auth>(context, listen: false);
     final apiToken = auth.apiToken;
     final filters = Provider.of<Filter>(context, listen: false);
+    final heroTag = 'cart${widget.cartItem.product.id}';
     int quantity = widget.cartItem.quantity;
     late Offset tapPosition;
     RenderBox overlay =
@@ -109,11 +110,12 @@ class _CartElementState extends State<CartElement> {
                       name: ProductDetailScreen.routeName,
                       arguments: <String, dynamic>{
                         'product': widget.cartItem.product,
-                        'herotag': 'cart${widget.cartItem.product.id}'
+                        'herotag': heroTag
                       },
                     ),
                     screen: ProductDetailScreen(),
                     pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                    withNavBar: true,
                   );
                 },
                 onTapDown: getPosition,
@@ -183,12 +185,11 @@ class _CartElementState extends State<CartElement> {
                                   children: <Widget>[
                                     ClipRRect(
                                       borderRadius: const BorderRadius.all(
-                                          Radius.circular(5)),
+                                          Radius.circular(6)),
                                       child: Stack(
                                         children: [
                                           Hero(
-                                            tag:
-                                                'cart${widget.cartItem.product.id}',
+                                            tag: heroTag,
                                             child: widget.cartItem.product
                                                         .imageUrl !=
                                                     null
@@ -224,7 +225,7 @@ class _CartElementState extends State<CartElement> {
                                               borderRadius:
                                                   const BorderRadius.only(
                                                       bottomRight:
-                                                          Radius.circular(5)),
+                                                          Radius.circular(6)),
                                               child: Flag.fromString(
                                                 countryList[widget.cartItem
                                                     .product.country!]!,
@@ -396,7 +397,7 @@ class _CartElementState extends State<CartElement> {
                                             ),
                                             borderRadius:
                                                 const BorderRadius.all(
-                                              Radius.circular(5),
+                                              Radius.circular(24),
                                             ),
                                           ),
                                           child: Stack(
@@ -528,7 +529,7 @@ class _CartElementState extends State<CartElement> {
                                                 ),
                                                 borderRadius:
                                                     const BorderRadius.all(
-                                                  Radius.circular(5),
+                                                  Radius.circular(24),
                                                 ),
                                               ),
                                               child: Icon(

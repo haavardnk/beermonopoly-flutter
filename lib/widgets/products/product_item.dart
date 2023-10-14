@@ -7,6 +7,7 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 import '../../models/product.dart';
+import '../../models/release.dart';
 import '../../providers/cart.dart';
 import '../../providers/auth.dart';
 import '../../screens/product_detail_screen.dart';
@@ -15,9 +16,11 @@ import '../item_popup_menu.dart';
 import '../../assets/constants.dart';
 
 class ProductItem extends StatefulWidget {
-  const ProductItem({required this.product, Key? key}) : super(key: key);
+  const ProductItem({required this.product, Key? key, this.release})
+      : super(key: key);
 
   final Product product;
+  final Release? release;
 
   @override
   State<ProductItem> createState() => _ProductItemState();
@@ -41,6 +44,9 @@ class _ProductItemState extends State<ProductItem> {
     final double _boxImageSize = _tabletMode
         ? 100 + _mediaQueryData.textScaleFactor * 10
         : _mediaQueryData.size.shortestSide / 4;
+    final heroTag = widget.release != null
+        ? 'release${widget.product.id}'
+        : 'products${widget.product.id}';
     late Offset tapPosition;
     RenderBox overlay =
         Overlay.of(context).context.findRenderObject() as RenderBox;
@@ -79,10 +85,11 @@ class _ProductItemState extends State<ProductItem> {
                         name: ProductDetailScreen.routeName,
                         arguments: <String, dynamic>{
                           'product': widget.product,
-                          'herotag': 'list${widget.product.id}'
+                          'herotag': heroTag
                         }),
                     screen: ProductDetailScreen(),
                     pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                    withNavBar: true,
                   );
                 },
                 onTapDown: getPosition,
@@ -117,11 +124,11 @@ class _ProductItemState extends State<ProductItem> {
                         padding: const EdgeInsets.only(top: 4),
                         child: ClipRRect(
                           borderRadius:
-                              const BorderRadius.all(Radius.circular(5)),
+                              const BorderRadius.all(Radius.circular(6)),
                           child: Stack(
                             children: [
                               Hero(
-                                tag: 'list${widget.product.id}',
+                                tag: heroTag,
                                 child: widget.product.imageUrl != null &&
                                         widget.product.imageUrl!.isNotEmpty
                                     ? FancyShimmerImage(
@@ -145,7 +152,7 @@ class _ProductItemState extends State<ProductItem> {
                                   countries[widget.product.country]!.isNotEmpty)
                                 ClipRRect(
                                   borderRadius: const BorderRadius.only(
-                                      bottomRight: Radius.circular(5)),
+                                      bottomRight: Radius.circular(6)),
                                   child: Flag.fromString(
                                     countries[widget.product.country!]!,
                                     height: 20,
@@ -368,7 +375,7 @@ class _ProductItemState extends State<ProductItem> {
                         color: Theme.of(context).colorScheme.onBackground,
                       ),
                       borderRadius: const BorderRadius.all(
-                        Radius.circular(10),
+                        Radius.circular(24),
                       ),
                     ),
                     child: Consumer<Cart>(
