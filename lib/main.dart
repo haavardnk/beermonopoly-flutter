@@ -7,7 +7,6 @@ import 'package:rate_my_app/rate_my_app.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import "package:go_router/go_router.dart";
 
 import 'firebase_options.dart';
 import './screens/auth_screen.dart';
