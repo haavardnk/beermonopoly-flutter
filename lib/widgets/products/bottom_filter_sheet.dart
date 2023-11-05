@@ -1041,6 +1041,7 @@ class _BottomFilterSheetState extends State<BottomFilterSheet> {
                     },
                   )
                 ],
+                showSelectedIcon: false,
                 selected: <int>{filters.styleChoice},
                 onSelectionChanged: (Set<int> newSelection) {
                   filters.setStyleChoice(newSelection.first);
