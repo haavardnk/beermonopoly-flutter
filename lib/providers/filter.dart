@@ -24,6 +24,7 @@ class Filter with ChangeNotifier {
   String sortBy = '-rating';
   String releaseSortBy = '-rating';
   String release = '';
+  String releaseProductSelectionChoice = '';
   int checkIn = 0;
   int wishlisted = 0;
   int styleChoice = 0;
@@ -260,6 +261,12 @@ class Filter with ChangeNotifier {
     styleChoice = index;
     selectedStyles = [];
     setStyle();
+    notifyListeners();
+    saveFilters();
+  }
+
+  void setReleaseProductSelectionChoice(String productSelectionChoice) {
+    releaseProductSelectionChoice = productSelectionChoice;
     notifyListeners();
     saveFilters();
   }

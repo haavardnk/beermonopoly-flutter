@@ -10,6 +10,7 @@ import '../widgets/products/bottom_filter_sheet.dart';
 import '../widgets/products/search_bar.dart';
 import '../widgets/products/release_sort.dart';
 import '../models/release.dart';
+import '../assets/constants.dart';
 
 class ProductOverviewTab extends StatelessWidget {
   final Release? release;
@@ -62,7 +63,48 @@ class ProductOverviewTab extends StatelessWidget {
                 child: SearchBar(),
                 preferredSize: Size.fromHeight(kToolbarHeight),
               )
-            : null,
+            : (release != null && release!.productSelections.length > 1)
+                ? PreferredSize(
+                    child: Consumer<Filter>(
+                      builder: (context, filter, _) => Container(
+                        height: kToolbarHeight,
+                        width: MediaQuery.of(context).size.width,
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                        child: SegmentedButton(
+                          segments: <ButtonSegment<String>>[
+                            ButtonSegment<String>(
+                              value: '',
+                              label: Padding(
+                                padding: const EdgeInsets.only(bottom: 3),
+                                child: Text('Alle'),
+                              ),
+                            ),
+                            ...release!.productSelections.map((element) {
+                              return ButtonSegment<String>(
+                                value: element,
+                                label: Padding(
+                                  padding: const EdgeInsets.only(bottom: 3),
+                                  child: Text(
+                                      productSelectionAbrevationList[element]!),
+                                ),
+                              );
+                            })
+                          ],
+                          selected: <String>{
+                            filter.releaseProductSelectionChoice
+                          },
+                          onSelectionChanged: (Set<String> newSelection) {
+                            filter.setReleaseProductSelectionChoice(
+                                newSelection.first);
+                          },
+                          showSelectedIcon: false,
+                          emptySelectionAllowed: true,
+                        ),
+                      ),
+                    ),
+                    preferredSize: Size.fromHeight(kToolbarHeight),
+                  )
+                : null,
       ),
       drawer: release == null ? const AppDrawer() : null,
       body: ProductListView(

@@ -26,6 +26,34 @@ class _ReleaseTabState extends State<ReleaseTab> {
   Widget build(BuildContext context) {
     late Filter filters = Provider.of<Filter>(context, listen: false);
 
+    _createProductSelectionText(List<String> productSelections) {
+      String productSelectionText = "";
+      productSelections
+          .removeWhere((element) => element == "Spesialbestilling");
+
+      if (productSelections.length == 1) {
+        productSelectionText = productSelections[0];
+      } else {
+        productSelections.forEach(
+          (element) {
+            if (productSelections.indexOf(element) ==
+                productSelections.length - 1) {
+              productSelectionText += element;
+            } else {
+              productSelectionText += "${element.split('utvalget')[0]}-";
+              if (productSelections.indexOf(element) <
+                  productSelections.length - 2) {
+                productSelectionText += ", ";
+              } else {
+                productSelectionText += " og ";
+              }
+            }
+          },
+        );
+      }
+      return productSelectionText;
+    }
+
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
@@ -45,6 +73,7 @@ class _ReleaseTabState extends State<ReleaseTab> {
             padding: const EdgeInsets.all(8),
             itemCount: filters.releaseList.length,
             itemBuilder: (BuildContext context, int index) {
+              filters.releaseList[index].productSelections.sort();
               return Column(
                 children: [
                   ListTile(
@@ -72,13 +101,21 @@ class _ReleaseTabState extends State<ReleaseTab> {
                     ),
                     iconColor: Theme.of(context).colorScheme.onBackground,
                     textColor: Theme.of(context).colorScheme.onBackground,
-                    onTap: () => pushScreen(
-                      context,
-                      screen: ProductOverviewTab(
-                        release: filters.releaseList[index],
-                      ),
-                      withNavBar: true,
-                    ),
+                    onTap: () {
+                      if (filters.filterSaveSettings[14]['save'] == false) {
+                        filters.releaseSortBy = '-rating';
+                        filters.releaseSortIndex =
+                            'Global rating - Høy til lav';
+                      }
+                      filters.releaseProductSelectionChoice = '';
+                      pushScreen(
+                        context,
+                        screen: ProductOverviewTab(
+                          release: filters.releaseList[index],
+                        ),
+                        withNavBar: true,
+                      );
+                    },
                     title: Text(
                       filters.releaseList[index].releaseDate != null
                           ? '${toBeginningOfSentenceCase(DateFormat.yMMMMEEEEd('nb_NO').format(filters.releaseList[index].releaseDate!))}'
@@ -92,11 +129,13 @@ class _ReleaseTabState extends State<ReleaseTab> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (filters.releaseList[index].productSelection != null)
+                        if (filters
+                            .releaseList[index].productSelections.isNotEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
-                              'Utvalg: ${filters.releaseList[index].productSelection}',
+                              _createProductSelectionText(
+                                  filters.releaseList[index].productSelections),
                               style: const TextStyle(
                                 fontSize: 14,
                               ),

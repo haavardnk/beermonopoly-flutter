@@ -313,6 +313,26 @@ class _ProductItemState extends State<ProductItem> {
                                           height: 0.9,
                                         ),
                                       ),
+                                      if (widget.release != null &&
+                                          widget.release!.productSelections
+                                                  .length >
+                                              1)
+                                        VerticalDivider(
+                                          width: 15,
+                                          thickness: 1,
+                                          color: Colors.grey[300],
+                                        ),
+                                      if (widget.release != null &&
+                                          widget.release!.productSelections
+                                                  .length >
+                                              1)
+                                        Text(
+                                          '${productSelectionAbrevationList[widget.product.product_selection]}',
+                                          style: const TextStyle(
+                                            fontSize: 11,
+                                            height: 0.9,
+                                          ),
+                                        ),
                                     ],
                                   ),
                                 ],

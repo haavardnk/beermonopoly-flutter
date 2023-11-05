@@ -100,7 +100,7 @@ class ApiHelper {
     const fields =
         'vmp_id,vmp_name,price,rating,checkins,label_sm_url,main_category,'
         'sub_category,style,stock,abv,user_checked_in,user_wishlisted,'
-        'volume,price_per_volume,vmp_url,untpd_url,untpd_id,country';
+        'volume,price_per_volume,vmp_url,untpd_url,untpd_id,country,product_selection';
     final Map<String, String> headers = auth.apiToken.isNotEmpty
         ? {
             'Authorization': 'Token ${auth.apiToken}',
@@ -238,7 +238,7 @@ class ApiHelper {
   }
 
   static Future<List<Release>> getReleaseList() async {
-    const fields = "name,release_date,beer_count,product_selection";
+    const fields = "name,release_date,beer_count,product_selections";
 
     final response = await http.get(_apiReleaseUrlBuilder(fields));
     if (response.statusCode == 200) {
@@ -346,6 +346,10 @@ Uri _apiReleaseProductUrlBuilder(
       '&ordering=${filter.releaseSortBy}'
       '&page=$page'
       '&page_size=$pageSize');
+
+  if (release.productSelections.length > 1) {
+    string += '&product_selection=${filter.releaseProductSelectionChoice}';
+  }
 
   final url = Uri.parse(string);
   return url;

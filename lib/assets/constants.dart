@@ -354,6 +354,13 @@ const Map<String, String> sortListAuth = {
   'Pris per liter - Lav til høy': 'price_per_volume',
 };
 
+const Map<String, String> productSelectionAbrevationList = {
+  'Basisutvalget': 'Basis',
+  'Bestillingsutvalget': 'BU',
+  'Partiutvalget': 'Parti',
+  'Tilleggsutvalget': 'TU',
+};
+
 const List<Map<String, String>> productSelectionList = [
   {'Basisutvalget': 'basisutvalget'},
   {'Bestillingsutvalget': 'bestillingsutvalget'},
