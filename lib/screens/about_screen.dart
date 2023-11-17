@@ -10,7 +10,8 @@ class AboutScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Om Ølmonopolet',
-          style: TextStyle(color: Theme.of(context).textTheme.titleLarge!.color),
+          style:
+              TextStyle(color: Theme.of(context).textTheme.titleLarge!.color),
         ),
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         iconTheme:
@@ -54,9 +55,10 @@ class AboutScreen extends StatelessWidget {
               height: 10,
             ),
             Text(
-                "Data fra Vinmonopolet blir oppdatert jevnlig, minst en gang per dag. "
-                "Denne informasjonen inkluderer detaljer om ølutvalg og lagerstatus. "
-                "Nøyaktig når dataen oppdateres kan variere fra dag til dag."),
+              "Data fra Vinmonopolet blir oppdatert jevnlig, minst en gang per dag. "
+              "Denne informasjonen inkluderer detaljer om ølutvalg og lagerstatus. "
+              "Nøyaktig når dataen oppdateres kan variere fra dag til dag.",
+            ),
             const SizedBox(
               height: 16,
             ),
@@ -86,9 +88,10 @@ class AboutScreen extends StatelessWidget {
               height: 10,
             ),
             Text(
-                "Ølmonopolet's algoritme for å matche øl mellom Vinmonopolet og Untappd er god, men ikke perfekt. "
-                "Derfor kan du støte på øl hvor metadataen er feil. Du kan rapportere dette ved å bruke knappen "
-                "'Rapporter feil Untappd match' på detaljsiden for hvert enkelt øl."),
+              "Ølmonopolet's algoritme for å matche øl mellom Vinmonopolet og Untappd er god, men ikke perfekt. "
+              "Derfor kan du støte på øl hvor metadataen er feil. Du kan rapportere dette ved å bruke knappen "
+              "'Rapporter feil Untappd match' på detaljsiden for hvert enkelt øl.",
+            ),
             const SizedBox(
               height: 16,
             ),

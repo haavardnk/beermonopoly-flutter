@@ -1,16 +1,14 @@
-import 'package:beermonopoly/helpers/api_helper.dart';
-import 'package:beermonopoly/screens/about_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
-import '../providers/auth.dart';
-import '../providers/filter.dart';
-import '../helpers/app_launcher.dart';
-import 'popup_widget.dart';
+import '../../providers/auth.dart';
+import '../../helpers/app_launcher.dart';
+import '../../screens/about_screen.dart';
+import '../../widgets/drawer/drawer_auth_button.dart';
+import '../../widgets/drawer/drawer_avatar_image.dart';
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer({Key? key}) : super(key: key);
@@ -38,60 +36,8 @@ class _AppDrawerState extends State<AppDrawer> {
   Widget build(BuildContext context) {
     final authData = Provider.of<Auth>(context);
 
-    Widget confirmLogoutButton = TextButton(
-      onPressed: () {
-        Navigator.of(context, rootNavigator: true).pop();
-        Navigator.of(context).pushReplacementNamed('/');
-        authData.logout();
-        Provider.of<Filter>(context, listen: false).resetFilters();
-      },
-      child: Text(
-        'Logg ut',
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.primary,
-        ),
-      ),
-    );
-
-    Widget confirmDeleteUserButton = ElevatedButton(
-      onPressed: () async {
-        Navigator.of(context, rootNavigator: true).pop();
-        try {
-          await ApiHelper.deleteUserAccount(authData);
-          authData.logout();
-          Provider.of<Filter>(context, listen: false).resetFilters();
-          await popupDialog(context, [], 'Bruker slettet',
-              'Brukeren din og alle data er nå slettet.');
-        } catch (error) {
-          await popupDialog(context, [], 'Det oppsto en feil',
-              'Det oppsto en feil ved sletting av brukeren din. Kontakt utvikler for å slette brukeren.');
-        }
-      },
-      child: const Text(
-        'Slett bruker',
-      ),
-    );
-
-    Widget deleteUserButton = TextButton(
-      onPressed: () {
-        Navigator.of(context, rootNavigator: true).pop();
-        popupDialog(
-          context,
-          [confirmDeleteUserButton],
-          'Slette bruker',
-          'Er du sikker på at du vil slette brukeren din på Ølmonopolet og alle data?',
-        );
-      },
-      child: Text(
-        'Slett bruker',
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.primary,
-        ),
-      ),
-    );
-
     return Drawer(
-      elevation: 0,
+      elevation: 3,
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
@@ -99,16 +45,7 @@ class _AppDrawerState extends State<AppDrawer> {
           if (authData.isAuth)
             Column(
               children: [
-                CachedNetworkImage(
-                  imageUrl: authData.userAvatarUrl,
-                  imageBuilder: (context, imageProvider) => CircleAvatar(
-                    backgroundImage: imageProvider,
-                    backgroundColor: Colors.transparent,
-                    radius: 65,
-                  ),
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                ),
+                DrawerAvatarImage(authData: authData),
                 const SizedBox(
                   height: 10,
                 ),
@@ -167,32 +104,9 @@ class _AppDrawerState extends State<AppDrawer> {
             },
           ),
           const Divider(),
-          authData.isAuth
-              ? ListTile(
-                  trailing: const Icon(Icons.exit_to_app),
-                  title: const Text('Logg ut'),
-                  onTap: () {
-                    List<Widget> buttons = [
-                      deleteUserButton,
-                      confirmLogoutButton
-                    ];
-                    popupDialog(
-                      context,
-                      buttons,
-                      'Logge ut',
-                      'Er du sikker på at du vil logge ut?',
-                    );
-                  },
-                )
-              : ListTile(
-                  trailing: const Icon(Icons.exit_to_app),
-                  title: const Text('Logg inn'),
-                  onTap: () {
-                    authData.skipLogin(false);
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pushReplacementNamed('/');
-                  },
-                ),
+          DrawerAuthButton(
+            authData: authData,
+          ),
           const Divider(),
           Expanded(
             child: Padding(

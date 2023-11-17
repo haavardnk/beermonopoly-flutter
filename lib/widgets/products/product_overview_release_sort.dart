@@ -6,15 +6,15 @@ import '../../providers/filter.dart';
 import '../../providers/auth.dart';
 import '../../assets/constants.dart';
 
-class ReleaseSort extends StatefulWidget {
+class ProductOverviewReleaseSort extends StatefulWidget {
   final Release release;
-  const ReleaseSort(this.release, {Key? key}) : super(key: key);
+  const ProductOverviewReleaseSort(this.release, {Key? key}) : super(key: key);
 
   @override
-  State<ReleaseSort> createState() => _ReleaseSortState();
+  State<ProductOverviewReleaseSort> createState() => _ReleaseSortState();
 }
 
-class _ReleaseSortState extends State<ReleaseSort> {
+class _ReleaseSortState extends State<ProductOverviewReleaseSort> {
   late final filters = Provider.of<Filter>(context, listen: false).filters;
   late final Auth authData = Provider.of<Auth>(context, listen: false);
 

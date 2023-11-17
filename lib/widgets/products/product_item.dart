@@ -11,8 +11,8 @@ import '../../models/release.dart';
 import '../../providers/cart.dart';
 import '../../providers/auth.dart';
 import '../../screens/product_detail_screen.dart';
-import '../rating_widget.dart';
-import '../item_popup_menu.dart';
+import '../common/rating_widget.dart';
+import '../common/item_popup_menu.dart';
 import '../../assets/constants.dart';
 
 class ProductItem extends StatefulWidget {

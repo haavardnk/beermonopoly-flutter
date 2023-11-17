@@ -3,14 +3,14 @@ import 'package:provider/provider.dart';
 
 import '../../providers/filter.dart';
 
-class SearchBar extends StatefulWidget {
-  const SearchBar({Key? key}) : super(key: key);
+class ProductOverviewSearchBar extends StatefulWidget {
+  const ProductOverviewSearchBar({Key? key}) : super(key: key);
 
   @override
-  State<SearchBar> createState() => _SearchBarState();
+  State<ProductOverviewSearchBar> createState() => _SearchBarState();
 }
 
-class _SearchBarState extends State<SearchBar> {
+class _SearchBarState extends State<ProductOverviewSearchBar> {
   TextEditingController _search = TextEditingController();
   late Filter filters;
 

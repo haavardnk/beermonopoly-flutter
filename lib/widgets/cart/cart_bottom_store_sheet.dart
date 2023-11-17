@@ -6,14 +6,14 @@ import 'package:dropdown_search/dropdown_search.dart';
 import '../../providers/cart.dart';
 import '../../providers/filter.dart';
 
-class BottomStoreSheet extends StatefulWidget {
-  const BottomStoreSheet({Key? key}) : super(key: key);
+class CartBottomStoreSheet extends StatefulWidget {
+  const CartBottomStoreSheet({Key? key}) : super(key: key);
 
   @override
   _BottomStoreSheetState createState() => _BottomStoreSheetState();
 }
 
-class _BottomStoreSheetState extends State<BottomStoreSheet> {
+class _BottomStoreSheetState extends State<CartBottomStoreSheet> {
   Future<void> initCartSettings() async {
     final cart = Provider.of<Cart>(context, listen: false);
     final filters = Provider.of<Filter>(context, listen: false);

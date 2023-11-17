@@ -14,7 +14,7 @@ import '../helpers/api_helper.dart';
 import '../helpers/untappd_helper.dart';
 import '../helpers/app_launcher.dart';
 import '../models/product.dart';
-import '../widgets/rating_widget.dart';
+import '../widgets/common/rating_widget.dart';
 import '../../assets/constants.dart';
 
 class ProductDetailScreen extends StatefulWidget {

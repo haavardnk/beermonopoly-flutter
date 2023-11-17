@@ -5,7 +5,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 import '../providers/filter.dart';
-import '../widgets/app_drawer.dart';
+import '../widgets/drawer/app_drawer.dart';
 import '../screens/product_overview_tab.dart';
 
 class ReleaseTab extends StatefulWidget {
@@ -26,7 +26,7 @@ class _ReleaseTabState extends State<ReleaseTab> {
   Widget build(BuildContext context) {
     late Filter filters = Provider.of<Filter>(context, listen: false);
 
-    _createProductSelectionText(List<String> productSelections) {
+    String _createProductSelectionText(List<String> productSelections) {
       String productSelectionText = "";
       productSelections
           .removeWhere((element) => element == "Spesialbestilling");

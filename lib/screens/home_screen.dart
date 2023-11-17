@@ -5,7 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'product_overview_tab.dart';
 import 'release_tab.dart';
-import 'store_stock_change_tab.dart';
+import 'stock_change_tab.dart';
 import 'cart_tab.dart';
 import '../providers/filter.dart';
 import '../providers/cart.dart';
@@ -24,7 +24,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> setupInteractedMessage(
       PersistentTabController _controller) async {
     void _handleMessage(RemoteMessage message) {
-      print(message.data);
       if (message.data['route'] == '/releases') {
         _controller.jumpToTab(1);
       }
@@ -78,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       PersistentTabConfig(
-        screen: StoreStockChangeTab(),
+        screen: StockChangeTab(),
         item: ItemConfig(
           icon: Icon(Icons.swap_vert),
           activeColorPrimary:

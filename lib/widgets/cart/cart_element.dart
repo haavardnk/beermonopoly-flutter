@@ -11,8 +11,8 @@ import '../../providers/cart.dart';
 import '../../providers/auth.dart';
 import '../../providers/filter.dart';
 import '../../helpers/api_helper.dart';
-import '../rating_widget.dart';
-import '../item_popup_menu.dart';
+import '../common/rating_widget.dart';
+import '../common/item_popup_menu.dart';
 import '../../assets/constants.dart';
 import '../../screens/product_detail_screen.dart';
 

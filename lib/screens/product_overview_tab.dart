@@ -3,13 +3,13 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
 
-import '../widgets/products/product_list_view.dart';
+import '../widgets/products/product_list.dart';
 import '../providers/filter.dart';
-import '../widgets/app_drawer.dart';
-import '../widgets/products/bottom_filter_sheet.dart';
-import '../widgets/products/search_bar.dart';
-import '../widgets/products/release_sort.dart';
-import '../widgets/products/release_product_selection.dart';
+import '../widgets/drawer/app_drawer.dart';
+import '../widgets/products/product_overview_bottom_filter_sheet.dart';
+import '../widgets/products/product_overview_search_bar.dart';
+import '../widgets/products/product_overview_release_sort.dart';
+import '../widgets/products/product_overview_release_product_selection.dart';
 import '../models/release.dart';
 
 class ProductOverviewTab extends StatelessWidget {
@@ -56,22 +56,25 @@ class ProductOverviewTab extends StatelessWidget {
                 ),
               ),
         actions: [
-          release == null ? const BottomFilterSheet() : ReleaseSort(release!),
+          release == null
+              ? const ProductOverviewBottomFilterSheet()
+              : ProductOverviewReleaseSort(release!),
         ],
         bottom: release == null
             ? const PreferredSize(
-                child: SearchBar(),
+                child: ProductOverviewSearchBar(),
                 preferredSize: Size.fromHeight(kToolbarHeight),
               )
             : (release != null && release!.productSelections.length > 1)
                 ? PreferredSize(
-                    child: ReleaseProductSelection(release: release),
+                    child: ProductOverviewReleaseProductSelection(
+                        release: release),
                     preferredSize: Size.fromHeight(kToolbarHeight),
                   )
                 : null,
       ),
       drawer: release == null ? const AppDrawer() : null,
-      body: ProductListView(
+      body: ProductList(
         release: release,
       ),
     );

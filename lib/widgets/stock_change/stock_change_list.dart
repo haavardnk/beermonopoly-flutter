@@ -2,34 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 
+import './stock_change_item.dart';
 import '../../helpers/api_helper.dart';
-import './product_item.dart';
-import '../../models/product.dart';
-import '../../models/release.dart';
+import '../../models/stock_change.dart';
 import '../../providers/filter.dart';
 import '../../providers/auth.dart';
-import './pagination_indicators/first_page_error_indicator.dart';
-import './pagination_indicators/new_page_error_indicator.dart';
-import './pagination_indicators/no_items_found_indicator.dart';
+import '../products/pagination_indicators/first_page_error_indicator.dart';
+import '../products/pagination_indicators/new_page_error_indicator.dart';
+import '../products/pagination_indicators/no_items_found_indicator.dart';
 
-class ProductListView extends StatefulWidget {
-  final Release? release;
-
-  const ProductListView({Key? key, this.release}) : super(key: key);
+class StockChangeList extends StatefulWidget {
+  const StockChangeList({Key? key}) : super(key: key);
 
   @override
-  _ProductListViewState createState() => _ProductListViewState();
+  _StockChangeListViewState createState() => _StockChangeListViewState();
 }
 
-class _ProductListViewState extends State<ProductListView> {
+class _StockChangeListViewState extends State<StockChangeList> {
   late int _pageSize;
-  final PagingController<int, Product> _pagingController =
+  late DateTime lastDate;
+  final PagingController<int, StockChange> _pagingController =
       PagingController(firstPageKey: 1, invisibleItemsThreshold: 5);
 
   Future<void> _fetchPage(int pageKey, Filter filters, Auth auth) async {
     try {
-      final newItems = await ApiHelper.getProductList(
-          pageKey, filters, auth, _pageSize, widget.release);
+      final newItems = await ApiHelper.getStockChangeList(
+          pageKey, auth, _pageSize, filters.stockChangeStoreId);
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
@@ -65,15 +63,22 @@ class _ProductListViewState extends State<ProductListView> {
         builder: (context, value, _) {
           _pagingController.refresh();
           return _mediaQueryData.size.width < 600
-              ? PagedListView<int, Product>.separated(
+              ? PagedListView<int, StockChange>(
                   pagingController: _pagingController,
-                  builderDelegate: PagedChildBuilderDelegate<Product>(
+                  builderDelegate: PagedChildBuilderDelegate<StockChange>(
                     animateTransitions: true,
                     transitionDuration: const Duration(milliseconds: 300),
-                    itemBuilder: (context, item, index) => ProductItem(
-                      product: item,
-                      release: widget.release,
-                    ),
+                    itemBuilder: (context, item, index) {
+                      if (index == 0) {
+                        return StockChangeItem(stockChange: item);
+                      } else {
+                        return StockChangeItem(
+                          stockChange: item,
+                          lastDate: _pagingController
+                              .itemList![index - 1].stock_unstock_at,
+                        );
+                      }
+                    },
                     firstPageErrorIndicatorBuilder: (_) =>
                         FirstPageErrorIndicator(
                       onTryAgain: () => _pagingController.refresh(),
@@ -84,11 +89,8 @@ class _ProductListViewState extends State<ProductListView> {
                     noItemsFoundIndicatorBuilder: (_) =>
                         const NoItemsFoundIndicator(),
                   ),
-                  separatorBuilder: (context, index) => Divider(
-                    height: 0,
-                  ),
                 )
-              : PagedGridView<int, Product>(
+              : PagedGridView<int, StockChange>(
                   pagingController: _pagingController,
                   showNewPageProgressIndicatorAsGridChild: false,
                   showNewPageErrorIndicatorAsGridChild: false,
@@ -102,13 +104,11 @@ class _ProductListViewState extends State<ProductListView> {
                             (350 + _mediaQueryData.textScaleFactor * 21)
                         : 4,
                   ),
-                  builderDelegate: PagedChildBuilderDelegate<Product>(
+                  builderDelegate: PagedChildBuilderDelegate<StockChange>(
                     animateTransitions: true,
                     transitionDuration: const Duration(milliseconds: 300),
-                    itemBuilder: (context, item, index) => ProductItem(
-                      product: item,
-                      release: widget.release,
-                    ),
+                    itemBuilder: (context, item, index) =>
+                        StockChangeItem(stockChange: item),
                     firstPageErrorIndicatorBuilder: (_) =>
                         FirstPageErrorIndicator(
                       onTryAgain: () => _pagingController.refresh(),

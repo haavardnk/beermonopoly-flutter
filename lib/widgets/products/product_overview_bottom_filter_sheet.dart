@@ -6,14 +6,16 @@ import '../../providers/filter.dart';
 import '../../providers/auth.dart';
 import '../../assets/constants.dart';
 
-class BottomFilterSheet extends StatefulWidget {
-  const BottomFilterSheet({Key? key}) : super(key: key);
+class ProductOverviewBottomFilterSheet extends StatefulWidget {
+  const ProductOverviewBottomFilterSheet({Key? key}) : super(key: key);
 
   @override
-  _BottomFilterSheetState createState() => _BottomFilterSheetState();
+  _ProductOverviewBottomFilterSheetState createState() =>
+      _ProductOverviewBottomFilterSheetState();
 }
 
-class _BottomFilterSheetState extends State<BottomFilterSheet> {
+class _ProductOverviewBottomFilterSheetState
+    extends State<ProductOverviewBottomFilterSheet> {
   // filter provider
   late Filter filters = Provider.of<Filter>(context, listen: false);
   late Auth authData = Provider.of<Auth>(context, listen: false);

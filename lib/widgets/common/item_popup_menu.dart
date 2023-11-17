@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../helpers/untappd_helper.dart';
-import '../helpers/app_launcher.dart';
-import '../models/product.dart';
-import '../providers/auth.dart';
+import '../../helpers/untappd_helper.dart';
+import '../../helpers/app_launcher.dart';
+import '../../models/product.dart';
+import '../../providers/auth.dart';
 
 Future<String?> showPopupMenu(BuildContext context, Auth auth, bool wishlisted,
     Offset tapPosition, RenderBox overlay, Product product) async {

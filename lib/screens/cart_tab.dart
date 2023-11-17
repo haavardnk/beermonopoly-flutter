@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../providers/cart.dart';
 import '../widgets/cart/cart_element.dart';
-import '../widgets/cart/bottom_store_sheet.dart';
-import '../widgets/app_drawer.dart';
+import '../widgets/cart/cart_bottom_store_sheet.dart';
+import '../widgets/drawer/app_drawer.dart';
 
 class CartTab extends StatelessWidget {
   const CartTab({Key? key}) : super(key: key);
@@ -29,7 +29,7 @@ class CartTab extends StatelessWidget {
           ),
         ),
         actions: [
-          const BottomStoreSheet(),
+          const CartBottomStoreSheet(),
         ],
       ),
       drawer: const AppDrawer(),

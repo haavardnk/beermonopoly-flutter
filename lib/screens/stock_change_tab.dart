@@ -1,20 +1,20 @@
-import 'package:beermonopoly/widgets/stock_change/stock_change_store_select.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/app_drawer.dart';
-import '../widgets/stock_change/stock_change_list_view.dart';
+import '../widgets/drawer/app_drawer.dart';
+import '../widgets/stock_change/stock_change_list.dart';
+import '../widgets/stock_change/stock_change_store_select.dart';
 import '../providers/filter.dart';
 
-class StoreStockChangeTab extends StatefulWidget {
-  const StoreStockChangeTab({Key? key}) : super(key: key);
+class StockChangeTab extends StatefulWidget {
+  const StockChangeTab({Key? key}) : super(key: key);
 
   @override
-  State<StoreStockChangeTab> createState() => _StoreStockChangeTabState();
+  State<StockChangeTab> createState() => _StockChangeTabState();
 }
 
-class _StoreStockChangeTabState extends State<StoreStockChangeTab> {
+class _StockChangeTabState extends State<StockChangeTab> {
   @override
   Widget build(BuildContext context) {
     late Filter filters = Provider.of<Filter>(context, listen: false);
@@ -52,7 +52,7 @@ class _StoreStockChangeTabState extends State<StoreStockChangeTab> {
       body: Consumer<Filter>(
         builder: (context, _, __) {
           return filters.stockChangeStoreId.isNotEmpty
-              ? StockChangeListView()
+              ? StockChangeList()
               : Center(
                   child: FilledButton.tonalIcon(
                     label: Text('Velg butikk'),
