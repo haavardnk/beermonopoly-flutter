@@ -63,7 +63,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         'label_hd_url,ibu,description,brewery,product_selection,all_stock,'
         'year,color,aroma,taste,storable,food_pairing,raw_materials,fullness,'
         'sweetness,freshness,bitterness,sugar,acid,method,allergens,'
-        'user_checked_in,friends_checked_in,app_rating';
+        'user_checked_in,friends_checked_in,app_rating,alcohol_units';
 
     if (init == false) {
       wishlisted = product.userWishlisted ?? false;
@@ -837,8 +837,31 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                               child: Column(
                                                 children: [
                                                   const Text('IBU'),
-                                                  Text(snapshot.data!['ibu']
-                                                      .toString()),
+                                                  Text(
+                                                    snapshot.data!['ibu']
+                                                        .toString(),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          if (snapshot.hasData &&
+                                              snapshot.data!['alcohol_units'] !=
+                                                  null &&
+                                              snapshot.data!['alcohol_units'] !=
+                                                  0)
+                                            FadeIn(
+                                              child: Column(
+                                                children: [
+                                                  const Text('Alkoholenheter'),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        snapshot.data![
+                                                                'alcohol_units']
+                                                            .toStringAsFixed(1),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ],
                                               ),
                                             ),
