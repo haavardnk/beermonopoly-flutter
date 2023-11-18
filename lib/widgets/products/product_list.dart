@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 import '../../helpers/api_helper.dart';
 import './product_item.dart';
@@ -8,6 +9,7 @@ import '../../models/product.dart';
 import '../../models/release.dart';
 import '../../providers/filter.dart';
 import '../../providers/auth.dart';
+import '../../providers/http_client.dart';
 import './pagination_indicators/first_page_error_indicator.dart';
 import './pagination_indicators/new_page_error_indicator.dart';
 import './pagination_indicators/no_items_found_indicator.dart';
@@ -26,10 +28,11 @@ class _ProductListViewState extends State<ProductList> {
   final PagingController<int, Product> _pagingController =
       PagingController(firstPageKey: 1, invisibleItemsThreshold: 5);
 
-  Future<void> _fetchPage(int pageKey, Filter filters, Auth auth) async {
+  Future<void> _fetchPage(
+      http.Client client, int pageKey, Filter filters, Auth auth) async {
     try {
       final newItems = await ApiHelper.getProductList(
-          pageKey, filters, auth, _pageSize, widget.release);
+          client, pageKey, filters, auth, _pageSize, widget.release);
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
@@ -54,7 +57,9 @@ class _ProductListViewState extends State<ProductList> {
       _pagingController.addPageRequestListener((pageKey) {
         final filters = Provider.of<Filter>(context, listen: false).filters;
         final auth = Provider.of<Auth>(context, listen: false);
-        _fetchPage(pageKey, filters, auth);
+        final client =
+            Provider.of<HttpClient>(context, listen: false).apiClient;
+        _fetchPage(client, pageKey, filters, auth);
       });
 
     return RefreshIndicator(

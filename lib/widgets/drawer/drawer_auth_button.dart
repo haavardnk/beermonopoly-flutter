@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../providers/auth.dart';
 import '../../providers/filter.dart';
+import '../../providers/http_client.dart';
 import '../../helpers/api_helper.dart';
 import '../../widgets/common/popup_widget.dart';
 
@@ -16,6 +17,8 @@ class DrawerAuthButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final client = Provider.of<HttpClient>(context, listen: false).apiClient;
+
     Widget confirmLogoutButton = TextButton(
       onPressed: () {
         Navigator.of(context, rootNavigator: true).pop();
@@ -35,7 +38,7 @@ class DrawerAuthButton extends StatelessWidget {
       onPressed: () async {
         Navigator.of(context, rootNavigator: true).pop();
         try {
-          await ApiHelper.deleteUserAccount(authData);
+          await ApiHelper.deleteUserAccount(client, authData);
           authData.logout();
           Provider.of<Filter>(context, listen: false).resetFilters();
           await popupDialog(context, [], 'Bruker slettet',

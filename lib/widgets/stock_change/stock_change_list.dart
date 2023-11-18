@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 import './stock_change_item.dart';
 import '../../helpers/api_helper.dart';
 import '../../models/stock_change.dart';
 import '../../providers/filter.dart';
 import '../../providers/auth.dart';
+import '../../providers/http_client.dart';
 import '../products/pagination_indicators/first_page_error_indicator.dart';
 import '../products/pagination_indicators/new_page_error_indicator.dart';
 import '../products/pagination_indicators/no_items_found_indicator.dart';
@@ -24,10 +26,11 @@ class _StockChangeListViewState extends State<StockChangeList> {
   final PagingController<int, StockChange> _pagingController =
       PagingController(firstPageKey: 1, invisibleItemsThreshold: 5);
 
-  Future<void> _fetchPage(int pageKey, Filter filters, Auth auth) async {
+  Future<void> _fetchPage(
+      http.Client client, int pageKey, Filter filters, Auth auth) async {
     try {
       final newItems = await ApiHelper.getStockChangeList(
-          pageKey, auth, _pageSize, filters.stockChangeStoreId);
+          client, pageKey, auth, _pageSize, filters.stockChangeStoreId);
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
@@ -52,7 +55,9 @@ class _StockChangeListViewState extends State<StockChangeList> {
       _pagingController.addPageRequestListener((pageKey) {
         final filters = Provider.of<Filter>(context, listen: false).filters;
         final auth = Provider.of<Auth>(context, listen: false);
-        _fetchPage(pageKey, filters, auth);
+        final client =
+            Provider.of<HttpClient>(context, listen: false).apiClient;
+        _fetchPage(client, pageKey, filters, auth);
       });
 
     return RefreshIndicator(

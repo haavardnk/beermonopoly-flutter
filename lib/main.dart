@@ -17,6 +17,7 @@ import './screens/about_screen.dart';
 import './providers/filter.dart';
 import './providers/auth.dart';
 import './providers/cart.dart';
+import './providers/http_client.dart';
 import './helpers/api_helper.dart';
 import './assets/color_schemes.g.dart';
 
@@ -93,10 +94,10 @@ class _MyAppState extends State<MyApp> {
     print('User granted permission: ${settings.authorizationStatus}');
   }
 
-  Future<void> sendFcmToken(String apiToken) async {
+  Future<void> sendFcmToken(client, String apiToken) async {
     var fcmToken = await FirebaseMessaging.instance.getToken();
     if (fcmToken!.isNotEmpty) {
-      ApiHelper.updateFcmToken(fcmToken, apiToken);
+      ApiHelper.updateFcmToken(client, fcmToken, apiToken);
     }
   }
 
@@ -121,21 +122,33 @@ class _MyAppState extends State<MyApp> {
       builder: (theme, darkTheme) => MultiProvider(
         providers: [
           ChangeNotifierProvider(
+            create: (ctx) => HttpClient(),
+          ),
+          ChangeNotifierProxyProvider<HttpClient, Auth>(
             create: (ctx) => Auth(),
+            update: (ctx, client, previousAuth) =>
+                previousAuth!..update(client.apiClient),
           ),
-          ChangeNotifierProvider(
+          ChangeNotifierProxyProvider<HttpClient, Filter>(
             create: (ctx) => Filter(),
+            update: (ctx, client, previousFilter) =>
+                previousFilter!..update(client.apiClient),
           ),
-          ChangeNotifierProxyProvider<Auth, Cart>(
+          ChangeNotifierProxyProvider2<Auth, HttpClient, Cart>(
             create: (ctx) => Cart(),
-            update: (ctx, auth, previousCart) =>
-                previousCart!..update(auth.apiToken),
+            update: (ctx, auth, client, previousCart) =>
+                previousCart!..update(auth.apiToken, client.apiClient),
           ),
         ],
         child: Consumer<Auth>(builder: (ctx, auth, _) {
+          final client = Provider.of<HttpClient>(ctx, listen: false).apiClient;
+
           Provider.of<Filter>(ctx, listen: false).loadFilters();
           if (auth.isAuth) {
-            sendFcmToken(auth.apiToken);
+            sendFcmToken(
+              client,
+              auth.apiToken,
+            );
             auth.getCheckedInStyles();
           }
 

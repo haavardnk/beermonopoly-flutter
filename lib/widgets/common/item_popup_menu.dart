@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:provider/provider.dart';
 
 import '../../helpers/untappd_helper.dart';
 import '../../helpers/app_launcher.dart';
 import '../../models/product.dart';
 import '../../providers/auth.dart';
+import '../../providers/http_client.dart';
 
 Future<String?> showPopupMenu(BuildContext context, Auth auth, bool wishlisted,
     Offset tapPosition, RenderBox overlay, Product product) async {
   final apiToken = auth.apiToken;
   final untappdToken = auth.untappdToken;
+  final client = Provider.of<HttpClient>(context).untappdClient;
   var value = await showMenu<String>(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.all(
@@ -63,15 +66,15 @@ Future<String?> showPopupMenu(BuildContext context, Auth auth, bool wishlisted,
     context: context,
   );
   if (value == "addWishlist") {
-    var success =
-        await UntappdHelper.addToWishlist(apiToken, untappdToken, product);
+    var success = await UntappdHelper.addToWishlist(
+        client, apiToken, untappdToken, product);
     if (success) {
       return 'wishlistAdded';
     }
   }
   if (value == "removeWishlist") {
-    var success =
-        await UntappdHelper.removeFromWishlist(apiToken, untappdToken, product);
+    var success = await UntappdHelper.removeFromWishlist(
+        client, apiToken, untappdToken, product);
     if (success) {
       return 'wishlistRemoved';
     }

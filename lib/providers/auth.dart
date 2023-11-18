@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:beermonopoly/helpers/api_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/http_exception.dart';
+import '../helpers/api_helper.dart';
 
 class Auth with ChangeNotifier {
   String _apiToken = '';
@@ -15,6 +15,11 @@ class Auth with ChangeNotifier {
   String userAvatarUrl = '';
   List<String> checkedInStyles = [];
   bool _skipLogin = false;
+
+  late http.Client _client;
+  void update(http.Client client) {
+    _client = client;
+  }
 
   bool get isAuth {
     return _apiToken.isNotEmpty;
@@ -119,7 +124,7 @@ class Auth with ChangeNotifier {
 
   Future<void> getCheckedInStyles() async {
     if (_apiToken.isNotEmpty) {
-      checkedInStyles = await ApiHelper.getCheckedInStyles(apiToken);
+      checkedInStyles = await ApiHelper.getCheckedInStyles(_client, _apiToken);
     }
   }
 }

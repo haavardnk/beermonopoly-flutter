@@ -6,10 +6,12 @@ import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:flag/flag.dart';
+import 'package:http/http.dart' as http;
 
 import '../providers/auth.dart';
 import '../providers/cart.dart';
 import '../providers/filter.dart';
+import '../providers/http_client.dart';
 import '../helpers/api_helper.dart';
 import '../helpers/untappd_helper.dart';
 import '../helpers/app_launcher.dart';
@@ -53,6 +55,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final herotag = args['herotag'] as String;
     final auth = Provider.of<Auth>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
+    final client = Provider.of<HttpClient>(context, listen: false);
     final filters = Provider.of<Filter>(context, listen: false);
     final countries = countryList;
     final _mediaQueryData = MediaQuery.of(context);
@@ -142,9 +145,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ];
           }, onSelected: (value) {
             if (value == 0) {
-              toggleWishlist(auth, product, cart);
+              toggleWishlist(client.untappdClient, auth, product, cart);
             } else if (value == 1) {
-              wrongUntappdMatch(product);
+              wrongUntappdMatch(client.apiClient, product);
             } else if (value == 2) {
               AppLauncher.launchUntappd(product);
             } else if (value == 3) {
@@ -207,8 +210,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         ),
       ),
       body: FutureBuilder(
-        future:
-            ApiHelper.getDetailedProductInfo(product.id, auth.apiToken, fields),
+        future: ApiHelper.getDetailedProductInfo(
+            client.apiClient, product.id, auth.apiToken, fields),
         builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
           if (snapshot.hasData &&
               snapshot.data!['all_stock'] != null &&
@@ -1322,7 +1325,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  Widget _showWrongUntappdMatchPopup(BuildContext context, int productId) {
+  Widget _showWrongUntappdMatchPopup(
+      BuildContext context, client, int productId) {
     final _urlController = TextEditingController();
 
     Future<void> showDialogMessage(String title, String message) async {
@@ -1371,7 +1375,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       }
       final untappdUrl = _urlController.text;
       try {
-        await ApiHelper.submitUntappdMatch(productId, untappdUrl);
+        await ApiHelper.submitUntappdMatch(client, productId, untappdUrl);
         await showDialogMessage('Takk for hjelpen!',
             'Ditt forslag er nå sendt inn og vil bli behandlet innen kort tid.');
       } catch (error) {
@@ -1535,12 +1539,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  Future<void> toggleWishlist(Auth auth, Product product, Cart cart) async {
+  Future<void> toggleWishlist(
+      http.Client client, Auth auth, Product product, Cart cart) async {
     bool success = !wishlisted
         ? await UntappdHelper.addToWishlist(
-            auth.apiToken, auth.untappdToken, product)
+            client, auth.apiToken, auth.untappdToken, product)
         : await UntappdHelper.removeFromWishlist(
-            auth.apiToken, auth.untappdToken, product);
+            client, auth.apiToken, auth.untappdToken, product);
     setState(() {
       if (!wishlisted && success) {
         wishlisted = true;
@@ -1552,7 +1557,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     });
   }
 
-  wrongUntappdMatch(Product product) {
+  wrongUntappdMatch(http.Client client, Product product) {
     showModalBottomSheet<void>(
       isScrollControlled: true,
       context: context,
@@ -1561,7 +1566,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             topLeft: Radius.circular(24), topRight: Radius.circular(24)),
       ),
       builder: (BuildContext context) {
-        return _showWrongUntappdMatchPopup(context, product.id);
+        return _showWrongUntappdMatchPopup(context, client, product.id);
       },
     );
   }

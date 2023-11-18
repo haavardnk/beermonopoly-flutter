@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 import '../models/store.dart';
 import '../models/release.dart';
@@ -48,6 +49,11 @@ class Filter with ChangeNotifier {
   List<bool> deliverySelectedList = List<bool>.filled(2, false);
   List<bool> releaseSelectedList = [];
 
+  late http.Client _client;
+  void update(http.Client client) {
+    _client = client;
+  }
+
   List<Map<String, dynamic>> filterSaveSettings = [
     {'name': 'store', 'text': 'Butikklager', 'save': true},
     {'name': 'price', 'text': 'Pris', 'save': false},
@@ -77,7 +83,7 @@ class Filter with ChangeNotifier {
     }
     try {
       storesLoading = true;
-      var stores = await ApiHelper.getStoreList();
+      var stores = await ApiHelper.getStoreList(_client);
       storeList = stores;
       storeList = await LocationHelper.calculateStoreDistance(storeList);
       storeList.sort((a, b) => a.distance!.compareTo(b.distance!));
@@ -98,7 +104,7 @@ class Filter with ChangeNotifier {
     }
     try {
       releasesLoading = true;
-      var releases = await ApiHelper.getReleaseList();
+      var releases = await ApiHelper.getReleaseList(_client);
       releaseList = releases;
       releaseSelectedList = List<bool>.filled(releaseList.length, false);
       releasesLoading = false;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 import '../helpers/db_helper.dart';
 import '../helpers/api_helper.dart';
@@ -20,9 +21,11 @@ class CartItem {
 
 class Cart with ChangeNotifier {
   late String _apiToken;
+  late http.Client _client;
 
-  void update(String token) {
+  void update(String token, http.Client client) {
     _apiToken = token;
+    _client = client;
   }
 
   Map<int, CartItem> _items = {};
@@ -187,7 +190,7 @@ class Cart with ChangeNotifier {
     if (_items.isNotEmpty) {
       final productIds = _items.keys.toList().join(',');
       final updatedProducts =
-          await ApiHelper.getProductsData(productIds, _apiToken);
+          await ApiHelper.getProductsData(_client, productIds, _apiToken);
       updatedProducts.forEach((product) {
         _items[product.id] = CartItem(
           product: Product(
@@ -236,7 +239,8 @@ class Cart with ChangeNotifier {
         }
         cartItemIds += value.product.id.toString();
       });
-      var response = await ApiHelper.checkStock(cartItemIds, cartStoreId);
+      var response =
+          await ApiHelper.checkStock(_client, cartItemIds, cartStoreId);
       itemsInStock = [];
       response.forEach((element) {
         itemsInStock.add(element['vmp_id']);

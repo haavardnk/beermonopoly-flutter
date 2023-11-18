@@ -10,6 +10,7 @@ import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import '../../providers/cart.dart';
 import '../../providers/auth.dart';
 import '../../providers/filter.dart';
+import '../../providers/http_client.dart';
 import '../../helpers/api_helper.dart';
 import '../common/rating_widget.dart';
 import '../common/item_popup_menu.dart';
@@ -59,6 +60,7 @@ class _CartElementState extends State<CartElement> {
     final auth = Provider.of<Auth>(context, listen: false);
     final apiToken = auth.apiToken;
     final filters = Provider.of<Filter>(context, listen: false);
+    final client = Provider.of<HttpClient>(context, listen: false).apiClient;
     final heroTag = 'cart${widget.cartItem.product.id}';
     int quantity = widget.cartItem.quantity;
     late Offset tapPosition;
@@ -551,7 +553,7 @@ class _CartElementState extends State<CartElement> {
                           ),
                           if (_expanded == true)
                             FutureBuilder(
-                              future: ApiHelper.getDetailedProductInfo(
+                              future: ApiHelper.getDetailedProductInfo(client,
                                   widget.cartItem.product.id, apiToken, fields),
                               builder: (context,
                                   AsyncSnapshot<Map<String, dynamic>>
