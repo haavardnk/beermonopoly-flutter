@@ -211,7 +211,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ),
       body: FutureBuilder(
         future: ApiHelper.getDetailedProductInfo(
-            client.apiClient, product.id, auth.apiToken, fields),
+            client.apiClient, product.id, auth, fields),
         builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
           if (snapshot.hasData &&
               snapshot.data!['all_stock'] != null &&

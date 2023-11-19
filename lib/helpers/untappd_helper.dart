@@ -9,8 +9,8 @@ const _apiBaseUrl = 'https://api.beermonopoly.com/';
 const _untappdBaseUrl = 'https://api.untappd.com/v4/';
 
 class UntappdHelper {
-  static Future<bool> addToWishlist(
-      String apiToken, String untappdToken, Product product) async {
+  static Future<bool> addToWishlist(http.Client http, String apiToken,
+      String untappdToken, Product product) async {
     try {
       final untappdResponse = await http.get(
         Uri.parse('$_untappdBaseUrl' +
@@ -38,8 +38,8 @@ class UntappdHelper {
     }
   }
 
-  static Future<bool> removeFromWishlist(
-      String apiToken, String untappdToken, Product product) async {
+  static Future<bool> removeFromWishlist(http.Client http, String apiToken,
+      String untappdToken, Product product) async {
     try {
       final untappdResponse = await http.get(
         Uri.parse('$_untappdBaseUrl' +

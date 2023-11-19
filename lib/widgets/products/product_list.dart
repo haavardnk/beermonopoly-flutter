@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:retry/retry.dart';
 
 import '../../helpers/api_helper.dart';
 import './product_item.dart';
@@ -31,8 +32,10 @@ class _ProductListViewState extends State<ProductList> {
   Future<void> _fetchPage(
       http.Client client, int pageKey, Filter filters, Auth auth) async {
     try {
-      final newItems = await ApiHelper.getProductList(
-          client, pageKey, filters, auth, _pageSize, widget.release);
+      final newItems = await retry(
+        () => ApiHelper.getProductList(
+            client, pageKey, filters, auth, _pageSize, widget.release),
+      );
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);

@@ -58,7 +58,6 @@ class _CartElementState extends State<CartElement> {
   Widget build(BuildContext context) {
     const fields = "all_stock";
     final auth = Provider.of<Auth>(context, listen: false);
-    final apiToken = auth.apiToken;
     final filters = Provider.of<Filter>(context, listen: false);
     final client = Provider.of<HttpClient>(context, listen: false).apiClient;
     final heroTag = 'cart${widget.cartItem.product.id}';
@@ -554,7 +553,7 @@ class _CartElementState extends State<CartElement> {
                           if (_expanded == true)
                             FutureBuilder(
                               future: ApiHelper.getDetailedProductInfo(client,
-                                  widget.cartItem.product.id, apiToken, fields),
+                                  widget.cartItem.product.id, auth, fields),
                               builder: (context,
                                   AsyncSnapshot<Map<String, dynamic>>
                                       snapshot) {

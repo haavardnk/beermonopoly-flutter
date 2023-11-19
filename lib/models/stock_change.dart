@@ -1,6 +1,8 @@
+import 'package:equatable/equatable.dart';
+
 import './product.dart';
 
-class StockChange {
+class StockChange extends Equatable {
   StockChange({
     required this.store,
     required this.quantity,
@@ -30,11 +32,22 @@ class StockChange {
                     : null,
       );
 
-  String store;
-  int quantity;
-  DateTime stock_updated;
-  DateTime? stocked_at;
-  DateTime? unstocked_at;
-  DateTime? stock_unstock_at;
-  Product product;
+  @override
+  List<Object?> get props => [
+        store,
+        quantity,
+        stock_updated,
+        stocked_at,
+        unstocked_at,
+        stock_unstock_at,
+        product,
+      ];
+
+  final String store;
+  final int quantity;
+  final DateTime stock_updated;
+  final DateTime? stocked_at;
+  final DateTime? unstocked_at;
+  final DateTime? stock_unstock_at;
+  final Product product;
 }

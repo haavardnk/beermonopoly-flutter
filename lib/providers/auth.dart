@@ -33,6 +33,10 @@ class Auth with ChangeNotifier {
     return _apiToken;
   }
 
+  void set apiToken(token) {
+    _apiToken = token;
+  }
+
   String get untappdToken {
     return _untappdToken;
   }
