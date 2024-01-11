@@ -26,7 +26,12 @@ class ProductOverviewReleaseProductSelection extends StatelessWidget {
               value: '',
               label: Padding(
                 padding: const EdgeInsets.only(bottom: 3),
-                child: Text('Alle'),
+                child: Text(
+                  'Alle',
+                  style: TextStyle(
+                    fontSize: release!.productSelections.length > 4 ? 13 : 14,
+                  ),
+                ),
               ),
             ),
             ...release!.productSelections.map((element) {
@@ -34,7 +39,16 @@ class ProductOverviewReleaseProductSelection extends StatelessWidget {
                 value: element,
                 label: Padding(
                   padding: const EdgeInsets.only(bottom: 3),
-                  child: Text(productSelectionAbrevationList[element]!),
+                  child: Text(
+                    productSelectionAbrevationList.containsKey(element)
+                        ? productSelectionAbrevationList[element]!
+                        : element,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: release!.productSelections.length > 4 ? 13 : 14,
+                    ),
+                  ),
                 ),
               );
             })

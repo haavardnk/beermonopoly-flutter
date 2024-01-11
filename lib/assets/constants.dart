@@ -385,6 +385,7 @@ const Map<String, String> productSelectionAbrevationList = {
   'Basisutvalget': 'Basis',
   'Bestillingsutvalget': 'BU',
   'Partiutvalget': 'Parti',
+  'Testutvalget': 'Test',
   'Tilleggsutvalget': 'TU',
 };
 
