@@ -7,6 +7,7 @@ import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import '../providers/filter.dart';
 import '../widgets/drawer/app_drawer.dart';
 import '../screens/product_overview_tab.dart';
+import '../models/release.dart';
 
 class ReleaseTab extends StatefulWidget {
   const ReleaseTab({Key? key}) : super(key: key);
@@ -25,6 +26,16 @@ class _ReleaseTabState extends State<ReleaseTab> {
   @override
   Widget build(BuildContext context) {
     late Filter filters = Provider.of<Filter>(context, listen: false);
+    List<int> years = [];
+
+    void _getReleaseYears() {
+      filters.releaseList.forEach((release) {
+        if (years.contains(release.releaseDate!.year)) {
+          return;
+        }
+        years.add(release.releaseDate!.year);
+      });
+    }
 
     String _createProductSelectionText(List<String> productSelections) {
       String productSelectionText = "";
@@ -68,97 +79,122 @@ class _ReleaseTabState extends State<ReleaseTab> {
       drawer: const AppDrawer(),
       body: RefreshIndicator(
         onRefresh: filters.getReleases,
-        child: Consumer<Filter>(builder: (context, _, __) {
-          return ListView.builder(
-            padding: const EdgeInsets.all(8),
-            itemCount: filters.releaseList.length,
-            itemBuilder: (BuildContext context, int index) {
-              filters.releaseList[index].productSelections.sort();
-              return Column(
-                children: [
-                  ListTile(
-                    isThreeLine: true,
-                    leading: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          filters.releaseList[index].releaseDate != null &&
-                                  DateTime.now()
-                                          .difference(filters
-                                              .releaseList[index].releaseDate!)
-                                          .inDays <=
-                                      14
-                              ? Icons.new_releases
-                              : Icons.new_releases_outlined,
-                        ),
-                      ],
-                    ),
-                    trailing: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.arrow_forward),
-                      ],
-                    ),
-                    iconColor: Theme.of(context).colorScheme.onBackground,
-                    textColor: Theme.of(context).colorScheme.onBackground,
-                    onTap: () {
-                      if (filters.filterSaveSettings[14]['save'] == false) {
-                        filters.releaseSortBy = '-rating';
-                        filters.releaseSortIndex =
-                            'Global rating - Høy til lav';
-                      }
-                      filters.releaseProductSelectionChoice = '';
-                      pushScreen(
-                        context,
-                        screen: ProductOverviewTab(
-                          release: filters.releaseList[index],
-                        ),
-                        withNavBar: true,
-                      );
-                    },
+        child: Consumer<Filter>(
+          builder: (context, _, __) {
+            _getReleaseYears();
+            return ListView(
+              children: [
+                for (int year in years)
+                  ExpansionTile(
                     title: Text(
-                      filters.releaseList[index].releaseDate != null
-                          ? '${toBeginningOfSentenceCase(DateFormat.yMMMMEEEEd('nb_NO').format(filters.releaseList[index].releaseDate!))}'
-                          : filters.releaseList[index].name,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      year.toString(),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    subtitle: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (filters
-                            .releaseList[index].productSelections.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5),
-                            child: Text(
-                              _createProductSelectionText(
-                                  filters.releaseList[index].productSelections),
-                              style: const TextStyle(
-                                fontSize: 14,
+                    initiallyExpanded: year == years[0] ? true : false,
+                    shape: const Border(),
+                    children: [
+                      for (Release release in filters.releaseList)
+                        if (release.releaseDate!.year == year)
+                          Column(
+                            children: [
+                              ListTile(
+                                isThreeLine: true,
+                                leading: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      release.releaseDate != null &&
+                                              DateTime.now()
+                                                      .difference(
+                                                          release.releaseDate!)
+                                                      .inDays <=
+                                                  14
+                                          ? Icons.new_releases
+                                          : Icons.new_releases_outlined,
+                                    ),
+                                  ],
+                                ),
+                                trailing: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.arrow_forward),
+                                  ],
+                                ),
+                                iconColor:
+                                    Theme.of(context).colorScheme.onBackground,
+                                textColor:
+                                    Theme.of(context).colorScheme.onBackground,
+                                onTap: () {
+                                  if (filters.filterSaveSettings[14]['save'] ==
+                                      false) {
+                                    filters.releaseSortBy = '-rating';
+                                    filters.releaseSortIndex =
+                                        'Global rating - Høy til lav';
+                                  }
+                                  filters.releaseProductSelectionChoice = '';
+                                  pushScreen(
+                                    context,
+                                    screen: ProductOverviewTab(
+                                      release: release,
+                                    ),
+                                    withNavBar: true,
+                                  );
+                                },
+                                title: Text(
+                                  release.releaseDate != null
+                                      ? '${toBeginningOfSentenceCase(DateFormat.yMMMMEEEEd('nb_NO').format(release.releaseDate!))}'
+                                      : release.name,
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (release.productSelections.isNotEmpty)
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text(
+                                          _createProductSelectionText(
+                                              release.productSelections),
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 5),
+                                      child: Text(
+                                        'Antall produkter: ${release.beerCount}',
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
+                              if (release.name !=
+                                      filters.releaseList.last.name &&
+                                  release.releaseDate!.year ==
+                                      filters
+                                          .releaseList[filters.releaseList
+                                                  .indexOf(release) +
+                                              1]
+                                          .releaseDate!
+                                          .year)
+                                Divider()
+                            ],
                           ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            'Antall produkter: ${filters.releaseList[index].beerCount}',
-                            style: const TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    ],
                   ),
-                  if (index + 1 != filters.releaseList.length) Divider()
-                ],
-              );
-            },
-          );
-        }),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
