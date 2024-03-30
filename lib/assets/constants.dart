@@ -1,4 +1,5 @@
 const Map<String, String> beermonopolyStyleList = {
+  'Alkoholfritt': 'non-alcoholic',
   'Annet': 'adambier,altbier,brett,burton,tan,chilli,cream ale,festbier,grape ale,'
       'happoshu,historical,honey beer,kellerbier,koji,kvass,lichtenhainer,'
       'malt beer,mild,pumpkin,rauchbier,roggenbier,root beer,rye beer,schwarzbier,'
@@ -193,6 +194,16 @@ const List<String> untappdStyleList = [
   'Mild - Light',
   'Mild - Other',
   'Märzen',
+  'Non-Alcoholic Beer - IPA',
+  'Non-Alcoholic Beer - Lager',
+  'Non-Alcoholic Beer - Other',
+  'Non-Alcoholic Beer - Pale Ale',
+  'Non-Alcoholic Beer - Porter / Stout',
+  'Non-Alcoholic Beer - Shandy / Radler',
+  'Non-Alcoholic Beer - Sour',
+  'Non-Alcoholic Beer - Wheat Beer',
+  'Non-Alcoholic Cider / Perry',
+  'Non-Alcoholic Mead',
   'Old / Stock Ale',
   'Pale Ale - American',
   'Pale Ale - Australian',
