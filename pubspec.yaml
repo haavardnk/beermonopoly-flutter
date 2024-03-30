@@ -34,7 +34,7 @@ dependencies:
   flutter_fadein: ^2.0.0
   fancy_shimmer_image: ^2.0.2
   provider: ^6.0.2
-  geolocator: ^10.0.0
+  geolocator: ^11.0.0
   shared_preferences: ^2.0.12
   flutter_web_auth: ^0.5.0
   intl: ^0.19.0
@@ -44,7 +44,7 @@ dependencies:
   adaptive_theme: ^3.1.1
   rate_my_app: ^2.0.0
   percent_indicator: ^4.2.3
-  external_app_launcher: ^3.1.0
+  external_app_launcher: ^4.0.0
   flag: ^7.0.0
   dropdown_search: ^5.0.2
   cached_network_image: ^3.2.3
@@ -57,7 +57,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core: ^2.3.0
   firebase_messaging: ^14.1.1
-  flutter_local_notifications: ^16.1.0
+  flutter_local_notifications: ^17.0.0
   firebase_analytics: ^10.0.6
 
 dev_dependencies:

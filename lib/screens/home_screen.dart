@@ -56,10 +56,11 @@ class _HomeScreenState extends State<HomeScreen> {
         screen: ProductOverviewTab(),
         item: ItemConfig(
           icon: Icon(Icons.liquor),
-          activeColorPrimary:
+          activeForegroundColor:
               Theme.of(context).colorScheme.onSecondaryContainer,
-          inactiveColorPrimary: Theme.of(context).colorScheme.onSurfaceVariant,
-          inactiveColorSecondary:
+          inactiveForegroundColor:
+              Theme.of(context).colorScheme.onSurfaceVariant,
+          inactiveBackgroundColor:
               Theme.of(context).colorScheme.onSurfaceVariant,
           title: 'Produkter',
         ),
@@ -68,10 +69,11 @@ class _HomeScreenState extends State<HomeScreen> {
         screen: ReleaseTab(),
         item: ItemConfig(
           icon: Icon(Icons.new_releases_outlined),
-          activeColorPrimary:
+          activeForegroundColor:
               Theme.of(context).colorScheme.onSecondaryContainer,
-          inactiveColorPrimary: Theme.of(context).colorScheme.onSurfaceVariant,
-          inactiveColorSecondary:
+          inactiveForegroundColor:
+              Theme.of(context).colorScheme.onSurfaceVariant,
+          inactiveBackgroundColor:
               Theme.of(context).colorScheme.onSurfaceVariant,
           title: 'Lanseringer',
         ),
@@ -80,10 +82,11 @@ class _HomeScreenState extends State<HomeScreen> {
         screen: StockChangeTab(),
         item: ItemConfig(
           icon: Icon(Icons.swap_vert),
-          activeColorPrimary:
+          activeForegroundColor:
               Theme.of(context).colorScheme.onSecondaryContainer,
-          inactiveColorPrimary: Theme.of(context).colorScheme.onSurfaceVariant,
-          inactiveColorSecondary:
+          inactiveForegroundColor:
+              Theme.of(context).colorScheme.onSurfaceVariant,
+          inactiveBackgroundColor:
               Theme.of(context).colorScheme.onSurfaceVariant,
           title: 'Lager inn/ut',
         ),
@@ -98,10 +101,11 @@ class _HomeScreenState extends State<HomeScreen> {
               isLabelVisible: cart.itemCount > 0,
             ),
           ),
-          activeColorPrimary:
+          activeForegroundColor:
               Theme.of(context).colorScheme.onSecondaryContainer,
-          inactiveColorPrimary: Theme.of(context).colorScheme.onSurfaceVariant,
-          inactiveColorSecondary:
+          inactiveForegroundColor:
+              Theme.of(context).colorScheme.onSurfaceVariant,
+          inactiveBackgroundColor:
               Theme.of(context).colorScheme.onSurfaceVariant,
           title: 'Handleliste',
         ),
