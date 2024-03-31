@@ -5,6 +5,8 @@ import 'package:dropdown_search/dropdown_search.dart';
 
 import '../../providers/cart.dart';
 import '../../providers/filter.dart';
+import '../../providers/auth.dart';
+import '../../assets/constants.dart';
 
 class CartBottomStoreSheet extends StatefulWidget {
   const CartBottomStoreSheet({Key? key}) : super(key: key);
@@ -14,6 +16,9 @@ class CartBottomStoreSheet extends StatefulWidget {
 }
 
 class _BottomStoreSheetState extends State<CartBottomStoreSheet> {
+  late Auth authData = Provider.of<Auth>(context, listen: false);
+  late List<String?> _sortList;
+
   Future<void> initCartSettings() async {
     final cart = Provider.of<Cart>(context, listen: false);
     final filters = Provider.of<Filter>(context, listen: false);
@@ -24,6 +29,17 @@ class _BottomStoreSheetState extends State<CartBottomStoreSheet> {
     if (cart.cartStoreId.isNotEmpty && (cart.greyNoStock || cart.hideNoStock)) {
       cart.checkCartStockStatus();
     }
+  }
+
+  @override
+  void initState() {
+    if (authData.isAuth) {
+      _sortList = cartSortListAuth;
+    } else {
+      _sortList = cartSortList;
+    }
+
+    super.initState();
   }
 
   @override
@@ -52,7 +68,7 @@ class _BottomStoreSheetState extends State<CartBottomStoreSheet> {
   Widget _showPopup() {
     final cart = Provider.of<Cart>(context, listen: false);
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.45,
+      height: MediaQuery.of(context).size.height * 0.6,
       child: StatefulBuilder(
         builder: (BuildContext context, StateSetter mystate) {
           return Column(
@@ -72,6 +88,44 @@ class _BottomStoreSheetState extends State<CartBottomStoreSheet> {
                 child: ListView(
                   padding: const EdgeInsets.all(16),
                   children: <Widget>[
+                    const Text('Sortering',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+                      child: DropdownSearch<String>(
+                        popupProps: PopupProps.dialog(),
+                        dropdownDecoratorProps: DropDownDecoratorProps(
+                          dropdownSearchDecoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            isDense: true,
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 23,
+                              horizontal: 10,
+                            ),
+                          ),
+                        ),
+                        dropdownBuilder: (context, selectedItem) {
+                          return Text(
+                            selectedItem!,
+                            style: TextStyle(fontSize: 16),
+                          );
+                        },
+                        items: _sortList.map((value) => value!).toList(),
+                        selectedItem: cart.cartSortIndex,
+                        onChanged: (String? x) {
+                          mystate(() {
+                            cart.cartSortIndex = x!;
+                            cart.sortCart();
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     const Text('Butikkvalg for handleliste',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
@@ -189,7 +243,7 @@ class _BottomStoreSheetState extends State<CartBottomStoreSheet> {
                                               border: OutlineInputBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(
-                                                  10,
+                                                  24,
                                                 ),
                                               ),
                                               isDense: true,

@@ -392,6 +392,32 @@ const Map<String, String> sortListAuth = {
   'Pris per liter - Lav til høy': 'price_per_volume',
 };
 
+const List<String> cartSortList = [
+  'Ingen sortering',
+  'Global rating - Høy til lav',
+  'Global rating - Lav til høy',
+  'Navn - A til Å',
+  'Navn - Å til A',
+  'Pris - Høy til lav',
+  'Pris - Lav til høy',
+  'Pris per liter - Høy til lav',
+  'Pris per liter - Lav til høy',
+];
+
+const List<String> cartSortListAuth = [
+  'Ingen sortering',
+  'Din rating - Høy til lav',
+  'Din rating - Lav til høy',
+  'Global rating - Høy til lav',
+  'Global rating - Lav til høy',
+  'Navn - A til Å',
+  'Navn - Å til A',
+  'Pris - Høy til lav',
+  'Pris - Lav til høy',
+  'Pris per liter - Høy til lav',
+  'Pris per liter - Lav til høy',
+];
+
 const Map<String, String> productSelectionAbrevationList = {
   'Basisutvalget': 'Basis',
   'Bestillingsutvalget': 'BU',
