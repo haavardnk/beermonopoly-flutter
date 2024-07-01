@@ -897,15 +897,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       snapshot.data!['year'] != 0)
                                     FadeIn(
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Text('Årgang'),
-                                          const SizedBox(width: 50),
+                                          Container(
+                                            child: const Text('Årgang'),
+                                            width: 115,
+                                          ),
                                           Flexible(
                                             child: Text(
                                               snapshot.data!['year'].toString(),
-                                              textAlign: TextAlign.end,
                                             ),
                                           )
                                         ],
@@ -921,17 +920,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       snapshot.data!['taste'] != null)
                                     FadeIn(
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Text('Smak'),
-                                          const SizedBox(width: 50),
+                                          Container(
+                                            child: const Text('Smak'),
+                                            width: 115,
+                                          ),
                                           Flexible(
                                             child: Text(
                                               snapshot.data!['taste']
                                                   .toString()
                                                   .replaceAll(".", ""),
-                                              textAlign: TextAlign.end,
                                             ),
                                           )
                                         ],
@@ -946,17 +944,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       snapshot.data!['aroma'] != null)
                                     FadeIn(
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Text('Lukt'),
-                                          const SizedBox(width: 50),
+                                          Container(
+                                            child: const Text('Lukt'),
+                                            width: 115,
+                                          ),
                                           Flexible(
                                             child: Text(
                                               snapshot.data!['aroma']
                                                   .toString()
                                                   .replaceAll(".", ""),
-                                              textAlign: TextAlign.end,
                                             ),
                                           )
                                         ],
@@ -971,17 +968,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       snapshot.data!['color'] != null)
                                     FadeIn(
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Text('Farge'),
-                                          const SizedBox(width: 50),
+                                          Container(
+                                            child: const Text('Farge'),
+                                            width: 115,
+                                          ),
                                           Flexible(
                                             child: Text(
                                               snapshot.data!['color']
                                                   .toString()
                                                   .replaceAll(".", ""),
-                                              textAlign: TextAlign.end,
                                             ),
                                           )
                                         ],
@@ -996,17 +992,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       snapshot.data!['food_pairing'] != null)
                                     FadeIn(
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Text('Passer til'),
-                                          const SizedBox(width: 50),
+                                          Container(
+                                            child: const Text('Passer til'),
+                                            width: 115,
+                                          ),
                                           Flexible(
                                             child: Text(
                                               snapshot.data!['food_pairing']
                                                   .toString()
                                                   .replaceAll(".", ""),
-                                              textAlign: TextAlign.end,
                                             ),
                                           )
                                         ],
@@ -1021,17 +1016,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       snapshot.data!['storable'] != null)
                                     FadeIn(
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Text('Lagring'),
-                                          const SizedBox(width: 50),
+                                          Container(
+                                            child: const Text('Lagring'),
+                                            width: 115,
+                                          ),
                                           Flexible(
                                             child: Text(
                                               snapshot.data!['storable']
                                                   .toString()
                                                   .replaceAll(".", ""),
-                                              textAlign: TextAlign.end,
                                             ),
                                           )
                                         ],
@@ -1046,17 +1040,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       snapshot.data!['raw_materials'] != null)
                                     FadeIn(
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Text('Råstoff'),
-                                          const SizedBox(width: 50),
+                                          Container(
+                                            child: const Text('Råstoff'),
+                                            width: 115,
+                                          ),
                                           Flexible(
                                             child: Text(
                                               snapshot.data!['raw_materials']
                                                   .toString()
                                                   .replaceAll(".", ""),
-                                              textAlign: TextAlign.end,
                                             ),
                                           )
                                         ],
@@ -1071,16 +1064,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       snapshot.data!['method'] != null)
                                     FadeIn(
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Text('Metode'),
-                                          const SizedBox(width: 50),
+                                          Container(
+                                            child: const Text('Metode'),
+                                            width: 115,
+                                          ),
                                           Flexible(
                                             child: Text(
                                               snapshot.data!['method']
                                                   .toString(),
-                                              textAlign: TextAlign.end,
                                             ),
                                           )
                                         ],
@@ -1095,16 +1087,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       snapshot.data!['allergens'] != null)
                                     FadeIn(
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Text('Allergen'),
-                                          const SizedBox(width: 50),
+                                          Container(
+                                            child: const Text('Allergen'),
+                                            width: 115,
+                                          ),
                                           Flexible(
                                             child: Text(
                                               snapshot.data!['allergens']
                                                   .toString(),
-                                              textAlign: TextAlign.end,
                                             ),
                                           )
                                         ],
@@ -1119,15 +1110,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       snapshot.data!['brewery'] != null)
                                     FadeIn(
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Text('Bryggeri'),
-                                          const SizedBox(width: 50),
+                                          Container(
+                                            child: const Text('Bryggeri'),
+                                            width: 115,
+                                          ),
                                           Flexible(
                                             child: Text(
                                               snapshot.data!['brewery'],
-                                              textAlign: TextAlign.end,
                                             ),
                                           ),
                                         ],
@@ -1141,19 +1131,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   if (product.country != null)
                                     FadeIn(
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Text('Land'),
-                                          const SizedBox(width: 50),
+                                          Container(
+                                            child: const Text('Land'),
+                                            width: 115,
+                                          ),
                                           Flexible(
                                             child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
                                               children: [
                                                 Text(
                                                   product.country!,
-                                                  textAlign: TextAlign.end,
                                                 ),
                                                 if (product.country != null &&
                                                     countries[
@@ -1185,15 +1172,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       height: 8,
                                     ),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      const Text('Varenummer'),
-                                      const SizedBox(width: 50),
+                                      Container(
+                                        child: const Text('Varenummer'),
+                                        width: 115,
+                                      ),
                                       Flexible(
                                         child: Text(
                                           product.id.toString(),
-                                          textAlign: TextAlign.end,
                                         ),
                                       )
                                     ],
@@ -1206,16 +1192,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                           null)
                                     FadeIn(
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Text('Utvalg'),
-                                          const SizedBox(width: 50),
+                                          Container(
+                                            child: const Text('Utvalg'),
+                                            width: 115,
+                                          ),
                                           Flexible(
                                             child: Text(
                                               snapshot
                                                   .data!['product_selection'],
-                                              textAlign: TextAlign.end,
                                             ),
                                           ),
                                         ],
@@ -1227,62 +1212,68 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             const Divider(
                               height: 15,
                             ),
-                            Container(
-                              height: _stockList.length < 6
-                                  ? _stockList.length * 15 + 65
-                                  : 165,
-                              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('Butikker med varen på lager',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold)),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  if (_stockList.isNotEmpty)
-                                    Expanded(
-                                      child: ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: _stockList.length,
-                                        itemBuilder: (context, index) {
-                                          return Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                            ExpansionTile(
+                              title: Text("Vis butikker med varen på lager",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              dense: true,
+                              shape: const Border(),
+                              children: [
+                                Container(
+                                  height: _stockList.length < 6
+                                      ? _stockList.length * 15 + 65
+                                      : 165,
+                                  padding:
+                                      const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      if (_stockList.isNotEmpty)
+                                        Expanded(
+                                          child: ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount: _stockList.length,
+                                            itemBuilder: (context, index) {
+                                              return Column(
                                                 children: [
-                                                  Text(_stockList[index]
-                                                      ['store_name']),
-                                                  Text(
-                                                    'På lager: ${_stockList[index]['quantity']}',
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(_stockList[index]
+                                                          ['store_name']),
+                                                      Text(
+                                                        'På lager: ${_stockList[index]['quantity']}',
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ],
                                                   ),
+                                                  if (index <
+                                                      _stockList.length - 1)
+                                                    const Divider(
+                                                      height: 5,
+                                                    ),
                                                 ],
-                                              ),
-                                              if (index < _stockList.length - 1)
-                                                const Divider(
-                                                  height: 5,
-                                                ),
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  if (_stockList.isEmpty)
-                                    Expanded(
-                                      child: Center(
-                                        child: const Text(
-                                          'Ingen butikker har denne på lager',
+                                              );
+                                            },
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                ],
-                              ),
+                                      if (_stockList.isEmpty)
+                                        const Text(
+                                          'Ingen butikker har denne varen på lager',
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                             const Divider(
                               height: 20,
