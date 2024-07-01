@@ -337,6 +337,7 @@ const Map<String, String> countryList = {
   'Polen': 'PL',
   'Portugal': 'PT',
   'Russland': 'RU',
+  'Romania': 'RO',
   'Serbia': 'RS',
   'Singapore': 'SG',
   'Skottland': 'GB',
