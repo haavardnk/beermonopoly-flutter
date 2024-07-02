@@ -122,6 +122,7 @@ const List<String> untappdStyleList = [
   'IPA - Belgian',
   'IPA - Black / Cascadian Dark Ale',
   'IPA - Brett',
+  'IPA - Brown',
   'IPA - Brut',
   'IPA - Cold',
   'IPA - English',
