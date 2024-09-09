@@ -1,4 +1,6 @@
 PODS:
+  - cupertino_http (0.0.1):
+    - Flutter
   - external_app_launcher (0.0.1):
     - Flutter
   - Firebase/Analytics (11.0.0):
@@ -141,6 +143,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - cupertino_http (from `.symlinks/plugins/cupertino_http/ios`)
   - external_app_launcher (from `.symlinks/plugins/external_app_launcher/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
@@ -171,6 +174,8 @@ SPEC REPOS:
     - PromisesObjC
 
 EXTERNAL SOURCES:
+  cupertino_http:
+    :path: ".symlinks/plugins/cupertino_http/ios"
   external_app_launcher:
     :path: ".symlinks/plugins/external_app_launcher/ios"
   firebase_analytics:
@@ -201,6 +206,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
+  cupertino_http: 1a3a0f163c1b26e7f1a293b33d476e0fde7a64ec
   external_app_launcher: ad55ac844aa21f2d2197d7cec58ff0d0dc40bbc0
   Firebase: 9f574c08c2396885b5e7e100ed4293d956218af9
   firebase_analytics: 1a66fe8d4375eccff44671ea37897683a78b2675

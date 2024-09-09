@@ -113,6 +113,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.18.0"
+  cronet_http:
+    dependency: "direct main"
+    description:
+      name: cronet_http
+      sha256: "3af9c4d57bf07ef4b307e77b22be4ad61bea19ee6ff65e62184863f3a09f1415"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.2"
   crypto:
     dependency: transitive
     description:
@@ -121,6 +129,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.5"
+  cupertino_http:
+    dependency: "direct main"
+    description:
+      name: cupertino_http
+      sha256: "7e75c45a27cc13a886ab0a1e4d8570078397057bd612de9d24fe5df0d9387717"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.1"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -185,6 +201,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  fetch_api:
+    dependency: transitive
+    description:
+      name: fetch_api
+      sha256: "97f46c25b480aad74f7cc2ad7ccba2c5c6f08d008e68f95c1077286ce243d0e6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0"
+  fetch_client:
+    dependency: "direct main"
+    description:
+      name: fetch_client
+      sha256: "9666ee14536778474072245ed5cba07db81ae8eb5de3b7bf4a2d1e2c49696092"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.2"
   ffi:
     dependency: transitive
     description:
@@ -466,6 +498,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  http_profile:
+    dependency: transitive
+    description:
+      name: http_profile
+      sha256: "7e679e355b09aaee2ab5010915c932cce3f2d1c11c3b2dc177891687014ffa78"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   image:
     dependency: transitive
     description:
@@ -495,6 +535,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.19.0"
+  jni:
+    dependency: transitive
+    description:
+      name: jni
+      sha256: f377c585ea9c08d48b427dc2e03780af2889d1bb094440da853c6883c1acba4b
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.1"
   json_annotation:
     dependency: transitive
     description:
@@ -580,6 +628,14 @@ packages:
     description:
       name: octo_image
       sha256: "34faa6639a78c7e3cbe79be6f9f96535867e879748ade7d17c9b1ae7536293bd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
+  package_config:
+    dependency: transitive
+    description:
+      name: package_config
+      sha256: "1c5b77ccc91e4823a5af61ee74e6b972db1ef98c2ff5a18d3161c982a55448bd"
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
@@ -1036,6 +1092,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.1"
+  web_socket:
+    dependency: transitive
+    description:
+      name: web_socket
+      sha256: "3c12d96c0c9a4eec095246debcea7b86c0324f22df69893d538fcc6f1b8cce83"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.6"
   webdriver:
     dependency: transitive
     description:
