@@ -758,6 +758,7 @@ class _ProductOverviewBottomFilterSheetState
                                   false,
                                 );
                               }
+                              filters.setFilters();
                             });
                           },
                           child: Text(
@@ -816,6 +817,7 @@ class _ProductOverviewBottomFilterSheetState
                                   false,
                                 );
                               }
+                              filters.setFilters();
                             });
                           },
                           child: Text(
