@@ -116,7 +116,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 child: Image.asset(
                   'assets/images/powered_by_untappd.png',
                   width: 100,
-                  color: Theme.of(context).colorScheme.onBackground,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ),

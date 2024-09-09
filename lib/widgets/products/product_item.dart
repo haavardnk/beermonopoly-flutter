@@ -392,7 +392,7 @@ class _ProductItemState extends State<ProductItem> {
                     decoration: BoxDecoration(
                       border: Border.all(
                         width: 1,
-                        color: Theme.of(context).colorScheme.onBackground,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                       borderRadius: const BorderRadius.all(
                         Radius.circular(24),
@@ -411,7 +411,7 @@ class _ProductItemState extends State<ProductItem> {
                           child: Icon(
                             Icons.shopping_cart_outlined,
                             size: 20,
-                            color: Theme.of(context).colorScheme.onBackground,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                       ),

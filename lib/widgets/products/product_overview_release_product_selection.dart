@@ -60,8 +60,8 @@ class ProductOverviewReleaseProductSelection extends StatelessWidget {
           showSelectedIcon: false,
           emptySelectionAllowed: true,
           style: ButtonStyle(
-            elevation: MaterialStateProperty.all<double>(3),
-            surfaceTintColor: MaterialStateProperty.all<Color?>(
+            elevation: WidgetStateProperty.all<double>(3),
+            surfaceTintColor: WidgetStateProperty.all<Color?>(
               Theme.of(context).colorScheme.surfaceTint,
             ),
           ),

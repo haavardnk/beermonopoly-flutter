@@ -85,7 +85,7 @@ class CartTab extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.all(12),
-              color: Theme.of(context).colorScheme.background,
+              color: Theme.of(context).colorScheme.surface,
               child: Column(
                 children: [
                   _createTotalPrice(cartData),

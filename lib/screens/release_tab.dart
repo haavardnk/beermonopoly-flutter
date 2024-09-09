@@ -122,9 +122,9 @@ class _ReleaseTabState extends State<ReleaseTab> {
                                   ],
                                 ),
                                 iconColor:
-                                    Theme.of(context).colorScheme.onBackground,
+                                    Theme.of(context).colorScheme.onSurface,
                                 textColor:
-                                    Theme.of(context).colorScheme.onBackground,
+                                    Theme.of(context).colorScheme.onSurface,
                                 onTap: () {
                                   if (filters.filterSaveSettings[14]['save'] ==
                                       false) {

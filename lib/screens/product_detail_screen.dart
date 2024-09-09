@@ -687,10 +687,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                             100)
                                                         .toStringAsFixed(0) +
                                                     '%'),
-                                                backgroundColor:
-                                                    Theme.of(context)
-                                                        .colorScheme
-                                                        .surfaceVariant,
+                                                backgroundColor: Theme.of(
+                                                        context)
+                                                    .colorScheme
+                                                    .surfaceContainerHighest,
                                                 progressColor: Theme.of(context)
                                                     .colorScheme
                                                     .primary,
@@ -716,10 +716,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                             100)
                                                         .toStringAsFixed(0) +
                                                     '%'),
-                                                backgroundColor:
-                                                    Theme.of(context)
-                                                        .colorScheme
-                                                        .surfaceVariant,
+                                                backgroundColor: Theme.of(
+                                                        context)
+                                                    .colorScheme
+                                                    .surfaceContainerHighest,
                                                 progressColor: Theme.of(context)
                                                     .colorScheme
                                                     .primary,
@@ -745,10 +745,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                             100)
                                                         .toStringAsFixed(0) +
                                                     '%'),
-                                                backgroundColor:
-                                                    Theme.of(context)
-                                                        .colorScheme
-                                                        .surfaceVariant,
+                                                backgroundColor: Theme.of(
+                                                        context)
+                                                    .colorScheme
+                                                    .surfaceContainerHighest,
                                                 progressColor: Theme.of(context)
                                                     .colorScheme
                                                     .primary,
@@ -776,10 +776,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                             100)
                                                         .toStringAsFixed(0) +
                                                     '%'),
-                                                backgroundColor:
-                                                    Theme.of(context)
-                                                        .colorScheme
-                                                        .surfaceVariant,
+                                                backgroundColor: Theme.of(
+                                                        context)
+                                                    .colorScheme
+                                                    .surfaceContainerHighest,
                                                 progressColor: Theme.of(context)
                                                     .colorScheme
                                                     .primary,

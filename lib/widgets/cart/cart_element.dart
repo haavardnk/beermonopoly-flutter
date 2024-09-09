@@ -442,7 +442,7 @@ class _CartElementState extends State<CartElement> {
                                                             color: Theme.of(
                                                                     context)
                                                                 .colorScheme
-                                                                .onBackground,
+                                                                .onSurface,
                                                           ),
                                                         ),
                                                       ),
@@ -491,7 +491,7 @@ class _CartElementState extends State<CartElement> {
                                                             color: Theme.of(
                                                                     context)
                                                                 .colorScheme
-                                                                .onBackground,
+                                                                .onSurface,
                                                           ),
                                                         ),
                                                       ),
@@ -538,7 +538,7 @@ class _CartElementState extends State<CartElement> {
                                                 size: 17,
                                                 color: Theme.of(context)
                                                     .colorScheme
-                                                    .onBackground,
+                                                    .onSurface,
                                               ),
                                             ),
                                           ),
