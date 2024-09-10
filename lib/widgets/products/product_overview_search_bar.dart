@@ -39,9 +39,10 @@ class _SearchBarState extends State<ProductOverviewSearchBar> {
         shadowColor: Colors.transparent,
         child: TextFormField(
           controller: _search,
-          textAlignVertical: TextAlignVertical.bottom,
           maxLines: 1,
-          style: TextStyle(fontSize: 16),
+          style: TextStyle(
+            fontSize: 16,
+          ),
           onChanged: (textValue) {
             setState(() {
               filters.setSearch(textValue);
