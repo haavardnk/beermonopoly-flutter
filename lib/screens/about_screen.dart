@@ -76,14 +76,14 @@ class AboutScreen extends StatelessWidget {
               height: 10,
             ),
             Text(
-              "Untappd-data blir kontinuerlig oppdatert gjennom hele døgnet på grunn av deres lave API-grense. "
-              "Øl blir derfor oppdatert i henhold til når de ble oppdatert sist, "
-              "med ekstra prioritet for nye øl og øl med få innsjekkinger. "
-              "Når du logger inn med Untappd for første gang, vil alle dine innsjekkinger bli hentet. "
-              "Dette kan ta noe tid og avhenger av hvor mange innsjekkinger du har. "
-              "Etter dette vil alle nye innsjekkinger bli hentet inn en gang per dag. "
-              "Din ønskeliste og venneliste vil også bli hentet inn en gang per dag.",
-            ),
+                "Untappd-data blir kontinuerlig oppdatert gjennom hele døgnet på grunn av deres lave API-grense. "
+                "Øl blir derfor oppdatert i henhold til når de ble oppdatert sist, "
+                "med ekstra prioritet for nye øl og øl med få innsjekkinger. "
+                // "Når du logger inn med Untappd for første gang, vil alle dine innsjekkinger bli hentet. "
+                // "Dette kan ta noe tid og avhenger av hvor mange innsjekkinger du har. "
+                // "Etter dette vil alle nye innsjekkinger bli hentet inn en gang per dag. "
+                // "Din ønskeliste og venneliste vil også bli hentet inn en gang per dag.",
+                ),
             const SizedBox(
               height: 10,
             ),

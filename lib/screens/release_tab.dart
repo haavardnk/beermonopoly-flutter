@@ -126,7 +126,7 @@ class _ReleaseTabState extends State<ReleaseTab> {
                                 textColor:
                                     Theme.of(context).colorScheme.onSurface,
                                 onTap: () {
-                                  if (filters.filterSaveSettings[14]['save'] ==
+                                  if (filters.filterSaveSettings[12]['save'] ==
                                       false) {
                                     filters.releaseSortBy = '-rating';
                                     filters.releaseSortIndex =

@@ -46,9 +46,9 @@ class _ReleaseSortState extends State<ProductOverviewReleaseSort> {
                                   'Husk valgt sortering',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                value: filters.filterSaveSettings[14]['save'],
+                                value: filters.filterSaveSettings[12]['save'],
                                 onChanged: (bool newValue) {
-                                  filters.filterSaveSettings[14]['save'] =
+                                  filters.filterSaveSettings[12]['save'] =
                                       newValue;
                                   filters.saveFilterSettings();
                                 },

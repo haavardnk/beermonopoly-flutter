@@ -66,8 +66,8 @@ class Filter with ChangeNotifier {
     {'name': 'productSelection', 'text': 'Produktutvalg', 'save': false},
     {'name': 'excludeAllergens', 'text': 'Allergener', 'save': false},
     {'name': 'delivery', 'text': 'Bestilling', 'save': false},
-    {'name': 'checkIn', 'text': 'Untappd Innsjekket', 'save': false},
-    {'name': 'wishlisted', 'text': 'Untappd Ønskeliste', 'save': false},
+    // {'name': 'checkIn', 'text': 'Untappd Innsjekket', 'save': false},
+    // {'name': 'wishlisted', 'text': 'Untappd Ønskeliste', 'save': false},
     {'name': 'stockChangeStoreId', 'text': 'Lager inn/ut butikk', 'save': true},
     {'name': 'releaseSortBy', 'text': 'Lanseringer Sortering', 'save': true},
   ];

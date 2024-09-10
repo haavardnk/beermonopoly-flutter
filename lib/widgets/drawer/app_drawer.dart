@@ -104,23 +104,23 @@ class _AppDrawerState extends State<AppDrawer> {
             },
           ),
           const Divider(),
-          DrawerAuthButton(
-            authData: authData,
-          ),
-          const Divider(),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Image.asset(
-                  'assets/images/powered_by_untappd.png',
-                  width: 100,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
-            ),
-          )
+          // DrawerAuthButton(
+          //   authData: authData,
+          // ),
+          // const Divider(),
+          // Expanded(
+          //   child: Padding(
+          //     padding: const EdgeInsets.all(15.0),
+          //     child: Align(
+          //       alignment: Alignment.bottomCenter,
+          //       child: Image.asset(
+          //         'assets/images/powered_by_untappd.png',
+          //         width: 100,
+          //         color: Theme.of(context).colorScheme.onSurface,
+          //       ),
+          //     ),
+          //   ),
+          // )
         ],
       ),
     );

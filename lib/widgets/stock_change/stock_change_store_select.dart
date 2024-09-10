@@ -64,9 +64,9 @@ class StockChangeStoreSelect extends StatelessWidget {
                           'Husk valgt butikk',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        value: filters.filterSaveSettings[13]['save'],
+                        value: filters.filterSaveSettings[11]['save'],
                         onChanged: (bool newValue) {
-                          filters.filterSaveSettings[13]['save'] = newValue;
+                          filters.filterSaveSettings[11]['save'] = newValue;
                           filters.saveFilterSettings();
                         },
                       );

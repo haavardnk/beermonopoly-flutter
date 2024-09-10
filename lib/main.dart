@@ -163,16 +163,17 @@ class _MyAppState extends State<MyApp> {
             theme: theme,
             darkTheme: darkTheme,
             home: RateMyAppBuilder(
-              builder: (context) => auth.isAuthOrSkipLogin
-                  ? const HomeScreen()
-                  : FutureBuilder(
-                      future: auth.tryAutoLogin(),
-                      builder: (ctx, authResultSnapshot) =>
-                          authResultSnapshot.connectionState ==
-                                  ConnectionState.waiting
-                              ? const SplashScreen()
-                              : const AuthScreen(),
-                    ),
+              builder: (context) => const HomeScreen(),
+              // builder: (context) => auth.isAuthOrSkipLogin
+              //     ? const HomeScreen()
+              //     : FutureBuilder(
+              //         future: auth.tryAutoLogin(),
+              //         builder: (ctx, authResultSnapshot) =>
+              //             authResultSnapshot.connectionState ==
+              //                     ConnectionState.waiting
+              //                 ? const SplashScreen()
+              //                 : const AuthScreen(),
+              //       ),
               onInitialized: (context, rateMyApp) {
                 if (rateMyApp.shouldOpenDialog) {
                   rateMyApp.showStarRateDialog(
