@@ -63,6 +63,19 @@
 		<key>CADisableMinimumFrameDurationOnPhone</key>
 		<true/>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
-</dict>
+		<true/>
+		<key>GIDServerClientID</key>
+		<string>298612751636-u2thkfq60087dnkml3ectaeqbe752rms.apps.googleusercontent.com</string>
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>com.googleusercontent.apps.298612751636-u2thkfq60087dnkml3ectaeqbe752rms</string>
+				</array>
+			</dict>
+		</array>
+	</dict>
 </plist>

@@ -913,54 +913,54 @@ class _ProductOverviewBottomFilterSheetState
                             );
                     },
                   ),
-                  // const SizedBox(
-                  //   height: 10,
-                  // ),
-                  // Text(
-                  //     authData.isAuth
-                  //         ? 'Untappd Innsjekket'
-                  //         : 'Untappd Innsjekket - Innlogging kreves',
-                  //     style: const TextStyle(
-                  //         fontSize: 16, fontWeight: FontWeight.bold)),
-                  // Wrap(
-                  //   spacing: 8,
-                  //   children: List.generate(
-                  //     checkinList.length,
-                  //     (index) {
-                  //       return _radio(
-                  //         checkinList[index],
-                  //         index,
-                  //         filters.checkIn,
-                  //         filters.setCheckin,
-                  //         mystate,
-                  //       );
-                  //     },
-                  //   ),
-                  // ),
-                  // const SizedBox(
-                  //   height: 10,
-                  // ),
-                  // Text(
-                  //     authData.isAuth
-                  //         ? 'Untappd Ønskeliste'
-                  //         : 'Untappd Ønskeliste - Innlogging kreves',
-                  //     style: const TextStyle(
-                  //         fontSize: 16, fontWeight: FontWeight.bold)),
-                  // Wrap(
-                  //   spacing: 8,
-                  //   children: List.generate(
-                  //     wishlistList.length,
-                  //     (index) {
-                  //       return _radio(
-                  //         wishlistList[index],
-                  //         index,
-                  //         filters.wishlisted,
-                  //         filters.setWishlisted,
-                  //         mystate,
-                  //       );
-                  //     },
-                  //   ),
-                  // ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                      authData.isAuth
+                          ? 'Untappd Innsjekket'
+                          : 'Untappd Innsjekket - Innlogging kreves',
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold)),
+                  Wrap(
+                    spacing: 8,
+                    children: List.generate(
+                      checkinList.length,
+                      (index) {
+                        return _radio(
+                          checkinList[index],
+                          index,
+                          filters.checkIn,
+                          filters.setCheckin,
+                          mystate,
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                      authData.isAuth
+                          ? 'Untappd Ønskeliste'
+                          : 'Untappd Ønskeliste - Innlogging kreves',
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold)),
+                  Wrap(
+                    spacing: 8,
+                    children: List.generate(
+                      wishlistList.length,
+                      (index) {
+                        return _radio(
+                          wishlistList[index],
+                          index,
+                          filters.wishlisted,
+                          filters.setWishlisted,
+                          mystate,
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),

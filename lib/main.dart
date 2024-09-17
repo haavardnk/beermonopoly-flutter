@@ -9,11 +9,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'firebase_options.dart';
-import './screens/auth_screen.dart';
+import 'screens/auth/auth_landing_screen.dart';
 import './screens/product_detail_screen.dart';
 import 'screens/home_screen.dart';
 import './screens/splash_screen.dart';
 import './screens/about_screen.dart';
+import 'screens/auth/auth_registration_screen.dart';
 import './providers/filter.dart';
 import './providers/auth.dart';
 import './providers/cart.dart';
@@ -163,17 +164,16 @@ class _MyAppState extends State<MyApp> {
             theme: theme,
             darkTheme: darkTheme,
             home: RateMyAppBuilder(
-              builder: (context) => const HomeScreen(),
-              // builder: (context) => auth.isAuthOrSkipLogin
-              //     ? const HomeScreen()
-              //     : FutureBuilder(
-              //         future: auth.tryAutoLogin(),
-              //         builder: (ctx, authResultSnapshot) =>
-              //             authResultSnapshot.connectionState ==
-              //                     ConnectionState.waiting
-              //                 ? const SplashScreen()
-              //                 : const AuthScreen(),
-              //       ),
+              builder: (context) => auth.isAuthOrSkipLogin
+                  ? const HomeScreen()
+                  : FutureBuilder(
+                      future: auth.tryAutoLogin(),
+                      builder: (ctx, authResultSnapshot) =>
+                          authResultSnapshot.connectionState ==
+                                  ConnectionState.waiting
+                              ? const SplashScreen()
+                              : const AuthLandingScreen(),
+                    ),
               onInitialized: (context, rateMyApp) {
                 if (rateMyApp.shouldOpenDialog) {
                   rateMyApp.showStarRateDialog(
@@ -204,6 +204,8 @@ class _MyAppState extends State<MyApp> {
               ProductDetailScreen.routeName: (ctx) =>
                   const ProductDetailScreen(),
               AboutScreen.routeName: (ctx) => const AboutScreen(),
+              AuthRegistrationScreen.routeName: (ctx) =>
+                  const AuthRegistrationScreen(),
             },
           );
         }),

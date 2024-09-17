@@ -104,9 +104,9 @@ class _AppDrawerState extends State<AppDrawer> {
             },
           ),
           const Divider(),
-          // DrawerAuthButton(
-          //   authData: authData,
-          // ),
+          DrawerAuthButton(
+            authData: authData,
+          ),
           // const Divider(),
           // Expanded(
           //   child: Padding(
