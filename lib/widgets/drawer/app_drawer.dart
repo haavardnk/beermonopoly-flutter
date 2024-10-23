@@ -8,7 +8,6 @@ import '../../providers/auth.dart';
 import '../../helpers/app_launcher.dart';
 import '../../screens/about_screen.dart';
 import '../../widgets/drawer/drawer_auth_button.dart';
-import '../../widgets/drawer/drawer_avatar_image.dart';
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer({Key? key}) : super(key: key);
@@ -43,17 +42,9 @@ class _AppDrawerState extends State<AppDrawer> {
         children: [
           const SizedBox(height: 70),
           if (authData.isAuth)
-            Column(
-              children: [
-                DrawerAvatarImage(authData: authData),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  authData.userName,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-              ],
+            Text(
+              authData.userName,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
           const Divider(),
           ListTile(
@@ -94,7 +85,7 @@ class _AppDrawerState extends State<AppDrawer> {
           const Divider(),
           ListTile(
             trailing: const Icon(Icons.info),
-            title: const Text('Om'),
+            title: const Text('Om Ølmonopolet'),
             onTap: () {
               pushScreen(
                 context,
@@ -107,20 +98,6 @@ class _AppDrawerState extends State<AppDrawer> {
           DrawerAuthButton(
             authData: authData,
           ),
-          // const Divider(),
-          // Expanded(
-          //   child: Padding(
-          //     padding: const EdgeInsets.all(15.0),
-          //     child: Align(
-          //       alignment: Alignment.bottomCenter,
-          //       child: Image.asset(
-          //         'assets/images/powered_by_untappd.png',
-          //         width: 100,
-          //         color: Theme.of(context).colorScheme.onSurface,
-          //       ),
-          //     ),
-          //   ),
-          // )
         ],
       ),
     );

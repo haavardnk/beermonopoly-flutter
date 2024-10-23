@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 import '../../providers/auth.dart';
 import '../../validators/auth_validator.dart';
+import 'auth_forgotten_password_screen.dart';
 
-class AuthRegistrationScreen extends StatefulWidget {
-  const AuthRegistrationScreen({Key? key}) : super(key: key);
-  static const routeName = '/auth/register';
+class AuthLoginScreen extends StatefulWidget {
+  const AuthLoginScreen({Key? key}) : super(key: key);
+  static const routeName = '/auth/login';
 
   @override
-  State<AuthRegistrationScreen> createState() => _AuthRegistrationScreenState();
+  State<AuthLoginScreen> createState() => _AuthLoginScreenState();
 }
 
-class _AuthRegistrationScreenState extends State<AuthRegistrationScreen> {
-  final GlobalKey<FormState> _signUpGlobalKey = GlobalKey<FormState>();
-  TextEditingController nameController = TextEditingController();
+class _AuthLoginScreenState extends State<AuthLoginScreen> {
+  final GlobalKey<FormState> _signInGlobalKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController passwordRetryController = TextEditingController();
   bool passwordSee = true;
 
   @override
@@ -25,10 +25,9 @@ class _AuthRegistrationScreenState extends State<AuthRegistrationScreen> {
     final _mediaQueryData = MediaQuery.of(context);
     final _auth = Provider.of<Auth>(context);
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(
-          'Ny Bruker',
+          'Logg inn',
           style:
               TextStyle(color: Theme.of(context).textTheme.titleLarge!.color),
         ),
@@ -43,25 +42,13 @@ class _AuthRegistrationScreenState extends State<AuthRegistrationScreen> {
           50,
         ),
         child: Form(
-          key: _signUpGlobalKey,
+          key: _signInGlobalKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
                 children: [
                   // Name Input -------------------------------------
-                  TextFormField(
-                    controller: nameController,
-                    enableSuggestions: false,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: AuthValidator.isNameValid,
-                    decoration: const InputDecoration(
-                      hintText: "Brukernavn",
-                    ),
-                  ),
-
-                  // Email Input -------------------------------------
-                  const SizedBox(height: 40),
                   TextFormField(
                     controller: emailController,
                     enableSuggestions: false,
@@ -95,52 +82,25 @@ class _AuthRegistrationScreenState extends State<AuthRegistrationScreen> {
                       ),
                     ),
                   ),
-
-                  // Retry Password Input -------------------------------------
-                  const SizedBox(height: 40),
-                  TextFormField(
-                    controller: passwordRetryController,
-                    enableSuggestions: false,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    obscureText: passwordSee,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Vennligst oppgi ditt passord';
-                      }
-                      if (value.length < 8) {
-                        return 'Passordet må være minst 8 bokstaver langt';
-                      }
-                      if (passwordController.text !=
-                          passwordRetryController.text) {
-                        return 'Passordene må være like';
-                      }
-
-                      return null;
-                    },
-                    decoration: const InputDecoration(
-                      hintText: "Passord",
-                    ),
-                  ),
                 ],
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Sign Up for Button ----------------------------------
+                  // Sign In Button ----------------------------------
                   FilledButton(
                     child: Text(
-                      "Registrer",
+                      "Logg inn",
                       style: TextStyle(
                         fontSize: 18,
                       ),
                     ),
                     onPressed: () async {
-                      if (_signUpGlobalKey.currentState!.validate()) {
+                      if (_signInGlobalKey.currentState!.validate()) {
                         try {
-                          var _status = await _auth.registerWithEmail(
-                            nameController.text.trim(),
-                            passwordController.text.trim(),
+                          var _status = await _auth.login(
                             emailController.text.trim(),
+                            passwordController.text.trim(),
                             context,
                           );
                           if (_status) {
@@ -173,6 +133,20 @@ class _AuthRegistrationScreenState extends State<AuthRegistrationScreen> {
                       }
                     },
                   ),
+                  SizedBox(height: 10),
+                  TextButton(
+                      onPressed: () {
+                        pushScreen(
+                          context,
+                          screen: AuthForgottenPasswordScreen(),
+                        );
+                      },
+                      child: Text(
+                        'Glemt passord?',
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      ))
                 ],
               ),
             ],

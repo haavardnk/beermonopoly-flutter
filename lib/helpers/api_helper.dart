@@ -10,8 +10,9 @@ import '../models/stock_change.dart';
 import '../providers/filter.dart';
 import '../providers/auth.dart';
 
-//const _baseUrl = 'http://127.0.0.1:8000/';
-const _baseUrl = 'https://api.beermonopoly.com/';
+//const _apiUrl = 'http://127.0.0.1:8000/';
+const _apiUrl = 'https://api.beermonopoly.com/';
+const _authUrl = 'https://api.beermonopoly.com/';
 
 class ApiHelper {
   static Future<Map<String, dynamic>> getDetailedProductInfo(
@@ -22,7 +23,7 @@ class ApiHelper {
           }
         : {};
     final url = Uri.parse(
-        '${_baseUrl}beers/?beers=$productId&fields=$fields&all_stock=true');
+        '${_apiUrl}beers/?beers=$productId&fields=$fields&all_stock=true');
     try {
       final response = await http.get(
         url,
@@ -46,7 +47,7 @@ class ApiHelper {
   static Future<List<dynamic>> checkStock(
       http.Client http, String productIds, String store) async {
     final url = Uri.parse(
-        '${_baseUrl}beers/?beers=$productIds&store=$store&fields=vmp_id,stock');
+        '${_apiUrl}beers/?beers=$productIds&store=$store&fields=vmp_id,stock');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -145,7 +146,7 @@ class ApiHelper {
             'Authorization': 'Token $apiToken',
           }
         : {};
-    final url = Uri.parse('${_baseUrl}beers/?beers=$productIds&fields=$fields');
+    final url = Uri.parse('${_apiUrl}beers/?beers=$productIds&fields=$fields');
     try {
       final response = await http.get(
         url,
@@ -176,7 +177,7 @@ class ApiHelper {
     });
     try {
       final response = await http.post(
-        Uri.parse('${_baseUrl}wrongmatch/'),
+        Uri.parse('${_apiUrl}wrongmatch/'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -220,7 +221,7 @@ class ApiHelper {
     };
     try {
       final response = await http.post(
-        Uri.parse('${_baseUrl}auth/checked_in_styles'),
+        Uri.parse('${_apiUrl}auth/checked_in_styles'),
         headers: headers,
       );
       if (response.statusCode == 200) {
@@ -258,7 +259,7 @@ class ApiHelper {
       http.Client http, String fcmToken, String apiToken) async {
     try {
       final response = await http.post(
-          Uri.parse('${_baseUrl}notifications/set_token/?token=${fcmToken}'),
+          Uri.parse('${_apiUrl}notifications/set_token/?token=${fcmToken}'),
           headers: {
             'Authorization': 'Token $apiToken',
           });
@@ -276,7 +277,7 @@ class ApiHelper {
   static Future<void> deleteUserAccount(http.Client http, Auth auth) async {
     try {
       final response = await http.delete(
-        Uri.parse('${_baseUrl}auth/delete/'),
+        Uri.parse('${_authUrl}accounts/delete/'),
         headers: {
           'Authorization': 'Token ${auth.apiToken}',
         },
@@ -294,7 +295,7 @@ class ApiHelper {
 
 Uri _apiProductUrlBuilder(
     String fields, int page, Filter filter, int pageSize) {
-  var string = ('$_baseUrl'
+  var string = ('$_apiUrl'
       'beers/'
       '?fields=$fields'
       '&active=True'
@@ -339,7 +340,7 @@ Uri _apiProductUrlBuilder(
 
 Uri _apiReleaseProductUrlBuilder(
     String fields, int page, Filter filter, Release release, int pageSize) {
-  var string = ('$_baseUrl'
+  var string = ('$_apiUrl'
       'beers/'
       '?fields=$fields'
       '&release=${release.name}'
@@ -356,7 +357,7 @@ Uri _apiReleaseProductUrlBuilder(
 }
 
 Uri _apiStockChangeUrlBuilder(int page, int pageSize, String store) {
-  var string = ('$_baseUrl'
+  var string = ('$_apiUrl'
       'stockchange/'
       '?store=$store'
       '&page=$page'
@@ -368,7 +369,7 @@ Uri _apiStockChangeUrlBuilder(int page, int pageSize, String store) {
 
 Uri _apiStoreUrlBuilder(String fields) {
   final url = Uri.parse(
-    '$_baseUrl'
+    '$_apiUrl'
     'stores/'
     '?fields=$fields'
     '&page_size=500',
@@ -378,7 +379,7 @@ Uri _apiStoreUrlBuilder(String fields) {
 
 Uri _apiReleaseUrlBuilder(String fields) {
   final url = Uri.parse(
-    '$_baseUrl'
+    '$_apiUrl'
     'release/'
     '?fields=$fields',
   );

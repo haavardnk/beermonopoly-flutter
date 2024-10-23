@@ -45,7 +45,7 @@ class DrawerAuthButton extends StatelessWidget {
               'Brukeren din og alle data er nå slettet.');
         } catch (error) {
           await popupDialog(context, [], 'Det oppsto en feil',
-              'Det oppsto en feil ved sletting av brukeren din. Kontakt utvikler for å slette brukeren.');
+              'Det oppsto en feil ved sletting av brukeren din. Kontakt Ølmonopolet for å slette brukeren.');
         }
       },
       child: const Text(
@@ -80,7 +80,7 @@ class DrawerAuthButton extends StatelessWidget {
               popupDialog(
                 context,
                 buttons,
-                'Logge ut',
+                'Logg ut',
                 'Er du sikker på at du vil logge ut?',
               );
             },

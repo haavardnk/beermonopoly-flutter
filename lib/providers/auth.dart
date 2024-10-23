@@ -50,9 +50,89 @@ class Auth with ChangeNotifier {
     prefs.setBool('skipLogin', _skipLogin);
   }
 
+  Future<bool> login(
+      String email, String password, BuildContext context) async {
+    const apiUrl = 'https://auth.beermonopoly.com/_allauth/app/v1/auth/login';
+    try {
+      final apiResponse = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: jsonEncode(
+          {
+            "email": email,
+            "password": password,
+          },
+        ),
+      );
+      final apiData = json.decode(apiResponse.body);
+      if (apiResponse.statusCode == 200) {
+        print(apiData);
+        _apiToken = apiData['meta']['access_token'];
+        _sessionToken = apiData['meta']['session_token'];
+        userName = apiData['data']['user']['username'];
+
+        notifyListeners();
+        final prefs = await SharedPreferences.getInstance();
+        prefs.setString('apiToken', _apiToken);
+        prefs.setString('sessionToken', _sessionToken);
+        prefs.setString('userName', userName);
+
+        return true;
+      } else {
+        print(apiResponse.statusCode);
+        print(apiResponse.body);
+
+        if (apiResponse.statusCode == 400 &&
+            apiData['errors'][0]['code'] == 'email_password_mismatch') {
+          throw ErrorDescription(
+            'E-posten og/eller passordet du oppgav er ikke korrekt.',
+          );
+        }
+        return false;
+      }
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  Future<bool> resetPassword(String email, BuildContext context) async {
+    const apiUrl =
+        'https://auth.beermonopoly.com/_allauth/app/v1/auth/password/request';
+    try {
+      final apiResponse = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: jsonEncode(
+          {
+            "email": email,
+          },
+        ),
+      );
+      if (apiResponse.statusCode == 200) {
+        return true;
+      } else if (apiResponse.statusCode == 400) {
+        throw ErrorDescription(
+          'En feil har oppstått, sjekk at e-posten er korrekt eller ta kontakt med Ølmonopolet.',
+        );
+      } else if (apiResponse.statusCode == 500) {
+        throw ErrorDescription(
+          'En konto med e-postadressen $email eksisterer ikke. Forsøk å registrer deg på nytt.',
+        );
+      } else {
+        return false;
+      }
+    } catch (error) {
+      rethrow;
+    }
+  }
+
   Future<bool> registerWithEmail(String username, String password, String email,
       BuildContext context) async {
-    const apiUrl = 'https://api.beermonopoly.com/_allauth/app/v1/auth/signup';
+    const apiUrl = 'https://auth.beermonopoly.com/_allauth/app/v1/auth/signup';
     try {
       final apiResponse = await http.post(
         Uri.parse(apiUrl),
@@ -84,10 +164,22 @@ class Auth with ChangeNotifier {
       } else {
         print(apiResponse.statusCode);
         print(apiResponse.body);
-        if (apiResponse.statusCode == 400) {
-          throw Exception(apiData['errors'][0]['message']);
+        if (apiResponse.statusCode == 400 &&
+            apiData['errors'][0]['code'] == 'email_taken') {
+          throw ErrorDescription(
+            'En bruker med denne e-posten finnes allerede.'
+            '\n\n'
+            'Hint: Dersom du tidligere har brukt Ølmonopolet med en Untappd bruker med samme e-post må du navigere til Logg inn og trykke glemt passord.',
+          );
         }
-
+        if (apiResponse.statusCode == 400 &&
+            apiData['errors'][0]['code'] == 'username_taken') {
+          throw ErrorDescription(
+            'En bruker med dette brukernavnet finnes allerede.'
+            '\n\n'
+            'Hint: Dersom du tidligere har brukt Ølmonopolet med en Untappd bruker med samme brukernavn kan du navigere til Logg inn og trykke glemt passord.',
+          );
+        }
         return false;
       }
     } catch (error) {
@@ -97,7 +189,7 @@ class Auth with ChangeNotifier {
 
   Future<void> authenticateApple() async {
     const apiUrl =
-        'https://api.beermonopoly.com/_allauth/app/v1/auth/provider/token';
+        'https://auth.beermonopoly.com/_allauth/app/v1/auth/provider/token';
 
     try {
       // Check if app server is available before starting Apple Sign In
@@ -114,7 +206,8 @@ class Auth with ChangeNotifier {
               : WebAuthenticationOptions(
                   clientId: 'com.beermonopoly.olmonopolet.android',
                   redirectUri: Uri.parse(
-                      'https://api.beermonopoly.com/accounts/apple/login/callback2/'),
+                    'https://auth.beermonopoly.com/accounts/apple/login/callback2/',
+                  ),
                 ),
         );
         final apiResponse = await http.post(Uri.parse('$apiUrl'),
@@ -153,7 +246,7 @@ class Auth with ChangeNotifier {
 
   Future<void> authenticateGoogle() async {
     const apiUrl =
-        'https://api.beermonopoly.com/_allauth/app/v1/auth/provider/token';
+        'https://auth.beermonopoly.com/_allauth/app/v1/auth/provider/token';
     const List<String> scopes = <String>[
       'email',
       'profile',
@@ -198,52 +291,6 @@ class Auth with ChangeNotifier {
     }
   }
 
-  // Future<void> authenticateUntappd() async {
-  //   const oauthUrl =
-  //       'https://auth.beermonopoly.com/connect/untappd?callback=com.beermonopoly.olmonopolet://callback';
-  //   const callbackUrl = 'com.beermonopoly.olmonopolet';
-  //   const apiUrl = 'https://api.beermonopoly.com/auth/untappd/';
-  //   const profileUrl = 'https://api.untappd.com/v4/user/info/';
-
-  //   try {
-  //     // Get Untappd token
-  //     final untappdResponse = await FlutterWebAuth.authenticate(
-  //         url: oauthUrl, callbackUrlScheme: callbackUrl);
-  //     final untappdToken =
-  //         Uri.parse(untappdResponse).queryParameters['access_token'];
-  //     // Get API token
-  //     final apiResponse =
-  //         await http.post(Uri.parse('$apiUrl?access_token=$untappdToken'),
-  //             headers: {
-  //               'Content-type': 'application/json',
-  //             },
-  //             body: jsonEncode({'access_token': untappdToken}));
-  //     final apiData = json.decode(apiResponse.body);
-  //     if (apiData['error'] != null) {
-  //       throw HttpException(apiData['error']['message']);
-  //     }
-  //     _apiToken = apiData['key'];
-  //     _untappdToken = untappdToken ?? '';
-  //     // Get Untappd profile
-  //     final untappdProfileResponse = await http.get(
-  //       Uri.parse('$profileUrl?access_token=$_untappdToken&compact=true'),
-  //       headers: {'User-Agent': 'app:Beermonopoly'},
-  //     );
-  //     final untappdProfileData = json.decode(untappdProfileResponse.body);
-  //     userName = untappdProfileData['response']['user']['user_name'];
-  //     userAvatarUrl = untappdProfileData['response']['user']['user_avatar'];
-
-  //     notifyListeners();
-  //     final prefs = await SharedPreferences.getInstance();
-  //     prefs.setString('apiToken', _apiToken);
-  //     prefs.setString('untappdToken', _untappdToken);
-  //     prefs.setString('userName', userName);
-  //     prefs.setString('userAvatarUrl', userAvatarUrl);
-  //   } catch (error) {
-  //     rethrow;
-  //   }
-  // }
-
   Future<bool> tryAutoLogin() async {
     final prefs = await SharedPreferences.getInstance();
     _skipLogin = prefs.getBool('skipLogin') ?? false;
@@ -264,7 +311,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> logout() async {
-    const apiUrl = 'https://api.beermonopoly.com/_allauth/app/v1/auth/session';
+    const apiUrl = 'https://auth.beermonopoly.com/_allauth/app/v1/auth/session';
     try {
       http.delete(
         Uri.parse(apiUrl),

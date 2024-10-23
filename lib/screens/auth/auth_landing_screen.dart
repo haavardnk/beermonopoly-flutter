@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 
 import '../../providers/auth.dart';
 import 'auth_registration_screen.dart';
+import 'auth_login_screen.dart';
 
 class AuthLandingScreen extends StatefulWidget {
   const AuthLandingScreen({Key? key}) : super(key: key);
@@ -27,7 +27,12 @@ class _AuthLandingScreenState extends State<AuthLandingScreen> {
         actions: [
           TextButton(
             onPressed: () => _authData.skipLogin(true),
-            child: Text('Hopp over'),
+            child: Text(
+              'Hopp over',
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
           )
         ],
       ),
@@ -48,9 +53,16 @@ class _AuthLandingScreenState extends State<AuthLandingScreen> {
                 FilledButton(
                   child: const Text(
                     'Logg inn',
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
                   ),
-                  onPressed: () => _authData.skipLogin(true),
+                  onPressed: () {
+                    pushScreen(
+                      context,
+                      screen: AuthLoginScreen(),
+                    );
+                  },
                 ),
                 SizedBox(height: 10),
                 TextButton(
@@ -62,16 +74,22 @@ class _AuthLandingScreenState extends State<AuthLandingScreen> {
                   },
                   child: Text(
                     'Registrer',
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
                   ),
                 ),
                 const SizedBox(
                   height: 10,
                 ),
                 Row(children: <Widget>[
-                  Expanded(child: Divider()),
-                  Text("    eller fortsett med    "),
-                  Expanded(child: Divider()),
+                  Expanded(
+                    child: Divider(),
+                  ),
+                  Text("    eller    "),
+                  Expanded(
+                    child: Divider(),
+                  ),
                 ]),
                 SizedBox(height: 15),
                 Container(
