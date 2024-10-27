@@ -14,6 +14,7 @@ class Product extends Equatable {
     this.abv,
     this.imageUrl,
     this.userRating,
+    this.userTasted,
     this.userWishlisted,
     this.vmpUrl,
     this.untappdUrl,
@@ -43,6 +44,7 @@ class Product extends Equatable {
                 product['user_checked_in'].isNotEmpty
             ? product['user_checked_in'][0]['rating']
             : null,
+        userTasted: product['user_tasted'] != null ? true : false,
         userWishlisted: product['user_wishlisted'] != null
             ? product['user_wishlisted']
             : false,
@@ -87,6 +89,7 @@ class Product extends Equatable {
   final double? abv;
   final String? imageUrl;
   final double? userRating;
+  final bool? userTasted;
   final bool? userWishlisted;
   final String? vmpUrl;
   final String? untappdUrl;

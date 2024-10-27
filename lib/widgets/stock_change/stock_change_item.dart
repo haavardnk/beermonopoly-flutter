@@ -109,12 +109,13 @@ class _StockChangeItemState extends State<StockChangeItem> {
                 },
                 onTapDown: getPosition,
                 onLongPress: () {
+                  RelativeRect position = RelativeRect.fromSize(
+                      tapPosition & const Size(40, 0), overlay.size);
                   showPopupMenu(
                     context,
                     auth,
                     wishlisted,
-                    tapPosition,
-                    overlay,
+                    position,
                     widget.stockChange.product,
                   ).then(
                     (value) => setState(() {

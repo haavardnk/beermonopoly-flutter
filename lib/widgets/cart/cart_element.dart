@@ -121,12 +121,13 @@ class _CartElementState extends State<CartElement> {
                 },
                 onTapDown: getPosition,
                 onLongPress: () {
+                  RelativeRect position = RelativeRect.fromSize(
+                      tapPosition & const Size(40, 0), overlay.size);
                   showPopupMenu(
                     context,
                     auth,
                     wishlisted,
-                    tapPosition,
-                    overlay,
+                    position,
                     widget.cartItem.product,
                   ).then(
                     (value) => setState(

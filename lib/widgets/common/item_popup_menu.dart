@@ -1,44 +1,64 @@
+import 'package:beermonopoly/helpers/api_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
 
-import '../../helpers/untappd_helper.dart';
+import '../../providers/cart.dart';
 import '../../helpers/app_launcher.dart';
 import '../../models/product.dart';
 import '../../providers/auth.dart';
 import '../../providers/http_client.dart';
 
-Future<String?> showPopupMenu(BuildContext context, Auth auth, bool wishlisted,
-    Offset tapPosition, RenderBox overlay, Product product) async {
+Future<String?> showPopupMenu(BuildContext context, Auth auth, bool tasted,
+    RelativeRect position, Product product) async {
   final apiToken = auth.apiToken;
-  final untappdToken = auth.untappdToken;
-  final client = Provider.of<HttpClient>(context).untappdClient;
+  final client = Provider.of<HttpClient>(context, listen: false).apiClient;
+  final cart = Provider.of<Cart>(context, listen: false);
   var value = await showMenu<String>(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.all(
         Radius.circular(8.0),
       ),
     ),
-    position:
-        RelativeRect.fromSize(tapPosition & const Size(40, 40), overlay.size),
+    position: position,
     items: <PopupMenuEntry<String>>[
-      if (wishlisted == false && auth.isAuth)
+      if (tasted == false && auth.isAuth)
         PopupMenuItem(
-          value: 'addWishlist',
+          value: 'addTasted',
           child: Row(
             children: <Widget>[
-              Icon(Icons.playlist_add),
-              Text(" Legg i Untappd ønskeliste"),
+              Icon(Icons.check_rounded),
+              Text(" Merk som smakt"),
             ],
           ),
         ),
-      if (wishlisted == true && auth.isAuth)
+      if (tasted == true && auth.isAuth)
         PopupMenuItem(
-          value: 'removeWishlist',
+          value: 'removeTasted',
           child: Row(
             children: <Widget>[
-              Icon(Icons.playlist_remove),
-              Text(" Fjern fra Untappd ønskeliste"),
+              Icon(Icons.close_rounded),
+              Text(" Fjern smakt"),
+            ],
+          ),
+        ),
+      if (!cart.items.keys.contains(product.id))
+        PopupMenuItem(
+          value: 'addToCart',
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.check_rounded),
+              Text(" Legg i handleliste"),
+            ],
+          ),
+        ),
+      if (cart.items.keys.contains(product.id))
+        PopupMenuItem(
+          value: 'removeFromCart',
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.close_rounded),
+              Text(" Fjern fra handleliste"),
             ],
           ),
         ),
@@ -65,19 +85,45 @@ Future<String?> showPopupMenu(BuildContext context, Auth auth, bool wishlisted,
     ],
     context: context,
   );
-  if (value == "addWishlist") {
-    var success = await UntappdHelper.addToWishlist(
-        client, apiToken, untappdToken, product);
+  if (value == "addTasted") {
+    var success = await ApiHelper.addTasted(product.id, client, apiToken);
     if (success) {
-      return 'wishlistAdded';
+      return 'addedTasted';
     }
   }
-  if (value == "removeWishlist") {
-    var success = await UntappdHelper.removeFromWishlist(
-        client, apiToken, untappdToken, product);
+  if (value == "removeTasted") {
+    var success = await ApiHelper.removeTasted(product.id, client, apiToken);
     if (success) {
-      return 'wishlistRemoved';
+      return 'removedTasted';
     }
+  }
+  if (value == "addToCart") {
+    cart.addItem(product.id, product);
+    cart.updateCartItemsData();
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text(
+          'Lagt til i handlelisten',
+          textAlign: TextAlign.center,
+        ),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+  if (value == "removeFromCart") {
+    cart.removeItem(product.id);
+    cart.updateCartItemsData();
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Fjernet fra handlelisten',
+          textAlign: TextAlign.center,
+        ),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
   if (value == "untappd") {
     AppLauncher.launchUntappd(product);

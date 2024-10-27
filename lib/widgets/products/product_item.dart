@@ -6,13 +6,13 @@ import 'package:flag/flag.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
+import '../common/item_popup_menu.dart';
 import '../../models/product.dart';
 import '../../models/release.dart';
 import '../../providers/cart.dart';
 import '../../providers/auth.dart';
 import '../../screens/product_detail_screen.dart';
 import '../common/rating_widget.dart';
-import '../common/item_popup_menu.dart';
 import '../../assets/constants.dart';
 
 class ProductItem extends StatefulWidget {
@@ -28,9 +28,12 @@ class ProductItem extends StatefulWidget {
 
 class _ProductItemState extends State<ProductItem> {
   late bool wishlisted;
+  late bool tasted;
+  GlobalKey actionsKey = GlobalKey();
   @override
   void initState() {
     wishlisted = widget.product.userWishlisted ?? false;
+    tasted = widget.product.userTasted ?? false;
     super.initState();
   }
 
@@ -47,13 +50,6 @@ class _ProductItemState extends State<ProductItem> {
     final heroTag = widget.release != null
         ? 'release${widget.product.id}'
         : 'products${widget.product.id}';
-    late Offset tapPosition;
-    RenderBox overlay =
-        Overlay.of(context).context.findRenderObject() as RenderBox;
-
-    void getPosition(TapDownDetails detail) {
-      tapPosition = detail.globalPosition;
-    }
 
     return Container(
       foregroundDecoration: wishlisted == true
@@ -64,13 +60,14 @@ class _ProductItemState extends State<ProductItem> {
             )
           : null,
       child: Container(
-        foregroundDecoration: widget.product.userRating != null
-            ? const RotatedCornerDecoration.withColor(
-                color: Color(0xFFFBC02D),
-                badgeSize: Size(25, 25),
-                badgePosition: BadgePosition.topStart,
-              )
-            : null,
+        foregroundDecoration:
+            widget.product.userRating != null || tasted == true
+                ? const RotatedCornerDecoration.withColor(
+                    color: Color(0xFFFBC02D),
+                    badgeSize: Size(25, 25),
+                    badgePosition: BadgePosition.topStart,
+                  )
+                : null,
         child: Stack(
           children: [
             Semantics(
@@ -90,28 +87,6 @@ class _ProductItemState extends State<ProductItem> {
                     screen: ProductDetailScreen(),
                     pageTransitionAnimation: PageTransitionAnimation.cupertino,
                     withNavBar: true,
-                  );
-                },
-                onTapDown: getPosition,
-                onLongPress: () {
-                  showPopupMenu(
-                    context,
-                    auth,
-                    wishlisted,
-                    tapPosition,
-                    overlay,
-                    widget.product,
-                  ).then(
-                    (value) => setState(() {
-                      if (value == 'wishlistAdded') {
-                        wishlisted = true;
-                        cart.updateCartItemsData();
-                      }
-                      if (value == 'wishlistRemoved') {
-                        wishlisted = false;
-                        cart.updateCartItemsData();
-                      }
-                    }),
                   );
                 },
                 child: Container(
@@ -350,74 +325,38 @@ class _ProductItemState extends State<ProductItem> {
               bottom: _tabletMode ? null : 10,
               top: !_tabletMode ? null : _boxImageSize + 11 - 35,
               right: 12,
-              child: Semantics(
-                button: true,
-                label: 'Legg i handleliste',
-                child: InkWell(
-                  onTap: () {
-                    cart.addItem(widget.product.id, widget.product);
-                    cart.updateCartItemsData();
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text(
-                          'Lagt til i handlelisten!',
-                          textAlign: TextAlign.center,
-                        ),
-                        duration: const Duration(seconds: 2),
-                      ),
-                    );
-                  },
-                  onLongPress: () {
-                    if (cart.items.keys.contains(widget.product.id)) {
-                      cart.removeSingleItem(widget.product.id);
-                      cart.updateCartItemsData();
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            cart.items.keys.contains(widget.product.id)
-                                ? 'Fjernet en fra handlelisten!'
-                                : 'Fjernet helt fra handlelisten!',
-                            textAlign: TextAlign.center,
-                          ),
-                          duration: const Duration(seconds: 2),
-                        ),
-                      );
-                    }
-                  },
-                  child: Container(
-                    height: 35,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        width: 1,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(24),
-                      ),
+              child: IconButton(
+                key: actionsKey,
+                icon: Icon(Icons.more_horiz),
+                iconSize: 28,
+                onPressed: () {
+                  RenderBox renderBox = actionsKey.currentContext!
+                      .findRenderObject() as RenderBox;
+                  Offset offset = renderBox.localToGlobal(Offset.zero);
+                  showPopupMenu(
+                    context,
+                    auth,
+                    tasted,
+                    RelativeRect.fromLTRB(
+                      offset.dx,
+                      offset.dy,
+                      offset.dx,
+                      offset.dy,
                     ),
-                    child: Consumer<Cart>(
-                      builder: (_, cart, __) => Center(
-                        child: Badge(
-                          isLabelVisible:
-                              cart.items.keys.contains(widget.product.id),
-                          label: Text(
-                              cart.items.keys.contains(widget.product.id)
-                                  ? cart.items[widget.product.id]!.quantity
-                                      .toString()
-                                  : ''),
-                          child: Icon(
-                            Icons.shopping_cart_outlined,
-                            size: 20,
-                            color: Theme.of(context).colorScheme.onSurface,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                    widget.product,
+                  ).then(
+                    (value) => setState(() {
+                      if (value == 'addedTasted') {
+                        tasted = true;
+                        cart.updateCartItemsData();
+                      }
+                      if (value == 'removedTasted') {
+                        tasted = false;
+                        cart.updateCartItemsData();
+                      }
+                    }),
+                  );
+                },
               ),
             ),
           ],

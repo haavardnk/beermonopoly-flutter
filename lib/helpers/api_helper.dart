@@ -100,7 +100,7 @@ class ApiHelper {
       [Release? release = null]) async {
     const fields =
         'vmp_id,vmp_name,price,rating,checkins,label_sm_url,main_category,'
-        'sub_category,style,stock,abv,user_checked_in,user_wishlisted,'
+        'sub_category,style,stock,abv,user_checked_in,user_tasted,user_wishlisted,'
         'volume,price_per_volume,vmp_url,untpd_url,untpd_id,country,product_selection';
     final Map<String, String> headers = auth.apiToken.isNotEmpty
         ? {
@@ -139,7 +139,7 @@ class ApiHelper {
       http.Client http, String productIds, String apiToken) async {
     const fields =
         'vmp_id,vmp_name,price,rating,checkins,label_sm_url,main_category,'
-        'sub_category,style,stock,abv,user_checked_in,user_wishlisted,'
+        'sub_category,style,stock,abv,user_checked_in,user_tasted,user_wishlisted,'
         'volume,price_per_volume,vmp_url,untpd_url,untpd_id,country';
     final Map<String, String> headers = apiToken.isNotEmpty
         ? {
@@ -268,6 +268,48 @@ class ApiHelper {
         return;
       } else {
         throw GenericHttpException();
+      }
+    } on SocketException {
+      throw NoConnectionException();
+    }
+  }
+
+  static Future<bool> addTasted(
+      int productId, http.Client http, String apiToken,
+      [int? rating]) async {
+    final url;
+    if (rating != null) {
+      url = Uri.parse(
+          '${_apiUrl}beers/add_remove_tasted?beer_id=${productId}&rating=${rating}');
+    } else {
+      url = Uri.parse('${_apiUrl}beers/add_remove_tasted?beer_id=${productId}');
+    }
+    try {
+      final response = await http.post(url, headers: {
+        'Authorization': 'Token $apiToken',
+      });
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } on SocketException {
+      throw NoConnectionException();
+    }
+  }
+
+  static Future<bool> removeTasted(
+      int productId, http.Client http, String apiToken) async {
+    try {
+      final response = await http.delete(
+          Uri.parse('${_apiUrl}beers/add_remove_tasted?beer_id=${productId}'),
+          headers: {
+            'Authorization': 'Token $apiToken',
+          });
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
       }
     } on SocketException {
       throw NoConnectionException();

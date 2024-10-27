@@ -30,6 +30,7 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   late bool wishlisted;
+  bool tasted = false;
   late bool init = false;
 
   int _numRatings = 0;
@@ -66,10 +67,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         'label_hd_url,ibu,description,brewery,product_selection,all_stock,'
         'year,color,aroma,taste,storable,food_pairing,raw_materials,fullness,'
         'sweetness,freshness,bitterness,sugar,acid,method,allergens,'
-        'user_checked_in,friends_checked_in,app_rating,alcohol_units';
+        'user_checked_in,friends_checked_in,app_rating,alcohol_units,user_tasted';
+    wishlisted = product.userWishlisted ?? false;
 
-    if (init == false) {
-      wishlisted = product.userWishlisted ?? false;
+    setup(data) {
+      tasted = data['user_tasted'] != null ? true : false;
       init = true;
     }
 
@@ -78,84 +80,117 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         title: Text('Detaljer'),
         surfaceTintColor: Colors.transparent,
         actions: [
-          PopupMenuButton(itemBuilder: (context) {
-            return [
-              if (auth.isAuth)
+          PopupMenuButton(
+            iconSize: 30,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(24),
+              ),
+            ),
+            itemBuilder: (context) {
+              return [
+                if (tasted == false && auth.isAuth)
+                  PopupMenuItem<int>(
+                    value: 0,
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Row(
+                        children: [
+                          Icon(Icons.check_rounded),
+                          VerticalDivider(width: 5),
+                          Text('Merk som smakt'),
+                        ],
+                      ),
+                    ),
+                  ),
+                if (tasted == true && auth.isAuth)
+                  PopupMenuItem<int>(
+                    value: 1,
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Row(
+                        children: [
+                          Icon(Icons.close_rounded),
+                          VerticalDivider(width: 5),
+                          Text('Fjern smakt'),
+                        ],
+                      ),
+                    ),
+                  ),
                 PopupMenuItem<int>(
-                  value: 0,
+                  value: 2,
                   child: FittedBox(
                     fit: BoxFit.fitWidth,
                     child: Row(
                       children: [
-                        Icon(!wishlisted
-                            ? Icons.playlist_add
-                            : Icons.playlist_remove),
+                        Icon(Icons.report),
                         VerticalDivider(width: 5),
-                        Text(!wishlisted
-                            ? 'Legg i Untappd ønskeliste'
-                            : 'Fjern fra Untappd ønskeliste'),
+                        Text(
+                          product.rating != null
+                              ? 'Rapporter feil Untappd match'
+                              : 'Foreslå untappd match',
+                          overflow: TextOverflow.fade,
+                        ),
                       ],
                     ),
                   ),
                 ),
-              PopupMenuItem<int>(
-                value: 1,
-                child: FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Row(
-                    children: [
-                      Icon(Icons.report),
-                      VerticalDivider(width: 5),
-                      Text(
-                        product.rating != null
-                            ? 'Rapporter feil Untappd match'
-                            : 'Foreslå untappd match',
-                        overflow: TextOverflow.fade,
-                      ),
-                    ],
+                PopupMenuItem<int>(
+                  value: 3,
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Row(
+                      children: [
+                        Icon(Icons.open_in_browser),
+                        VerticalDivider(width: 5),
+                        Text("Åpne i Untappd"),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              PopupMenuItem<int>(
-                value: 2,
-                child: FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Row(
-                    children: [
-                      Icon(Icons.open_in_browser),
-                      VerticalDivider(width: 5),
-                      Text("Åpne i Untappd"),
-                    ],
+                PopupMenuItem<int>(
+                  value: 4,
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Row(
+                      children: [
+                        Icon(Icons.open_in_browser),
+                        VerticalDivider(width: 5),
+                        Text("Åpne i Vinmonopolet"),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              PopupMenuItem<int>(
-                value: 3,
-                child: FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Row(
-                    children: [
-                      Icon(Icons.open_in_browser),
-                      VerticalDivider(width: 5),
-                      Text("Åpne i Vinmonopolet"),
-                    ],
-                  ),
-                ),
-              ),
-            ];
-          }, onSelected: (value) {
-            if (value == 0) {
-              toggleWishlist(client.untappdClient, auth, product, cart);
-            } else if (value == 1) {
-              wrongUntappdMatch(client.apiClient, product);
-            } else if (value == 2) {
-              AppLauncher.launchUntappd(product);
-            } else if (value == 3) {
-              product.vmpUrl != null
-                  ? launchUrl(Uri.parse(product.vmpUrl!))
-                  : null;
-            }
-          }),
+              ];
+            },
+            onSelected: (value) async {
+              if (value == 0) {
+                var success = await ApiHelper.addTasted(
+                    product.id, client.apiClient, auth.apiToken);
+                if (success) {
+                  setState(() {
+                    tasted = true;
+                  });
+                }
+              } else if (value == 1) {
+                var success = await ApiHelper.removeTasted(
+                    product.id, client.apiClient, auth.apiToken);
+                if (success) {
+                  setState(() {
+                    tasted = false;
+                  });
+                }
+              } else if (value == 2) {
+                wrongUntappdMatch(client.apiClient, product);
+              } else if (value == 3) {
+                AppLauncher.launchUntappd(product);
+              } else if (value == 4) {
+                product.vmpUrl != null
+                    ? launchUrl(Uri.parse(product.vmpUrl!))
+                    : null;
+              }
+            },
+          ),
         ],
       ),
       floatingActionButton: InkWell(
@@ -169,7 +204,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 content: Text(
                   cart.items.keys.contains(product.id)
                       ? 'Fjernet en fra handlelisten!'
-                      : 'Fjernet helt fra handlelisten!',
+                      : 'Fjernet fra handlelisten!',
                   textAlign: TextAlign.center,
                 ),
                 duration: const Duration(seconds: 1),
@@ -222,6 +257,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           if (snapshot.hasData) {
             _numRatings = 0;
             _friendsRating = 0;
+
+            if (init == false) {
+              setup(snapshot.data);
+            }
+            if (snapshot.data!['all_stock'] != null &&
+                filters.storeList.isNotEmpty) {
+              _stockList =
+                  _sortStockList(_stockList, snapshot, filters.storeList);
+            }
             if (snapshot.data!['app_rating'] != null &&
                 snapshot.data!['app_rating']['rating'] != null) {
               _numRatings += 1;
@@ -258,14 +302,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             )
                           : null,
                       child: Container(
-                        foregroundDecoration: product.userRating != null
-                            ? const RotatedCornerDecoration.withColor(
-                                color: Color(0xFFFBC02D),
-                                textSpan: TextSpan(text: 'Smakt'),
-                                badgeSize: Size(60, 60),
-                                badgePosition: BadgePosition.topStart,
-                              )
-                            : null,
+                        foregroundDecoration:
+                            product.userRating != null || tasted == true
+                                ? const RotatedCornerDecoration.withColor(
+                                    color: Color(0xFFFBC02D),
+                                    textSpan: TextSpan(text: 'Smakt'),
+                                    badgeSize: Size(60, 60),
+                                    badgePosition: BadgePosition.topStart,
+                                  )
+                                : null,
                         height: _boxImageSize,
                         width: _boxImageSize,
                         child: snapshot.hasData &&
